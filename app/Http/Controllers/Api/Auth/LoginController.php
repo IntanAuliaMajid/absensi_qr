@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -12,10 +13,21 @@ class LoginController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string|min:8'
-        ]);
+        try {
+            $credentials = $request->validate([
+                'email' => 'required|string|email',
+                'password' => 'required|string|min:8'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $error){
+            Log::warning("login validation failed",[
+                "error" => $error->errors(),
+                "email" => $request->email,
+                "ip" => $request->ip(),
+                "user agent" => $request->userAgent(),
+            ]);
+            throw $error;
+        }
+        
 
 
         // jika data tidak valid kirim json credentials are not valid

@@ -1,8 +1,17 @@
-import { Head } from '@inertiajs/react';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { dashboard } from '@/routes';
+import { 
+    CalendarCheck, 
+    ClipboardList,
+    UserMinus,
+    BarChart3,
+    Clock,
+    MapPin,
+    ArrowRight
+} from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -12,23 +21,130 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard() {
+    const { auth } = usePage().props as any;
+    const userName = auth?.user?.name ? auth.user.name.split(' ')[0] : 'Mahasiswa';
+
+    const chartData = [
+        { name: 'Jan', kehadiran: 85 },
+        { name: 'Feb', kehadiran: 92 },
+        { name: 'Mar', kehadiran: 88 },
+        { name: 'Apr', kehadiran: 95 },
+        { name: 'Mei', kehadiran: 90 },
+        { name: 'Jun', kehadiran: 98 },
+    ];
+
+    const stats = [
+        { label: 'Total Kehadiran', value: '92%', icon: CalendarCheck, color: 'bg-sky-50 text-sky-600' },
+        { label: 'Izin / Sakit', value: '2 Hari', icon: ClipboardList, color: 'bg-sky-50 text-sky-600' },
+        { label: 'Alfa', value: '1', icon: UserMinus, color: 'bg-sky-50 text-sky-600' },
+    ];
+
+    // Data mata kuliah hari ini untuk absensi
+    const todayClasses = [
+        { id: 1, subject: 'Pemrograman Web', time: '08:00 - 10:30', room: 'Lab Terpadu 1', status: 'Active' },
+        { id: 2, subject: 'Basis Data Terdistribusi', time: '13:00 - 15:30', room: 'Ruang Kuliah 3.2', status: 'Upcoming' },
+    ];
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
+            <Head title="Dashboard Absensi" />
+            
+            <div className="flex h-full flex-1 flex-col gap-6 p-6 bg-[#F8FAFC]">
+                
+                {/* Header Section */}
+                <div className="flex flex-col gap-1">
+                    <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+                        Selamat Datang, {userName}! 👋
+                    </h1>
+                    <p className="text-sm text-slate-500">Ringkasan aktivitas dan jadwal absensi Anda.</p>
                 </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+
+                {/* Stat Cards */}
+                <div className="grid gap-4 md:grid-cols-3">
+                    {stats.map((stat, index) => (
+                        <div key={index} className="rounded-3xl border border-sky-100 bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all hover:shadow-md">
+                            <div className="flex items-center gap-4">
+                                <div className={`rounded-xl p-3 ${stat.color}`}>
+                                    <stat.icon className="size-6" />
+                                </div>
+                                <div>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-slate-400">{stat.label}</p>
+                                    <p className="text-2xl font-black text-slate-900">{stat.value}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Grid Layout untuk Grafik dan Jadwal */}
+                <div className="grid gap-6 lg:grid-cols-3 flex-1">
+                    
+                    {/* Chart Section (2/3 Kolom) */}
+                    <div className="lg:col-span-2 rounded-[2rem] border border-sky-100 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8">
+                        <div className="flex items-center justify-between mb-8">
+                            <div className="flex items-center gap-2">
+                                <div className="p-2 bg-sky-50 rounded-lg">
+                                    <BarChart3 className="size-5 text-sky-600" />
+                                </div>
+                                <h2 className="text-lg font-bold text-slate-800">Statistik Kehadiran</h2>
+                            </div>
+                        </div>
+                        <div className="h-[300px] w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12, fontWeight: 600}} dy={10} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
+                                    <Tooltip cursor={{fill: '#f8fafc'}} contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', padding: '12px' }} />
+                                    <Bar dataKey="kehadiran" radius={[10, 10, 10, 10]} barSize={40}>
+                                        {chartData.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={index === chartData.length - 1 ? '#0ea5e9' : '#bae6fd'} />
+                                        ))}
+                                    </Bar>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+
+                    {/* Jadwal Absensi Section (1/3 Kolom) */}
+                    <div className="rounded-[2rem] border border-sky-100 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8">
+                        <h2 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                            <Clock className="size-5 text-sky-600" />
+                            Jadwal Hari Ini
+                        </h2>
+                        
+                        <div className="flex flex-col gap-4">
+                            {todayClasses.map((item) => (
+                                <div key={item.id} className="p-4 rounded-2xl border border-slate-50 bg-slate-50/50 hover:border-sky-200 hover:bg-sky-50/50 transition-all group">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
+                                            item.status === 'Active' ? 'bg-green-100 text-green-600' : 'bg-slate-200 text-slate-500'
+                                        }`}>
+                                            {item.status === 'Active' ? 'Mulai' : 'Akan Datang'}
+                                        </span>
+                                        <span className="text-xs font-semibold text-slate-400">{item.time}</span>
+                                    </div>
+                                    <h3 className="font-bold text-slate-800 mb-2 leading-tight">{item.subject}</h3>
+                                    <div className="flex items-center justify-between mt-4">
+                                        <div className="flex items-center gap-1 text-xs text-slate-500">
+                                            <MapPin className="size-3" />
+                                            {item.room}
+                                        </div>
+                                        {item.status === 'Active' && (
+                                            <button className="flex items-center gap-1 text-xs font-bold text-sky-600 group-hover:gap-2 transition-all">
+                                                Absen <ArrowRight className="size-3" />
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                            
+                            {todayClasses.length === 0 && (
+                                <p className="text-center text-sm text-slate-400 py-10">Tidak ada jadwal kuliah hari ini.</p>
+                            )}
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </AppLayout>
