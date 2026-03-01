@@ -8,8 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Carbon;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable;
@@ -49,5 +53,26 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+
+    public function sendEmailVerificationNotification()
+    {
+        if (request()->is('api/*')) {
+
+            $verificationUrl = URL::temporarySignedRoute(
+                'api.verification.verify',
+                Carbon::now()->addMinutes(60),
+                [
+                    'id' => $this->getKey(),
+                    'hash' => sha1($this->getEmailForVerification()),
+                ]
+            );
+
+            $this->notify(new \App\Notifications\ApiVerifyEmailNotification($verificationUrl));
+
+        } else {
+            $this->notify(new VerifyEmail);
+        }
     }
 }
