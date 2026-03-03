@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Models\User;
+use Inertia\Inertia;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -42,7 +43,6 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
 
 })->middleware(['signed'])->name('api.verification.verify');
 
-
 // Route untuk mengirim ulang email verifikasi
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
@@ -54,4 +54,15 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 Route::post('/register', RegisterController::class);
 Route::post('/login', LoginController::class);
-Route::post('/logout', LogoutController::class)->middleware('auth:sanctum');                    
+Route::post('/logout', LogoutController::class)->middleware('auth:sanctum');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    if (!auth()->user()->hasVerifiedEmail()) {
+        return response()->json([
+            'message' => 'Email not verified'
+        ], 403);
+    }
+    return response()->json([
+        'message' => 'Welcome to dashboard'
+    ]);
+});
