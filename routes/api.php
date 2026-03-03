@@ -56,7 +56,7 @@ Route::post('/register', RegisterController::class);
 Route::post('/login', LoginController::class);
 Route::post('/logout', LogoutController::class)->middleware('auth:sanctum');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+Route::middleware('auth:sanctum')->get('/dashboard', function () {
     if (!auth()->user()->hasVerifiedEmail()) {
         return response()->json([
             'message' => 'Email not verified'
