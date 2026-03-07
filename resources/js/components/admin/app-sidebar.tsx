@@ -58,38 +58,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
     navMain: [
       {
-        title: "User",
-        url: "/admin/users/users-index",
-        icon: Users,
-        isActive: url.startsWith("/admin/users"),
-        items: [
-          {
-            title: "All User",
-            url: "/admin/users/users-index",
-            isActive: url === "/admin/users/users-index"
-          },
-          {
-            title: "Add User",
-            url: "/admin/users/add",
-            isActive: url === "/admin/users/add"
-          }
-        ],
-      },
-      {
         title: "Role",
-        url: "/admin/roles/roles-index",
+        url: "/admin/roles",
         icon: Shield,
         isActive: url.startsWith("/admin/roles"),
         items: [
           {
             title: "All Roles",
-            url: "/admin/roles/roles-index",
-            isActive: url === "/admin/roles/roles-index"
+            url: "/admin/roles",
+            isActive: url === "/admin/roles"
           },
           {
             title: "Add Roles",
-            url: "/admin/roles/roles-add",
-            isActive: url === "/admin/roles-add"
+            url: "/admin/roles/create",
+            isActive: url === "/admin/roles/create"
           }
         ],
       }

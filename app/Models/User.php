@@ -12,13 +12,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Carbon;
+use App\Notifications\ApiVerifyEmailNotification;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasRoles, HasFactory, Notifiable, TwoFactorAuthenticatable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -28,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'institution_id'
     ];
 
     /**
@@ -56,24 +57,27 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-
     public function sendEmailVerificationNotification()
     {
-        if (request()->is('api/*')) {
+        $isApiRequest = request()->is('api/*') || request()->expectsJson();
 
-            $verificationUrl = URL::temporarySignedRoute(
-                'api.verification.verify',
-                Carbon::now()->addMinutes(60),
-                [
-                    'id' => $this->getKey(),
-                    'hash' => sha1($this->getEmailForVerification()),
-                ]
-            );
+        if ($isApiRequest) {
+            $otp = rand(100000, 999999);
 
-            $this->notify(new \App\Notifications\ApiVerifyEmailNotification($verificationUrl));
+            $this->otps()->create([
+                'otp' => $otp,
+                'type' => 'email_verification',
+                'expires_at' => Carbon::now()->addMinutes(60),
+            ]);
 
+            $this->notify(new ApiVerifyEmailNotification($otp));
         } else {
             $this->notify(new VerifyEmail);
         }
+    }
+
+    public function otps()
+    {
+        return $this->hasMany(Otp::class);
     }
 }
