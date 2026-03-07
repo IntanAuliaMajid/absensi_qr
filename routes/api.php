@@ -24,4 +24,4 @@ Route::post('/email/resend-otp', [EmailVerificationController::class, 'resendOtp
 // Password Reset Routes
 Route::post('/reset-password', [PasswordResetController::class, 'sendOtp']);
 Route::post('/otp-check', [PasswordResetController::class, 'checkOtp'])->middleware('throttle:6,1');
-Route::post('/new-password', [PasswordResetController::class, 'resetPassword']);    
+Route::post('/new-password', [PasswordResetController::class, 'resetPassword']);
