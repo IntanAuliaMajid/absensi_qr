@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class RoleController extends Controller
 {
+    //nampilin data role
     public function index(){
         $roles = Role::select('id', 'name')->get();
         return Inertia::render('admin/roles/roles-index', [

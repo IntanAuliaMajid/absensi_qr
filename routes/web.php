@@ -19,14 +19,10 @@ Route::get('matakuliah', function () {
     return Inertia::render('matakuliah');
 })->middleware(['auth', 'verified'])->name('matakuliah');
 
-Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'verified','can:manage_system'])->prefix('admin')->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('admin/dashboard');
     })->name('admin.dashboard');
-
-    Route::get('/users/users-index', function(){
-        return Inertia::render('admin/users/users-index');
-    });
     
     Route::get('roles/roles-index', [RoleController::class, 'index'])->name('admin.roles.index');
     Route::get('/roles/roles-add', [RoleController::class, 'add'])->name('admin.roles.add');

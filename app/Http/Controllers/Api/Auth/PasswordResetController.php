@@ -16,26 +16,32 @@ use Illuminate\Validation\ValidationException;
 class PasswordResetController extends Controller
 {
     public function sendOtp(Request $request){
+        // Validasi input
         $request->validate([
             'email' => 'required|email',
         ]);
 
+        // Mencari user berdasarkan email
         $user = User::where('email', $request->email)->first();
 
+        // Jika user tidak ada
         if(!$user){
             return response()->json(['message' => 'User not found'], 404);
         }
 
+        // Hapus otp lama
         PasswordOtp::where('user_id', $user->id)->delete();
 
+        // Membuat otp baru 6 digit
         $otp = rand(100000, 999999);
 
+        // Masukkan otp ke database
         $passwordOtp = PasswordOtp::create([
             'user_id' => $user->id,
             'otp' => $otp,
             'expires_at' => Carbon::now()->addMinutes(5),
         ]);
-
+        // Pesan email yang dikirim
         Mail::raw("Your OTP Code: $otp. Expired in 5 minutes", function ($message) use ($user){
             $message->to($user->email)->subject('OTP Reset Password');
         });
@@ -85,7 +91,7 @@ class PasswordResetController extends Controller
         if(!$passwordOtp){
             return response()->json(['message' => 'Invalid or expired token'], 400);
         }
-
+        // Kalau berhasil / valid
         $user = User::find($passwordOtp->user_id);
         $user->password = bcrypt($request->password);
         $user->save();

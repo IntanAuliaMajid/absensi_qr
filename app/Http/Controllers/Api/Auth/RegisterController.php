@@ -31,7 +31,7 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-
+ 
         $user->sendEmailVerificationNotification();
 
         return response()->json([
