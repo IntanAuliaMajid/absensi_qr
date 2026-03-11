@@ -29,16 +29,12 @@ class LoginController extends Controller
         }
         
 
-
-        // jika data tidak valid kirim json credentials are not valid
         if(!auth()->attempt($credentials)){
             return response()->json(['message' => 'Credentials are not valid'], 401);
         }
 
-        // jika valid ambil datanya 
         $user = auth()->user();
 
-        // kirim data tokennya 
         return response()->json([
             'token' => $user->createToken('auth-token')->plainTextToken
         ]);

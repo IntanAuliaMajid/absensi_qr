@@ -39,7 +39,6 @@ export default function Dashboard() {
         { label: 'Alfa', value: '1', icon: UserMinus, color: 'bg-sky-50 text-sky-600' },
     ];
 
-    // Data mata kuliah hari ini untuk absensi
     const todayClasses = [
         { id: 1, subject: 'Pemrograman Web', time: '08:00 - 10:30', room: 'Lab Terpadu 1', status: 'Active' },
         { id: 2, subject: 'Basis Data Terdistribusi', time: '13:00 - 15:30', room: 'Ruang Kuliah 3.2', status: 'Upcoming' },
@@ -51,7 +50,6 @@ export default function Dashboard() {
             
             <div className="flex h-full flex-1 flex-col gap-6 p-6 bg-[#F8FAFC]">
                 
-                {/* Header Section */}
                 <div className="flex flex-col gap-1">
                     <h1 className="text-2xl font-bold tracking-tight text-slate-900">
                         Selamat Datang, {userName}! 👋
@@ -59,7 +57,6 @@ export default function Dashboard() {
                     <p className="text-sm text-slate-500">Ringkasan aktivitas dan jadwal absensi Anda.</p>
                 </div>
 
-                {/* Stat Cards */}
                 <div className="grid gap-4 md:grid-cols-3">
                     {stats.map((stat, index) => (
                         <div key={index} className="rounded-3xl border border-sky-100 bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all hover:shadow-md">

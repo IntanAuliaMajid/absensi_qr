@@ -16,12 +16,7 @@ import { Button } from '@/components/ui/button';
 import { useForm, usePage } from '@inertiajs/react';
 import { index } from '@/routes/admin/users';
 
-interface PageProps {
-    [key: string]: any;
-}
-
 export default function Page() {
-    const { props } = usePage<PageProps>();
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',

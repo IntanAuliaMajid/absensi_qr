@@ -40,7 +40,7 @@ export default function Profile({
                     <Heading
                         variant="small"
                         title="Profile information"
-                        description="Update your name and email address"
+                        description="Update your profile information"
                     />
 
                     <Form
@@ -88,6 +88,64 @@ export default function Profile({
                                     <InputError
                                         className="mt-2"
                                         message={errors.email}
+                                    />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="gender">Gender</Label>
+
+                                    <Input
+                                        id="gender"
+                                        className="mt-1 block w-full"
+                                        defaultValue={auth.user.gender ?? ''}
+                                        name="gender"
+                                        autoComplete="sex"
+                                        placeholder="Male, Female, etc."
+                                    />
+
+                                    <InputError
+                                        className="mt-2"
+                                        message={errors.gender}
+                                    />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="date_of_birth">
+                                        Date of birth
+                                    </Label>
+
+                                    <Input
+                                        id="date_of_birth"
+                                        type="date"
+                                        className="mt-1 block w-full"
+                                        defaultValue={
+                                            auth.user.date_of_birth ?? ''
+                                        }
+                                        name="date_of_birth"
+                                        autoComplete="bday"
+                                    />
+
+                                    <InputError
+                                        className="mt-2"
+                                        message={errors.date_of_birth}
+                                    />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="address">Address</Label>
+
+                                    <Input
+                                        id="address"
+                                        className="mt-1 block w-full"
+                                        defaultValue={auth.user.address ?? ''}
+                                        name="address"
+                                        autoComplete="street-address"
+                                        placeholder="Your address"
+                                    />
+
+                                    <InputError
+                                        className="mt-2"
+                                        message={errors.address}
                                     />
                                 </div>
 

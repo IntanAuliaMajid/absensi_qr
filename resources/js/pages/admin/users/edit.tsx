@@ -27,7 +27,6 @@ export default function EditUserPage() {
     const { data, setData, put, processing, errors } = useForm({
         name: user.name,
         email: user.email,
-        institution: user.institution ?? '',
         gender: user.gender ?? '',
         date_of_birth: user.date_of_birth ?? '',
         address: user.address ?? '',
