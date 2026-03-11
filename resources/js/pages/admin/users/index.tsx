@@ -30,7 +30,6 @@ import {
 import { User } from '@/types';
 
 export default function Page() {
-    // ambil data user dari server
     const { users } = usePage<{ users: User[] }>().props;
 
     const { delete: destroy, processing } = useForm();

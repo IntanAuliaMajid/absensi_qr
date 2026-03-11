@@ -13,26 +13,17 @@ import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useForm, usePage } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { index } from '@/routes/admin/roles/index';
 
-
-interface PageProps {
-    [key: string]: any; 
-}
-
 export default function Page() {
-    const { props } = usePage<PageProps>();
-
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
     });
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/admin/roles', {
-            onSuccess: () => reset(),
-        });
+        post('/admin/roles');
     };
 
     return (
