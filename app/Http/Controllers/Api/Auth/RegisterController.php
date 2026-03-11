@@ -33,8 +33,11 @@ class RegisterController extends Controller
         ]);
 
         $user->sendEmailVerificationNotification();
+        // membuat token authentikasi
+        $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
+            'token' => $token,
             'message' => 'Registration successful. Please check your email to verify your account.',
             'user' => $user
         ], 201);

@@ -29,28 +29,51 @@ import {
 } from '@/routes/admin/roles';
 import { toast } from 'sonner';
 import { useEffect } from 'react';
+import { Role } from '@/types';
 
-type Role = {
-    id: number;
-    name: string;
-};
 
 export default function Page() {
+    // Mengambil data props dari Inertia usePage
+    // Di sini kita mengambil props bernama roles dengan tipe Role[]
     const { roles } = usePage<{ roles: Role[] }>().props;
 
+
+    // Menggunakan useForm dari Inertia
+    // destroy -> function untuk mengirim request DELETE
+    // processing -> boolean untuk mengetahui apakah request sedang berjalan
     const { delete: destroy, processing } = useForm();
 
+
+    // Mengambil flash message dari props
+    // Biasanya flash ini dikirim dari Laravel session()->flash()
     const { flash } = usePage<{ flash?: { success?: string } }>().props;
 
+
+    // useEffect akan dijalankan setiap kali nilai flash berubah
     useEffect(() => {
+
+        // Jika ada pesan success dari flash
         if (flash?.success) {
+
+            // Menampilkan notifikasi toast sukses
             toast.success(flash.success);
         }
-    }, [flash]);
+
+    }, [flash]); // dependency: dijalankan ulang jika flash berubah
+
+
+    // Function untuk menghapus role berdasarkan id
     const handleDelete = (id: number) => {
+
+        // Konfirmasi dulu sebelum delete
         if (confirm('Are you sure you want to delete this role?')) {
+
+            // Mengirim request DELETE ke route destroy
             destroy(destroyRoute.url(id), {
+
+                // Agar posisi scroll halaman tidak berubah setelah request
                 preserveScroll: true,
+
             });
         }
     };

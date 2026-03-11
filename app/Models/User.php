@@ -56,9 +56,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
-
+    
     public function sendEmailVerificationNotification()
     {
+        //cek request berupa api
         $isApiRequest = request()->is('api/*') || request()->expectsJson();
 
         if ($isApiRequest) {
@@ -69,13 +70,13 @@ class User extends Authenticatable implements MustVerifyEmail
                 'type' => 'email_verification',
                 'expires_at' => Carbon::now()->addMinutes(60),
             ]);
-
+            // ngirim email
             $this->notify(new ApiVerifyEmailNotification($otp));
         } else {
             $this->notify(new VerifyEmail);
         }
     }
-
+    // relasi ke tabel otp
     public function otps()
     {
         return $this->hasMany(Otp::class);

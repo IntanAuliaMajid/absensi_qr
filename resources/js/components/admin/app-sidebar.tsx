@@ -28,6 +28,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { usePage } from "@inertiajs/react"
+import AppLogoIcon from '@/components/user/app-logo-icon';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { url } = usePage();
@@ -39,27 +40,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       email: "m@example.com",
       avatar: "/avatars/shadcn.jpg",
     },
-    teams: [
-      {
-        name: "Acme Inc",
-        logo: GalleryVerticalEnd,
-        plan: "Enterprise",
-      },
-      {
-        name: "Acme Corp.",
-        logo: AudioWaveform,
-        plan: "Startup",
-      },
-      {
-        name: "Evil Corp.",
-        logo: Command,
-        plan: "Free",
-      },
-    ],
+
     navMain: [
       {
         title: "Role",
-        url: "/admin/roles",
+      url: "/admin/roles",
         icon: Shield,
         isActive: url.startsWith("/admin/roles"),
         items: [
@@ -98,7 +83,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <div className="flex items-center gap-2 px-2 py-2">
+          <AppLogoIcon className="h-10 w-10" />
+          <span className="font-semibold">Absensi</span>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

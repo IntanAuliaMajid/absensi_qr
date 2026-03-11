@@ -15,6 +15,7 @@ import {
 import type { NavItem } from '@/types';
 import AppLogo from './app-logo';
 import { dashboard } from '@/routes';
+import AppLogoIcon from '@/components/user/app-logo-icon';
 
 const mainNavItems: NavItem[] = [
     {
@@ -45,7 +46,8 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href={dashboard()} prefetch>
-                                <AppLogo />
+                                <AppLogoIcon className="h-10 w-10 " />
+                                <h2 className='font-semibold'>Absensi</h2>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
