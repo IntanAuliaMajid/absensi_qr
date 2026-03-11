@@ -1,4 +1,4 @@
-import { AppSidebar } from '@/components/admin/app-sidebar';
+import AdminLayout from '@/layouts/AdminLayout';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -8,11 +8,7 @@ import {
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
-import {
-    SidebarInset,
-    SidebarProvider,
-    SidebarTrigger,
-} from '@/components/ui/sidebar';
+import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -20,19 +16,13 @@ import { Button } from '@/components/ui/button';
 import { useForm, usePage } from '@inertiajs/react';
 import { index } from '@/routes/admin/roles/index';
 
-// 1. Definisikan interface untuk tipe data Props dari Inertia
+
 interface PageProps {
-    flash: {
-        success?: string;
-        error?: string;
-    };
-    [key: string]: any; // Untuk props lain seperti 'auth', dll.
+    [key: string]: any; 
 }
 
 export default function Page() {
-    // 2. Gunakan interface tadi saat memanggil usePage
     const { props } = usePage<PageProps>();
-    const { flash } = props;
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -40,15 +30,13 @@ export default function Page() {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Pastikan path diawali dengan '/' agar menjadi absolut
         post('/admin/roles', {
             onSuccess: () => reset(),
         });
     };
 
     return (
-        <SidebarProvider>
-            <AppSidebar />
+        <AdminLayout>
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
                     <div className="flex items-center gap-2">
@@ -73,7 +61,6 @@ export default function Page() {
                     </div>
                 </header>
 
-                {/* 3. Menambahkan items-center & justify-center agar form di tengah */}
                 <div className="flex flex-1 items-center justify-center p-4">
                     <form
                         onSubmit={submit}
@@ -82,13 +69,6 @@ export default function Page() {
                         <h1 className="text-center text-2xl font-semibold">
                             Add Role
                         </h1>
-
-                        {/* 4. Gunakan Optional Chaining (?.) untuk menampilkan pesan sukses */}
-                        {flash?.success && (
-                            <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm font-medium text-green-600">
-                                {flash.success}
-                            </div>
-                        )}
 
                         <Field className="grid gap-2">
                             <FieldLabel htmlFor="name">Name</FieldLabel>
@@ -99,7 +79,6 @@ export default function Page() {
                                     setData('name', e.target.value)
                                 }
                                 placeholder="Enter role name"
-                                // 5. Beri warna merah pada border jika ada error validasi
                                 className={
                                     errors.name
                                         ? 'border-red-500 focus-visible:ring-red-500'
@@ -128,6 +107,6 @@ export default function Page() {
                     </form>
                 </div>
             </SidebarInset>
-        </SidebarProvider>
+        </AdminLayout>
     );
 }
