@@ -24,3 +24,78 @@ export type PageProps = {
     role: Role;
     user: User;
 };
+
+export type AdminItem = {
+    id: number;
+    user_id: number;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+    };
+};
+
+export type AdminPayload = {
+    id: number;
+    user_id: number;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+    };
+};
+
+export type LecturerPayload = {
+    id: number;
+    user_id: number;
+    nip: string;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+        address?: string | null;
+    };
+};
+
+
+export type LecturerItem = {
+    id: number;
+    user_id: number;
+    nip: string;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+        address?: string | null;
+    };
+};
+
+
+export type StudentPayload = {
+    id: number;
+    user_id: number;
+    nim: string;
+    gender?: string | null;
+    date_of_birth?: string | null;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+        address?: string | null;
+    };
+};
+
+
+export type StudentItem = {
+    id: number;
+    user_id: number;
+    nim: string;
+    gender?: string | null;
+    date_of_birth?: string | null;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+        address?: string | null;
+    };
+};

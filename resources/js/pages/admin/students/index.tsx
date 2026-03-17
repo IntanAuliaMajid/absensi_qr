@@ -21,20 +21,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { usePage, useForm, Link } from '@inertiajs/react';
 import { Trash2, Pencil } from 'lucide-react';
+import { StudentItem } from '@/types';
 
-type StudentItem = {
-    id: number;
-    user_id: number;
-    nim: string;
-    gender?: string | null;
-    date_of_birth?: string | null;
-    user: {
-        id: number;
-        name: string;
-        email: string;
-        address?: string | null;
-    };
-};
 
 export default function Page() {
     const { students } = usePage<{ students: StudentItem[] }>().props;

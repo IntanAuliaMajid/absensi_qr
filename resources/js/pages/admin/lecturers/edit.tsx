@@ -13,18 +13,8 @@ import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useForm, usePage } from '@inertiajs/react';
+import { LecturerPayload } from '@/types';
 
-type LecturerPayload = {
-    id: number;
-    user_id: number;
-    nip: string;
-    user: {
-        id: number;
-        name: string;
-        email: string;
-        address?: string | null;
-    };
-};
 
 export default function EditUserPage() {
     const { lecturer } = usePage<{ lecturer: LecturerPayload }>().props;

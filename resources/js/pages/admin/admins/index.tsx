@@ -21,16 +21,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { usePage, useForm, Link } from '@inertiajs/react';
 import { Trash2, Pencil } from 'lucide-react';
+import { AdminItem } from '@/types';
 
-type AdminItem = {
-    id: number;
-    user_id: number;
-    user: {
-        id: number;
-        name: string;
-        email: string;
-    };
-};
 
 export default function Page() {
     const { admins } = usePage<{ admins: AdminItem[] }>().props;

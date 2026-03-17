@@ -13,16 +13,8 @@ import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useForm, usePage } from '@inertiajs/react';
+import { AdminPayload } from '@/types';
 
-type AdminPayload = {
-    id: number;
-    user_id: number;
-    user: {
-        id: number;
-        name: string;
-        email: string;
-    };
-};
 
 export default function EditUserPage() {
     const { admin } = usePage<{ admin: AdminPayload }>().props;
