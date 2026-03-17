@@ -3,8 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use App\Http\Controllers\Web\Admin\AdminController;
+use App\Http\Controllers\Web\Admin\LecturerController;
 use App\Http\Controllers\Web\Admin\RoleController;
-use App\Http\Controllers\Web\Admin\UserController;
+use App\Http\Controllers\Web\Admin\StudentController;
 
 Route::get('/', function () {
     return Inertia::render('welcome', [
@@ -26,7 +28,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     })->name('dashboard');
 
     Route::resource('/roles', RoleController::class)->except(['show']);
-    Route::resource('/users', UserController::class)->except(['show']);
+    Route::resource('/students', StudentController::class)->except(['show']);
+    Route::resource('/lecturers', LecturerController::class)->except(['show']);
+    Route::resource('/admins', AdminController::class)->except(['show']);
 });
 
 require __DIR__ . '/settings.php';

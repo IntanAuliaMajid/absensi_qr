@@ -21,21 +21,26 @@ import {
 import { Button } from '@/components/ui/button';
 import { usePage, useForm, Link } from '@inertiajs/react';
 import { Trash2, Pencil } from 'lucide-react';
-import {
-    index,
-    create,
-    edit,
-    destroy as destroyRoute,
-} from '@/routes/admin/users';
-import { User } from '@/types';
+
+type LecturerItem = {
+    id: number;
+    user_id: number;
+    nip: string;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+        address?: string | null;
+    };
+};
 
 export default function Page() {
-    const { users } = usePage<{ users: User[] }>().props;
+    const { lecturers } = usePage<{ lecturers: LecturerItem[] }>().props;
 
     const { delete: destroy, processing } = useForm();
     const handleDelete = (id: number) => {
         if (confirm('Are you sure you want to delete this user?')) {
-            destroy(destroyRoute.url(id), {
+            destroy(`/admin/lecturers/${id}`, {
                 preserveScroll: true,
             });
         }
@@ -54,13 +59,15 @@ export default function Page() {
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href={index.url()}>
-                                        User
+                                    <BreadcrumbLink href="/admin/lecturers">
+                                        Lecturers
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block" />
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>All Users</BreadcrumbPage>
+                                    <BreadcrumbPage>
+                                        All lecturers
+                                    </BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
@@ -68,13 +75,15 @@ export default function Page() {
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                     <div className="flex justify-between">
-                        <h1 className="text-xl font-semibold">Manage Users</h1>
-                        <Link href={create.url()}>
+                        <h1 className="text-xl font-semibold">
+                            Manage lecturers
+                        </h1>
+                        <Link href="/admin/lecturers/create">
                             <Button className="w-auto">Tambah</Button>
                         </Link>
                     </div>
                     <Table>
-                        <TableCaption>A list of Users</TableCaption>
+                        <TableCaption>A list of lecturers</TableCaption>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
@@ -82,9 +91,9 @@ export default function Page() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {users.map((user, index) => (
-                                <TableRow key={user.id}>
-                                    <TableCell>{user.name}</TableCell>
+                            {lecturers.map((lecturer) => (
+                                <TableRow key={lecturer.id}>
+                                    <TableCell>{lecturer.user.name}</TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">
                                             <Button
@@ -93,7 +102,9 @@ export default function Page() {
                                                 size="sm"
                                                 disabled={processing}
                                             >
-                                                <Link href={edit.url(user.id)}>
+                                                <Link
+                                                    href={`/admin/lecturers/${lecturer.id}/edit`}
+                                                >
                                                     <Pencil className="mr-2 h-4 w-4" />
                                                     Edit
                                                 </Link>
@@ -103,7 +114,7 @@ export default function Page() {
                                                 size="sm"
                                                 disabled={processing}
                                                 onClick={() =>
-                                                    handleDelete(user.id)
+                                                    handleDelete(lecturer.id)
                                                 }
                                             >
                                                 <Trash2 className="mr-2 h-4 w-4" />

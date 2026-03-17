@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Carbon;
 use App\Notifications\ApiVerifyEmailNotification;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -27,10 +28,9 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        'type',
         'password',
         'address',
-        'gender',
-        'date_of_birth'
     ];
 
     /**
@@ -58,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
-    
+
     public function sendEmailVerificationNotification()
     {
         //cek request berupa api
@@ -82,5 +82,20 @@ class User extends Authenticatable implements MustVerifyEmail
     public function otps()
     {
         return $this->hasMany(Otp::class);
+    }
+
+    public function admin(): HasOne
+    {
+        return $this->hasOne(Admin::class);
+    }
+
+    public function lecturer(): HasOne
+    {
+        return $this->hasOne(Lecturer::class);
+    }
+
+    public function student(): HasOne
+    {
+        return $this->hasOne(Student::class);
     }
 }

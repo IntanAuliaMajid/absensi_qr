@@ -2,18 +2,13 @@
 
 import * as React from 'react';
 import {
-    AudioWaveform,
-    BookOpen,
-    Bot,
-    Command,
     Frame,
-    GalleryVerticalEnd,
+    GraduationCap,
+    Shield,
+    UserCog,
+    Users,
     Map,
     PieChart,
-    Settings2,
-    Shield,
-    SquareTerminal,
-    Users,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/admin/nav-main';
@@ -43,20 +38,56 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         navMain: [
             {
-                title: 'User',
-                url: '/admin/users',
-                icon: Users,
-                isActive: url.startsWith('/admin/users'),
+                title: 'Student',
+                url: '/admin/students',
+                icon: GraduationCap,
+                isActive: url.startsWith('/admin/students'),
                 items: [
                     {
-                        title: 'All User',
-                        url: '/admin/users',
-                        isActive: url === '/admin/users',
+                        title: 'All Students',
+                        url: '/admin/students',
+                        isActive: url === '/admin/students',
                     },
                     {
-                        title: 'Add User',
-                        url: '/admin/users/create',
-                        isActive: url === '/admin/users/create',
+                        title: 'Add Student',
+                        url: '/admin/students/create',
+                        isActive: url === '/admin/students/create',
+                    },
+                ],
+            },
+            {
+                title: 'Lecturer',
+                url: '/admin/lecturers',
+                icon: Users,
+                isActive: url.startsWith('/admin/lecturers'),
+                items: [
+                    {
+                        title: 'All Lecturers',
+                        url: '/admin/lecturers',
+                        isActive: url === '/admin/lecturers',
+                    },
+                    {
+                        title: 'Add Lecturer',
+                        url: '/admin/lecturers/create',
+                        isActive: url === '/admin/lecturers/create',
+                    },
+                ],
+            },
+            {
+                title: 'Admin',
+                url: '/admin/admins',
+                icon: UserCog,
+                isActive: url.startsWith('/admin/admins'),
+                items: [
+                    {
+                        title: 'All Admins',
+                        url: '/admin/admins',
+                        isActive: url === '/admin/admins',
+                    },
+                    {
+                        title: 'Add Admin',
+                        url: '/admin/admins/create',
+                        isActive: url === '/admin/admins/create',
                     },
                 ],
             },

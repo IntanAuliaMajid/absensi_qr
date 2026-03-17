@@ -9,29 +9,43 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useForm, usePage } from '@inertiajs/react';
-import { index } from '@/routes/admin/users';
 
-export default function Page() {
+type StudentPayload = {
+    id: number;
+    user_id: number;
+    nim: string;
+    gender?: string | null;
+    date_of_birth?: string | null;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+        address?: string | null;
+    };
+};
 
-    const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
-        email: '',
-        gender: '',
-        date_of_birth: '',
-        address: '',
+export default function EditUserPage() {
+    const { student } = usePage<{ student: StudentPayload }>().props;
+
+    const { data, setData, put, processing, errors } = useForm({
+        name: student.user.name,
+        email: student.user.email,
+        nim: student.nim ?? '',
+        gender: student.gender ?? '',
+        date_of_birth: student.date_of_birth ?? '',
+        address: student.user.address ?? '',
         password: '',
         password_confirmation: '',
     });
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/admin/users', {
-            onSuccess: () => reset(),
+        put(`/admin/students/${student.id}`, {
+            preserveScroll: true,
         });
     };
 
@@ -48,13 +62,15 @@ export default function Page() {
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href={index.url()}>
-                                        User
+                                    <BreadcrumbLink href="/admin/students">
+                                        Students
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block" />
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>Add User</BreadcrumbPage>
+                                    <BreadcrumbPage>
+                                        Edit Student
+                                    </BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
@@ -67,7 +83,7 @@ export default function Page() {
                         className="w-full max-w-md space-y-6"
                     >
                         <h1 className="text-center text-2xl font-semibold">
-                            Add User
+                            Edit Student
                         </h1>
 
                         <Field className="grid gap-2">
@@ -91,10 +107,6 @@ export default function Page() {
                                     {errors.name}
                                 </p>
                             )}
-
-                            <FieldDescription>
-                                Choose a unique name.
-                            </FieldDescription>
                         </Field>
 
                         <Field className="grid gap-2">
@@ -119,10 +131,27 @@ export default function Page() {
                                     {errors.email}
                                 </p>
                             )}
+                        </Field>
 
-                            <FieldDescription>
-                                Choose a unique email.
-                            </FieldDescription>
+                        <Field className="grid gap-2">
+                            <FieldLabel htmlFor="nim">NIM</FieldLabel>
+                            <Input
+                                id="nim"
+                                value={data.nim}
+                                onChange={(e) => setData('nim', e.target.value)}
+                                placeholder="Enter NIM"
+                                className={
+                                    errors.nim
+                                        ? 'border-red-500 focus-visible:ring-red-500'
+                                        : ''
+                                }
+                            />
+
+                            {errors.nim && (
+                                <p className="text-sm font-medium text-red-500">
+                                    {errors.nim}
+                                </p>
+                            )}
                         </Field>
 
                         <Field className="grid gap-2">
@@ -197,7 +226,9 @@ export default function Page() {
                         </Field>
 
                         <Field className="grid gap-2">
-                            <FieldLabel htmlFor="password">Password</FieldLabel>
+                            <FieldLabel htmlFor="password">
+                                New Password
+                            </FieldLabel>
                             <Input
                                 id="password"
                                 type="password"
@@ -205,7 +236,7 @@ export default function Page() {
                                 onChange={(e) =>
                                     setData('password', e.target.value)
                                 }
-                                placeholder="Enter Password"
+                                placeholder="Leave blank if unchanged"
                                 className={
                                     errors.password
                                         ? 'border-red-500 focus-visible:ring-red-500'
@@ -218,6 +249,10 @@ export default function Page() {
                                     {errors.password}
                                 </p>
                             )}
+
+                            <FieldDescription>
+                                Kosongkan jika tidak ingin mengganti password.
+                            </FieldDescription>
                         </Field>
 
                         <Field className="grid gap-2">
@@ -234,7 +269,7 @@ export default function Page() {
                                         e.target.value,
                                     )
                                 }
-                                placeholder="Enter Password Confirmation"
+                                placeholder="Repeat new password"
                                 className={
                                     errors.password_confirmation
                                         ? 'border-red-500 focus-visible:ring-red-500'
@@ -249,13 +284,23 @@ export default function Page() {
                             )}
                         </Field>
 
-                        <Button
-                            type="submit"
-                            className="w-full"
-                            disabled={processing}
-                        >
-                            {processing ? 'Saving...' : 'Save User'}
-                        </Button>
+                        <div className="flex gap-2">
+                            <Button
+                                type="submit"
+                                className="flex-1"
+                                disabled={processing}
+                            >
+                                {processing ? 'Saving...' : 'Update Student'}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="flex-1"
+                                onClick={() => window.history.back()}
+                            >
+                                Cancel
+                            </Button>
+                        </div>
                     </form>
                 </div>
             </SidebarInset>

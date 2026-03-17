@@ -42,21 +42,16 @@ class EmailVerificationController extends Controller
             ], 400);
         }
 
-        // tandai user sudah verifikasi
         $user->markEmailAsVerified();
 
-        // tandai otp sudah digunakan jam saat ini
         $otp->used_at = Carbon::now();
         $otp->save();
 
-
-        // menambahkan log verifikasi sukses
         Log::info('Email verified successfully', [
             'user_id' => $user->id,
             'email' => $user->email,
         ]);
 
-        // mengirim respon json bahwa email berhasil diverifikasi dan mengirimkan data user dan token
         return response()->json([
             'message' => 'Email verified successfully',
             'user' => new UserResource($user),
@@ -67,26 +62,21 @@ class EmailVerificationController extends Controller
     {
         $user = $request->user();
 
-        // cek apakah user sudah pernah di verifikasi
         if ($user->hasVerifiedEmail()) {
             return response()->json([
                 'message' => 'Email already verified'
             ], 400);
         }
 
-        // menghapus otp lama
         $user->otps()->where('type', 'email_verification')->whereNull('used_at')->delete();
 
-        // mengirim otp ulang
         $user->sendEmailVerificationNotification();
 
-        // menambahkan log info email verifikasi otp dikrim
         Log::info('Email verification OTP resent', [
             'user_id' => $user->id,
             'email' => $user->email,
         ]);
 
-        // response json untuk pesan otp telah dikirim melalui email
         return response()->json([
             'message' => 'OTP code has been sent to your email'
         ]);

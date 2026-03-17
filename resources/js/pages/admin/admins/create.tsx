@@ -9,30 +9,24 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useForm, usePage } from '@inertiajs/react';
-import { index } from '@/routes/admin/users';
-import { PageProps, User } from '@/types';
+import { useForm } from '@inertiajs/react';
 
-export default function EditUserPage() {
-    const { user } = usePage<PageProps & { role: User }>().props;
-
-    const { data, setData, put, processing, errors } = useForm({
-        name: user.name,
-        email: user.email,
-        gender: user.gender ?? '',
-        date_of_birth: user.date_of_birth ?? '',
-        address: user.address ?? '',
+export default function Page() {
+    const { data, setData, post, processing, errors, reset } = useForm({
+        name: '',
+        email: '',
         password: '',
         password_confirmation: '',
     });
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/admin/users/${user.id}`, {
-            preserveScroll: true,
+        post('/admin/admins', {
+            onSuccess: () => reset(),
         });
     };
 
@@ -49,13 +43,13 @@ export default function EditUserPage() {
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href={index.url()}>
-                                        User
+                                    <BreadcrumbLink href="/admin/admins">
+                                        Admins
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block" />
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>Edit User</BreadcrumbPage>
+                                    <BreadcrumbPage>Add Admin</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
@@ -68,7 +62,7 @@ export default function EditUserPage() {
                         className="w-full max-w-md space-y-6"
                     >
                         <h1 className="text-center text-2xl font-semibold">
-                            Edit User
+                            Add Admin
                         </h1>
 
                         <Field className="grid gap-2">
@@ -92,6 +86,10 @@ export default function EditUserPage() {
                                     {errors.name}
                                 </p>
                             )}
+
+                            <FieldDescription>
+                                Choose a unique name.
+                            </FieldDescription>
                         </Field>
 
                         <Field className="grid gap-2">
@@ -116,83 +114,14 @@ export default function EditUserPage() {
                                     {errors.email}
                                 </p>
                             )}
+
+                            <FieldDescription>
+                                Choose a unique email.
+                            </FieldDescription>
                         </Field>
 
                         <Field className="grid gap-2">
-                            <FieldLabel htmlFor="gender">Gender</FieldLabel>
-                            <Input
-                                id="gender"
-                                value={data.gender}
-                                onChange={(e) =>
-                                    setData('gender', e.target.value)
-                                }
-                                placeholder="Male, Female, etc."
-                                className={
-                                    errors.gender
-                                        ? 'border-red-500 focus-visible:ring-red-500'
-                                        : ''
-                                }
-                            />
-
-                            {errors.gender && (
-                                <p className="text-sm font-medium text-red-500">
-                                    {errors.gender}
-                                </p>
-                            )}
-                        </Field>
-
-                        <Field className="grid gap-2">
-                            <FieldLabel htmlFor="date_of_birth">
-                                Date of Birth
-                            </FieldLabel>
-                            <Input
-                                id="date_of_birth"
-                                type="date"
-                                value={data.date_of_birth}
-                                onChange={(e) =>
-                                    setData('date_of_birth', e.target.value)
-                                }
-                                className={
-                                    errors.date_of_birth
-                                        ? 'border-red-500 focus-visible:ring-red-500'
-                                        : ''
-                                }
-                            />
-
-                            {errors.date_of_birth && (
-                                <p className="text-sm font-medium text-red-500">
-                                    {errors.date_of_birth}
-                                </p>
-                            )}
-                        </Field>
-
-                        <Field className="grid gap-2">
-                            <FieldLabel htmlFor="address">Address</FieldLabel>
-                            <Input
-                                id="address"
-                                value={data.address}
-                                onChange={(e) =>
-                                    setData('address', e.target.value)
-                                }
-                                placeholder="Enter Address"
-                                className={
-                                    errors.address
-                                        ? 'border-red-500 focus-visible:ring-red-500'
-                                        : ''
-                                }
-                            />
-
-                            {errors.address && (
-                                <p className="text-sm font-medium text-red-500">
-                                    {errors.address}
-                                </p>
-                            )}
-                        </Field>
-
-                        <Field className="grid gap-2">
-                            <FieldLabel htmlFor="password">
-                                New Password
-                            </FieldLabel>
+                            <FieldLabel htmlFor="password">Password</FieldLabel>
                             <Input
                                 id="password"
                                 type="password"
@@ -200,7 +129,7 @@ export default function EditUserPage() {
                                 onChange={(e) =>
                                     setData('password', e.target.value)
                                 }
-                                placeholder="Leave blank if unchanged"
+                                placeholder="Enter Password"
                                 className={
                                     errors.password
                                         ? 'border-red-500 focus-visible:ring-red-500'
@@ -213,10 +142,6 @@ export default function EditUserPage() {
                                     {errors.password}
                                 </p>
                             )}
-
-                            <FieldDescription>
-                                Kosongkan jika tidak ingin mengganti password.
-                            </FieldDescription>
                         </Field>
 
                         <Field className="grid gap-2">
@@ -233,7 +158,7 @@ export default function EditUserPage() {
                                         e.target.value,
                                     )
                                 }
-                                placeholder="Repeat new password"
+                                placeholder="Enter Password Confirmation"
                                 className={
                                     errors.password_confirmation
                                         ? 'border-red-500 focus-visible:ring-red-500'
@@ -248,23 +173,13 @@ export default function EditUserPage() {
                             )}
                         </Field>
 
-                        <div className="flex gap-2">
-                            <Button
-                                type="submit"
-                                className="flex-1"
-                                disabled={processing}
-                            >
-                                {processing ? 'Saving...' : 'Update User'}
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                className="flex-1"
-                                onClick={() => window.history.back()}
-                            >
-                                Cancel
-                            </Button>
-                        </div>
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={processing}
+                        >
+                            {processing ? 'Saving...' : 'Save Admin'}
+                        </Button>
                     </form>
                 </div>
             </SidebarInset>
