@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -10,43 +12,53 @@ class RoleHasPermission extends Seeder
 {
     public function run(): void
     {
-        // BUAT PERMISSION
         $permissions = [
             'manage_system',
-            'kelola_kelas',
-            'kelola_pertemuan',
-            'kelola_absensi',
+            'manage_classes',
+            'manage_meetings',
+            'manage_attendance',
             'scan_qr',
-            'lihat_absensi',
-            'lihat_absensi_sendiri',
+            'view_attendance',
+            'view_own_attendance',
         ];
 
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }
 
-        // BUAT ROLE
         $admin = Role::create(['name' => 'admin']);
-        $dosen = Role::create(['name' => 'dosen']);
-        $mahasiswa = Role::create(['name' => 'mahasiswa']);
+        $lecturer = Role::create(['name' => 'lecturer']);
+        $student = Role::create(['name' => 'student']);
 
-        // BERIKAN PERMISSION KE ROLE
 
-        // Admin bisa semua
         $admin->givePermissionTo(Permission::all());
 
-        // Dosen
-        $dosen->givePermissionTo([
-            'kelola_kelas',
-            'kelola_pertemuan',
-            'kelola_absensi',
-            'lihat_absensi',
+        $lecturer->givePermissionTo([
+            'manage_classes',
+            'manage_meetings',
+            'manage_attendance',
+            'view_attendance',
         ]);
 
-        // Mahasiswa
-        $mahasiswa->givePermissionTo([
+        $student->givePermissionTo([
             'scan_qr',
-            'lihat_absensi_sendiri',
+            'view_own_attendance',
+        ]);
+
+
+        $user = User::firstOrCreate([
+            'name' => 'Intan Aulia Majid',
+            'email' => 'intanadmin@gmail.com',
+            'password' => 'intannn1',
+            'email_verified_at' => now()
+        ]);
+
+        $user->assignRole('admin');
+        $user->type = 'admin';
+        $user->save();
+
+        Admin::firstOrCreate([
+            'user_id' => $user->id,
         ]);
     }
 }

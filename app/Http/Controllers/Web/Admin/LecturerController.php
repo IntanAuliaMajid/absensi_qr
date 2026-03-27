@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
+
 
 class LecturerController extends Controller
 {
@@ -35,18 +37,20 @@ class LecturerController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'address' => $validated['address'] ?? null,
-            'password' => $validated['password'],
-            'type' => 'lecturer',
-        ]);
+        DB::transaction(function () use ($validated) {
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'address' => $validated['address'] ?? null,
+                'password' => $validated['password'],
+                'type' => 'lecturer',
+            ]);
 
-        Lecturer::create([
-            'user_id' => $user->id,
-            'nip' => $validated['nip'],
-        ]);
+            Lecturer::create([
+                'user_id' => $user->id,
+                'nip' => $validated['nip'],
+            ]);
+        });
 
         return Redirect::route('admin.lecturers.index')->with('success', 'Lecturer has been successfully added!');
     }

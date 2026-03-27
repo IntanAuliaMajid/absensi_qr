@@ -7,6 +7,18 @@ export type Role = {
     name: string;
 };
 
+export type Faculty = {
+    id: number;
+    name: string;
+}
+
+export type StudyProgram = {
+    id: number;
+    name: string;
+    faculty_id: number;
+    faculty?: Faculty;
+}
+
 export type User = {
     id: number;
     name: string;
@@ -23,6 +35,8 @@ export type User = {
 export type PageProps = {
     role: Role;
     user: User;
+    faculty: Faculty;
+    studyProgram: StudyProgram;
 };
 
 export type AdminItem = {

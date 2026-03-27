@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -37,20 +38,22 @@ class StudentController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'address' => $validated['address'] ?? null,
-            'password' => $validated['password'],
-            'type' => 'student',
-        ]);
+        DB::transaction(function () use ($validated) {
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'address' => $validated['address'] ?? null,
+                'password' => $validated['password'],
+                'type' => 'student',
+            ]);
 
-        Student::create([
-            'user_id' => $user->id,
-            'nim' => $validated['nim'],
-            'gender' => $validated['gender'] ?? null,
-            'date_of_birth' => $validated['date_of_birth'] ?? null,
-        ]);
+            Student::create([
+                'user_id' => $user->id,
+                'nim' => $validated['nim'],
+                'gender' => $validated['gender'] ?? null,
+                'date_of_birth' => $validated['date_of_birth'] ?? null,
+            ]);
+        });
 
         return Redirect::route('admin.students.index')->with('success', 'Student has been successfully added!');
     }

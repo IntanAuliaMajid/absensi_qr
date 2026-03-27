@@ -9,6 +9,7 @@ import {
     Users,
     Map,
     PieChart,
+    Book,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/admin/nav-main';
@@ -106,6 +107,42 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         title: 'Add Roles',
                         url: '/admin/roles/create',
                         isActive: url === '/admin/roles/create',
+                    },
+                ],
+            },
+            {
+                title: 'Faculty',
+                url: '/admin/faculties',
+                icon: Book,
+                isActive: url.startsWith('/admin/faculties'),
+                items: [
+                    {
+                        title: 'All Faculties',
+                        url: '/admin/faculties',
+                        isActive: url === '/admin/faculties',
+                    },
+                    {
+                        title: 'Add Faculty',
+                        url: '/admin/faculties/create',
+                        isActive: url === '/admin/faculties/create',
+                    },
+                ],
+            },
+            {
+                title: 'Study Program',
+                url: '/admin/study-programs',
+                icon: Shield,
+                isActive: url.startsWith('/admin/study-programs'),
+                items: [
+                    {
+                        title: 'All Study Programs',
+                        url: '/admin/study-programs',
+                        isActive: url === '/admin/study-programs',
+                    },
+                    {
+                        title: 'Add Study Programs',
+                        url: '/admin/study-programs/create',
+                        isActive: url === '/admin/study-programs/create',
                     },
                 ],
             },

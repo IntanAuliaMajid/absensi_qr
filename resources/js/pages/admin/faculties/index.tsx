@@ -21,15 +21,22 @@ import {
 import { Button } from '@/components/ui/button';
 import { usePage, useForm, Link } from '@inertiajs/react';
 import { Trash2, Pencil } from 'lucide-react';
-import { StudentItem } from '@/types';
+import {
+    index,
+    create,
+    edit,
+    destroy as destroyRoute,
+} from '@/routes/admin/faculties';
+import { Faculty } from '@/types';
 
 export default function Page() {
-    const { students } = usePage<{ students: StudentItem[] }>().props;
+    const { faculties } = usePage<{ faculties: Faculty[] }>().props;
 
     const { delete: destroy, processing } = useForm();
+
     const handleDelete = (id: number) => {
-        if (confirm('Are you sure you want to delete this student?')) {
-            destroy(`/admin/students/${id}`, {
+        if (confirm('Are you sure you want to delete this role?')) {
+            destroy(destroyRoute.url(id), {
                 preserveScroll: true,
             });
         }
@@ -48,15 +55,13 @@ export default function Page() {
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="/admin/students">
-                                        Students
+                                    <BreadcrumbLink href={index.url()}>
+                                        Faculty
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block" />
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>
-                                        All students
-                                    </BreadcrumbPage>
+                                    <BreadcrumbPage>All Faculty</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
@@ -65,24 +70,24 @@ export default function Page() {
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                     <div className="flex justify-between">
                         <h1 className="text-xl font-semibold">
-                            Manage students
+                            Manage Faculty
                         </h1>
-                        <Link href="/admin/students/create">
-                            <Button className="w-auto">Tambah</Button>
+                        <Link href={create.url()}>
+                            <Button className="w-auto">Add</Button>
                         </Link>
                     </div>
                     <Table>
-                        <TableCaption>A list of students</TableCaption>
+                        <TableCaption>A list of Faculty</TableCaption>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Aksi</TableHead>
+                                <TableHead>Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {students.map((student) => (
-                                <TableRow key={student.id}>
-                                    <TableCell>{student.user.name}</TableCell>
+                            {faculties.map((faculty, index) => (
+                                <TableRow key={faculty.id}>
+                                    <TableCell>{faculty.name}</TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">
                                             <Button
@@ -92,7 +97,7 @@ export default function Page() {
                                                 disabled={processing}
                                             >
                                                 <Link
-                                                    href={`/admin/students/${student.id}/edit`}
+                                                    href={edit.url(faculty.id)}
                                                 >
                                                     <Pencil className="mr-2 h-4 w-4" />
                                                     Edit
@@ -103,7 +108,7 @@ export default function Page() {
                                                 size="sm"
                                                 disabled={processing}
                                                 onClick={() =>
-                                                    handleDelete(student.id)
+                                                    handleDelete(faculty.id)
                                                 }
                                             >
                                                 <Trash2 className="mr-2 h-4 w-4" />
