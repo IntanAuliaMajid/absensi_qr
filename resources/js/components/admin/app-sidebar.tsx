@@ -10,12 +10,12 @@ import {
     Map,
     PieChart,
     Book,
+    BookOpen,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/admin/nav-main';
 import { NavProjects } from '@/components/admin/nav-projects';
 import { NavUser } from '@/components/admin/nav-user';
-import { TeamSwitcher } from '@/components/admin/team-switcher';
 import {
     Sidebar,
     SidebarContent,
@@ -131,7 +131,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {
                 title: 'Study Program',
                 url: '/admin/study-programs',
-                icon: Shield,
+                icon: BookOpen,
                 isActive: url.startsWith('/admin/study-programs'),
                 items: [
                     {

@@ -29,7 +29,7 @@ class StudyProgramController extends Controller
     public function create()
     {
         return Inertia::render('admin/study-programs/create', [
-            'faculties' => Faculty::class,
+            'faculties' => Faculty::all(),
         ]);
     }
 

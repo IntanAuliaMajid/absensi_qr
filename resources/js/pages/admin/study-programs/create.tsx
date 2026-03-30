@@ -13,12 +13,26 @@ import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import { index } from '@/routes/admin/study-programs/index';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Faculty } from '@/types';
 
 export default function Page() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { faculties } = usePage<{ faculties: Faculty[] }>().props;
+
+    const { data, setData, post, processing, errors } = useForm<{
+        name: string;
+        faculty_id: number | null;
+    }>({
         name: '',
+        faculty_id: null,
     });
 
     const submit = (e: React.FormEvent) => {
@@ -45,7 +59,9 @@ export default function Page() {
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block" />
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>Add Study Program</BreadcrumbPage>
+                                    <BreadcrumbPage>
+                                        Add Study Program
+                                    </BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
@@ -69,7 +85,7 @@ export default function Page() {
                                 onChange={(e) =>
                                     setData('name', e.target.value)
                                 }
-                                placeholder="Enter role name"
+                                placeholder="Enter study program name"
                                 className={
                                     errors.name
                                         ? 'border-red-500 focus-visible:ring-red-500'
@@ -86,6 +102,38 @@ export default function Page() {
                             <FieldDescription>
                                 Choose a unique study program name.
                             </FieldDescription>
+                        </Field>
+
+                        <Field className="grid gap-2">
+                            <FieldLabel htmlFor="faculty_id">
+                                Faculty
+                            </FieldLabel>
+                            <Select
+                                value={data.faculty_id?.toString()}
+                                onValueChange={(value) =>
+                                    setData('faculty_id', parseInt(value))
+                                }
+                            >
+                                <SelectTrigger
+                                    className={
+                                        errors.faculty_id
+                                            ? 'border-red-500'
+                                            : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select a faculty" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {faculties.map((faculty) => (
+                                        <SelectItem
+                                            key={faculty.id}
+                                            value={faculty.id.toString()}
+                                        >
+                                            {faculty.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </Field>
 
                         <Button
