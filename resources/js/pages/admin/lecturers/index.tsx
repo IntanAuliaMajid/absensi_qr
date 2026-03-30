@@ -66,10 +66,10 @@ export default function Page() {
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                     <div className="flex justify-between">
                         <h1 className="text-xl font-semibold">
-                            Manage lecturers
+                            Manage Lecturers
                         </h1>
                         <Link href="/admin/lecturers/create">
-                            <Button className="w-auto">Tambah</Button>
+                            <Button className="w-auto">Add</Button>
                         </Link>
                     </div>
                     <Table>
@@ -77,7 +77,7 @@ export default function Page() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Aksi</TableHead>
+                                <TableHead>Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>

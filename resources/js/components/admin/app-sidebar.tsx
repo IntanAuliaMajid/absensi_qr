@@ -2,19 +2,15 @@
 
 import * as React from 'react';
 import {
-    Frame,
     GraduationCap,
     Shield,
     UserCog,
     Users,
-    Map,
-    PieChart,
     Book,
     BookOpen,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/admin/nav-main';
-import { NavProjects } from '@/components/admin/nav-projects';
 import { NavUser } from '@/components/admin/nav-user';
 import {
     Sidebar,
@@ -27,13 +23,12 @@ import { usePage } from '@inertiajs/react';
 import AppLogoIcon from '@/components/user/app-logo-icon';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    const { url } = usePage();
-
-    // This is sample data.
+    const { url,props: pageProps } = usePage();
+    const user = pageProps.auth?.user;
     const data = {
         user: {
-            name: 'shadcn',
-            email: 'm@example.com',
+            name: user.name,
+            email: user.email,
             avatar: '/avatars/shadcn.jpg',
         },
 
@@ -147,23 +142,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 ],
             },
         ],
-        projects: [
-            {
-                name: 'Design Engineering',
-                url: '#',
-                icon: Frame,
-            },
-            {
-                name: 'Sales & Marketing',
-                url: '#',
-                icon: PieChart,
-            },
-            {
-                name: 'Travel',
-                url: '#',
-                icon: Map,
-            },
-        ],
     };
 
     return (
@@ -176,7 +154,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={data.navMain} />
-                <NavProjects projects={data.projects} />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={data.user} />
