@@ -8,6 +8,7 @@ import {
     Users,
     Book,
     BookOpen,
+    PieChart,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/admin/nav-main';
@@ -21,9 +22,10 @@ import {
 } from '@/components/ui/sidebar';
 import { usePage } from '@inertiajs/react';
 import AppLogoIcon from '@/components/user/app-logo-icon';
+import { Nav } from './nav';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    const { url,props: pageProps } = usePage();
+    const { url, props: pageProps } = usePage();
     const user = pageProps.auth?.user;
     const data = {
         user: {
@@ -31,6 +33,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             email: user.email,
             avatar: '/avatars/shadcn.jpg',
         },
+
+        nav: [
+            {
+                title: 'Dashboard',
+                url: '/admin/dashboard',
+                icon: PieChart,
+                isActive: url.startsWith('/admin/dashboard'),
+            },
+        ],
 
         navMain: [
             {
@@ -152,6 +163,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <span className="font-semibold">Absensi</span>
                 </div>
             </SidebarHeader>
+            <Nav items={data.nav}></Nav>
             <SidebarContent>
                 <NavMain items={data.navMain} />
             </SidebarContent>
