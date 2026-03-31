@@ -29,7 +29,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('dashboard', function () {
         return Inertia::render('admin/dashboard');
     })->name('dashboard');
-
     Route::resource('/roles', RoleController::class)->except(['show']);
     Route::resource('/students', StudentController::class)->except(['show']);
     Route::resource('/lecturers', LecturerController::class)->except(['show']);
