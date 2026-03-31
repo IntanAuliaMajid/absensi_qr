@@ -13,13 +13,16 @@ class RoleHasPermission extends Seeder
     public function run(): void
     {
         $permissions = [
+            'manage_roles',
             'manage_system',
             'manage_classes',
             'manage_meetings',
             'manage_attendance',
-            'scan_qr',
-            'view_attendance',
-            'view_own_attendance',
+            'manage_faculties',
+            'manage_study_programs',
+            'manage_lecturers',
+            'manage_admins',
+            'manage_students'
         ];
 
         foreach ($permissions as $permission) {
@@ -32,19 +35,6 @@ class RoleHasPermission extends Seeder
 
 
         $admin->givePermissionTo(Permission::all());
-
-        $lecturer->givePermissionTo([
-            'manage_classes',
-            'manage_meetings',
-            'manage_attendance',
-            'view_attendance',
-        ]);
-
-        $student->givePermissionTo([
-            'scan_qr',
-            'view_own_attendance',
-        ]);
-
 
         $user = User::firstOrCreate([
             'name' => 'Intan Aulia Majid',
