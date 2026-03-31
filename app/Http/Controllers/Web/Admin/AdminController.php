@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -33,18 +34,20 @@ class AdminController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $validated['password'],
-            'type' => 'admin',
-        ]);
+        DB::transaction(function () use ($validated) {
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => $validated['password'],
+                'type' => 'admin',
+            ]);
 
-        Admin::create([
-            'user_id' => $user->id,
-        ]);
+            Admin::create([
+                'user_id' => $user->id,
+            ]);
+        });
 
-        return Redirect::route('admin.admins.index');
+        return Redirect::route('admin.admins.index')->with('success', 'Admin Successfully Created!');;
     }
 
     public function edit(Admin $admin)
@@ -58,32 +61,38 @@ class AdminController extends Controller
 
     public function update(Request $request, Admin $admin)
     {
-        $admin->load('user');
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $admin->user_id,
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        $user = $admin->user;
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
+        DB::transaction(function () use ($validated, $admin) {
+            $user = $admin->user;
+            $user->name = $validated['name'];
+            $user->email = $validated['email'];
 
-        if (! empty($validated['password'])) {
-            $user->password = $validated['password'];
-        }
+            if (!empty($validated['password'])) {
+                $user->password = $validated['password'];
+            }
 
-        $user->save();
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
+            }
 
-        return Redirect::route('admin.admins.index')->with('success', 'Admin berhasil diupdate!');
+            $user->save();
+        });
+
+        return Redirect::route('admin.admins.index')->with('success', 'Admin Successfully Updated!');
     }
 
     public function destroy(Admin $admin)
     {
-        $admin->load('user');
-        $admin->user->delete();
+        DB::transaction(function () use ($admin) {
+            $admin->delete();
+            $admin->user->delete();
+        });
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Admin Successfully Deleted!');
     }
 }

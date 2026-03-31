@@ -81,29 +81,40 @@ class StudentController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        $user = $student->user;
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->address = $validated['address'] ?? null;
+        DB::transaction(function () use ($validated, $student) {
+            $user = $student->user;
 
-        if (! empty($validated['password'])) {
-            $user->password = $validated['password'];
-        }
+            $user->fill([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+            ]);
 
-        $user->save();
+            if (!empty($validated['password'])) {
+                $user['password'] = $validated['password'];
+            }
 
-        $student->nim = $validated['nim'];
-        $student->gender = $validated['gender'] ?? null;
-        $student->date_of_birth = $validated['date_of_birth'] ?? null;
-        $student->save();
+            if ($student->user->isDirty('email')) {
+                $student->user->email_verified_at = null;
+            }
+
+            $user->save();
+
+            $student->update([
+                'gender' => $validated['gender'],
+                'date_of_birth' => $validated['date_of_birth'],
+                'address' => $validated['address'],
+            ]);
+        });
 
         return Redirect::route('admin.students.index')->with('success', 'Student successfully updated!');
     }
 
     public function destroy(Student $student)
     {
-        $student->load('user');
-        $student->user->delete();
+        DB::transaction(function () use ($student) {
+            $student->delete();
+            $student->user->delete();
+        });
 
         return redirect()->back()->with('success', 'Student deleted successfully!');
     }

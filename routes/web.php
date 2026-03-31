@@ -25,16 +25,18 @@ Route::get('matakuliah', function () {
     return Inertia::render('matakuliah');
 })->middleware(['auth', 'verified'])->name('matakuliah');
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'can:manage_system'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('admin/dashboard');
     })->name('dashboard');
-    Route::resource('/roles', RoleController::class)->except(['show']);
-    Route::resource('/students', StudentController::class)->except(['show']);
-    Route::resource('/lecturers', LecturerController::class)->except(['show']);
-    Route::resource('/admins', AdminController::class)->except(['show']);
-    Route::resource('/faculties', FacultyController::class)->except(['show']);
-    Route::resource('/study-programs', StudyProgramController::class)->except(['show']);
+
+    Route::resource('/roles', RoleController::class)->middleware('can:manage_roles')->except(['show']);
+    Route::resource('/students', StudentController::class)->middleware('can:manage_students')->except(['show']);
+    Route::resource('/lecturers', LecturerController::class)->middleware('can:manage_lecturers')->except(['show']);
+    Route::resource('/admins', AdminController::class)->middleware('can:manage_admins')->except(['show']);
+    Route::resource('/faculties', FacultyController::class)->middleware('can:manage_faculties')->except(['show']);
+    Route::resource('/study-programs', StudyProgramController::class)->middleware('can:manage_study_programs')->except(['show']);
+
 });
 
 require __DIR__ . '/settings.php';
