@@ -1,7 +1,8 @@
 import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/student-layout';
 import type { BreadcrumbItem } from '@/types';
-import { dashboard } from '@/routes';
+import student from '@/routes/student';
+
 import {
     CalendarCheck,
     ClipboardList,
@@ -25,7 +26,7 @@ import {
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard().url,
+        href: '/student/dashboard',
     },
 ];
 
@@ -133,8 +134,8 @@ export default function Dashboard() {
                                 </h2>
                             </div>
                         </div>
-                        <div className="h-[300px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
+                        <div className="h-[300px] w-full overflow-hidden">
+                            <ResponsiveContainer width="100%" height={300}>
                                 <BarChart
                                     data={chartData}
                                     margin={{

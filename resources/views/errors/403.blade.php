@@ -156,7 +156,7 @@
     $dashboardRoute = match ($user?->type) {
     'admin' => route('admin.dashboard'),
     'lecturer' => route('lecturer.dashboard'),
-    'student' => route('dashboard'),
+    'student' => route('student.dashboard'),
     default => route('login'),
     };
 

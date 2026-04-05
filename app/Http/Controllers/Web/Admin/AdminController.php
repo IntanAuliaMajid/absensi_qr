@@ -76,10 +76,6 @@ class AdminController extends Controller
                 $user->password = $validated['password'];
             }
 
-            if ($user->isDirty('email')) {
-                $user->email_verified_at = null;
-            }
-
             $user->save();
         });
 

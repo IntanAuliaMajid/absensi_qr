@@ -15,6 +15,10 @@ class LoginResponse implements LoginResponseContract
             return redirect()->route('admin.dashboard');
         }
 
-        return redirect()->route('dashboard');
+        if ($user->type == 'lecturer') {
+            return redirect()->route('lecturer.dashboard');
+        }
+
+        return redirect()->route('student.dashboard');
     }
 }

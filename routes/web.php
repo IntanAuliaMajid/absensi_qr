@@ -13,6 +13,7 @@ use App\Http\Controllers\Web\Admin\StudyProgramController;
 use App\Http\Controllers\Web\EmailChangeVerificationController;
 use App\Http\Middleware\LecturerMiddleware;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\StudentMiddleware;
 
 
 Route::get('/', function () {
@@ -25,19 +26,18 @@ Route::get('/email/change/verify/{user}/{hash}', EmailChangeVerificationControll
     ->middleware('signed')
     ->name('email.change.verify');
 
-Route::get('dashboard', function () {
-    $user = Auth::user();
 
-    if (! $user) {
-        return redirect()->route('login');
-    }
+Route::middleware(['auth', StudentMiddleware::class])->prefix('student')->name('student.')->group(function () {
+    Route::get('dashboard', function () {
+        return Inertia::render('student/dashboard');
+    })->name('dashboard');
 
-    return match ($user->type) {
-        'admin' => redirect()->route('admin.dashboard'),
-        'lecturer' => redirect()->route('lecturer.dashboard'),
-        default => Inertia::render('student/dashboard'),
-    };
-})->middleware(['auth', 'verified'])->name('dashboard');
+
+    Route::get('matakuliah', function () {
+        return Inertia::render('student/matakuliah');
+    })->name('matakuliah');
+
+});
 
 
 Route::middleware(['auth', LecturerMiddleware::class])->prefix('lecturer')->name('lecturer.')->group(function () {
@@ -45,10 +45,6 @@ Route::middleware(['auth', LecturerMiddleware::class])->prefix('lecturer')->name
         return Inertia::render('lecturer/dashboard');
     })->name('dashboard');
 });
-
-Route::get('matakuliah', function () {
-    return Inertia::render('matakuliah');
-})->middleware(['auth', 'verified'])->name('matakuliah');
 
 Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', function () {

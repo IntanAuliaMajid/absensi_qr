@@ -4,9 +4,9 @@ import type { AppLayoutProps } from '@/types';
 
 export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => (
     <>
+        <RealtimeEmailChangedListener />
         <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
             {children}
         </AppLayoutTemplate>
-        <RealtimeEmailChangedListener />
     </>
 );

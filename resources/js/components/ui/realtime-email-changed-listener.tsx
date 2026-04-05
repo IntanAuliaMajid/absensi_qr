@@ -7,13 +7,16 @@ type EmailChangedPayload = {
 };
 
 export default function RealtimeEmailChangedListener() {
+    const page = usePage();
+    console.log(page.props);
+
     const {
         auth: { user },
     } = usePage<{ auth: { user: { id: number } } }>().props;
 
     useEcho(
         `user.${user.id}`,
-        '.EmailChanged',
+        'EmailChanged',
         (payload: EmailChangedPayload) => {
             toast.info(
                 payload.message ?? 'Email kamu telah diubah oleh admin.',

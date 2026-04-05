@@ -1,7 +1,7 @@
 import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/student-layout';
 import type { BreadcrumbItem } from '@/types';
-import { dashboard } from '@/routes';
+import { dashboard } from '@/routes/lecturer';
 import {
     CalendarCheck,
     ClipboardList,
@@ -133,8 +133,8 @@ export default function Dashboard() {
                                 </h2>
                             </div>
                         </div>
-                        <div className="h-[300px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
+                        <div className="h-[300px] w-full overflow-hidden">
+                            <ResponsiveContainer width="100%" height={300}>
                                 <BarChart
                                     data={chartData}
                                     margin={{

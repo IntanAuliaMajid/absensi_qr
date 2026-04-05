@@ -1,10 +1,27 @@
 import { Link } from '@inertiajs/react';
 import AppLogoIcon from '@/components/student/app-logo-icon';
 import { Button } from '@/components/ui/button';
-import { dashboard, login, register } from '@/routes';
+import { login, register } from '@/routes';
+import student from '@/routes/student';
+import admin from '@/routes/admin';
+import lecturer from '@/routes/lecturer';
+
 import type { WelcomeProps } from '@/components/welcome/types';
 
 export default function WelcomeNavbar({ auth, canRegister }: WelcomeProps) {
+    const getDashboardHref = () => {
+        if (!auth.user) return null;
+        
+        if (auth.user.type === 'admin') {
+            return admin.dashboard().url;
+        } else if (auth.user.type === 'lecturer') {
+            return lecturer.dashboard().url;
+        }
+        return student.dashboard().url;
+    };
+
+    const dashboardHref = getDashboardHref();
+
     return (
         <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-gray-100 bg-white/80 px-8 py-3 backdrop-blur-md">
             <div className="flex items-center gap-3">
@@ -20,7 +37,7 @@ export default function WelcomeNavbar({ auth, canRegister }: WelcomeProps) {
             </div>
             <div className="flex items-center gap-4">
                 {auth.user ? (
-                    <Link href={dashboard().url}>
+                    <Link href={dashboardHref || '/'}>
                         <Button className="rounded-full bg-blue-800 px-6 text-white hover:bg-blue-600 dark:bg-white dark:text-black dark:hover:bg-slate-200">
                             Dashboard
                         </Button>
