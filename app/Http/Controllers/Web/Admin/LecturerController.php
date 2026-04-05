@@ -76,27 +76,35 @@ class LecturerController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        $user = $lecturer->user;
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->address = $validated['address'] ?? null;
+        DB::transaction(function () use ($validated, $request, $lecturer) {
+            $user = $lecturer->user;
+            $user->name = $validated['name'];
+            $user->email = $validated['email'];
+            $user->address = $validated['address'] ?? null;
 
-        if (! empty($validated['password'])) {
-            $user->password = $validated['password'];
-        }
+            if (! empty($validated['password'])) {
+                $user->password = $validated['password'];
+            }
 
-        $user->save();
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
+            }
 
-        $lecturer->nip = $validated['nip'];
-        $lecturer->save();
+            $user->save();
+
+            $lecturer->nip = $validated['nip'];
+            $lecturer->save();
+        });
 
         return Redirect::route('admin.lecturers.index')->with('success', 'Lecturer successfully updated!');
     }
 
     public function destroy(Lecturer $lecturer)
     {
-        $lecturer->load('user');
-        $lecturer->user->delete();
+        DB::transaction(function () use ($lecturer) {
+            $lecturer->delete();
+            $lecturer->user->delete();
+        });
 
         return redirect()->back()->with('success', 'Lecturer deleted successfully!');
     }

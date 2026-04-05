@@ -80,4 +80,22 @@ trait ProfileValidationRules
     {
         return ['nullable', 'string', 'max:1000'];
     }
+
+    /**
+     * Get the validation rules used to validate student NIM.
+     *
+     * @return array<int, \Illuminate\Contracts\Validation\Rule|array<mixed>|string>
+     */
+    protected function nimRules(?int $studentId = null): array
+    {
+        return [
+            'required',
+            'string',
+            'max:30',
+            'regex:/^[A-Za-z0-9\-]+$/',
+            $studentId === null
+                ? Rule::unique('students', 'nim')
+                : Rule::unique('students', 'nim')->ignore($studentId),
+        ];
+    }
 }

@@ -38,7 +38,14 @@ class StudyProgramController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:study_programs,name',
+            'faculty_id' => 'required|exists:faculties,id',
+        ]);
+
+        StudyProgram::create($validated);
+
+        return Redirect::route('admin.study-programs.index')->with('success', 'Study Program created successfully!');
     }
 
     /**
@@ -72,6 +79,8 @@ class StudyProgramController extends Controller
      */
     public function destroy(StudyProgram $studyProgram)
     {
-        //
+        $studyProgram->delete();
+
+        return Redirect::route('admin.study-programs.index')->with('success', 'Study Program deleted successfully!');
     }
 }
