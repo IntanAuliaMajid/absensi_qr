@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import AppLogoIcon from '@/components/user/app-logo-icon';
+import AppLogoIcon from '@/components/student/app-logo-icon';
 import { Button } from '@/components/ui/button';
 import { dashboard, login, register } from '@/routes';
 import type { WelcomeProps } from '@/components/welcome/types';

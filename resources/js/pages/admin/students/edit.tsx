@@ -1,4 +1,4 @@
-import AdminLayout from '@/layouts/AdminLayout';
+import AdminLayout from '@/layouts/admin-layout';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -11,18 +11,30 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { useForm, usePage } from '@inertiajs/react';
-import { StudentPayload } from '@/types';
-
+import { StudentPayload, StudyProgram } from '@/types';
 
 export default function EditUserPage() {
-    const { student } = usePage<{ student: StudentPayload }>().props;
+    const { student, studyPrograms } = usePage<{
+        student: StudentPayload;
+        studyPrograms: StudyProgram[];
+    }>().props;
 
     const { data, setData, put, processing, errors } = useForm({
         name: student.user.name,
         email: student.user.email,
         nim: student.nim ?? '',
+        study_program_id: student.study_program_id
+            ? String(student.study_program_id)
+            : '',
         gender: student.gender ?? '',
         date_of_birth: student.date_of_birth ?? '',
         address: student.user.address ?? '',
@@ -143,20 +155,69 @@ export default function EditUserPage() {
                         </Field>
 
                         <Field className="grid gap-2">
+                            <FieldLabel htmlFor="study_program_id">
+                                Study Program
+                            </FieldLabel>
+                            <Select
+                                value={data.study_program_id}
+                                onValueChange={(value) =>
+                                    setData('study_program_id', value)
+                                }
+                            >
+                                <SelectTrigger
+                                    id="study_program_id"
+                                    className={
+                                        errors.study_program_id
+                                            ? 'border-red-500 focus-visible:ring-red-500'
+                                            : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select study program" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {studyPrograms.map((program) => (
+                                        <SelectItem
+                                            key={program.id}
+                                            value={String(program.id)}
+                                        >
+                                            {program.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+
+                            {errors.study_program_id && (
+                                <p className="text-sm font-medium text-red-500">
+                                    {errors.study_program_id}
+                                </p>
+                            )}
+                        </Field>
+
+                        <Field className="grid gap-2">
                             <FieldLabel htmlFor="gender">Gender</FieldLabel>
-                            <Input
-                                id="gender"
+                            <Select
                                 value={data.gender}
-                                onChange={(e) =>
-                                    setData('gender', e.target.value)
+                                onValueChange={(value) =>
+                                    setData('gender', value)
                                 }
-                                placeholder="Male, Female, etc."
-                                className={
-                                    errors.gender
-                                        ? 'border-red-500 focus-visible:ring-red-500'
-                                        : ''
-                                }
-                            />
+                            >
+                                <SelectTrigger
+                                    id="gender"
+                                    className={
+                                        errors.gender
+                                            ? 'border-red-500 focus-visible:ring-red-500'
+                                            : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select gender" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="male">Male</SelectItem>
+                                    <SelectItem value="female">
+                                        Female
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
 
                             {errors.gender && (
                                 <p className="text-sm font-medium text-red-500">

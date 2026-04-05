@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
+use App\Events\EmailChanged;
 use App\Http\Controllers\Controller;
 use App\Models\Lecturer;
 use App\Models\User;
+use App\Notifications\PendingEmailChangeVerificationNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Notification;
 
 class LecturerController extends Controller
 {
@@ -70,30 +72,44 @@ class LecturerController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $lecturer->user_id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $lecturer->user->id . '|unique:users,pending_email,' . $lecturer->user->id,
             'nip' => 'required|string|max:30|unique:lecturers,nip,' . $lecturer->id,
             'address' => 'nullable|string|max:1000',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        DB::transaction(function () use ($validated, $request, $lecturer) {
+        DB::transaction(function () use ($validated, $lecturer) {
             $user = $lecturer->user;
-            $user->name = $validated['name'];
-            $user->email = $validated['email'];
-            $user->address = $validated['address'] ?? null;
+
+            $newEmail = $validated['email'];
+            $emailChanged = $newEmail !== $user->email;
+
+            $user->fill([
+                'name' => $validated['name'],
+                'address' => $validated['address'] ?? null,
+            ]);
 
             if (! empty($validated['password'])) {
-                $user->password = $validated['password'];
+                $user['password'] = $validated['password'];
             }
 
-            if ($user->isDirty('email')) {
-                $user->email_verified_at = null;
+            if ($emailChanged) {
+                $user->pending_email = $newEmail;
             }
 
             $user->save();
+            $user->save();
 
-            $lecturer->nip = $validated['nip'];
-            $lecturer->save();
+            if ($emailChanged) {
+                Notification::route('mail', $newEmail)
+                    ->notify(new PendingEmailChangeVerificationNotification($user));
+
+                event(new EmailChanged($user->id, $newEmail, $user->type));
+            }
+
+            $lecturer->update([
+                'nip' => $validated['nip'],
+            ]);
         });
 
         return Redirect::route('admin.lecturers.index')->with('success', 'Lecturer successfully updated!');

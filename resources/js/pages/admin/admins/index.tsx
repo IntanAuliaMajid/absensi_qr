@@ -1,4 +1,4 @@
-import AdminLayout from '@/layouts/AdminLayout';
+import AdminLayout from '@/layouts/admin-layout';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -22,7 +22,6 @@ import { Button } from '@/components/ui/button';
 import { usePage, useForm, Link } from '@inertiajs/react';
 import { Trash2, Pencil } from 'lucide-react';
 import { AdminItem } from '@/types';
-
 
 export default function Page() {
     const { admins } = usePage<{ admins: AdminItem[] }>().props;

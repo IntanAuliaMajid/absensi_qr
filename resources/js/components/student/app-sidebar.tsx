@@ -1,8 +1,8 @@
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
-import { NavFooter } from '@/components/user/nav-footer';
-import { NavMain } from '@/components/user/nav-main';
-import { NavUser } from '@/components/user/nav-user';
+import { NavFooter } from '@/components/student/nav-footer';
+import { NavMain } from '@/components/student/nav-main';
+import { NavUser } from '@/components/student/nav-user';
 import {
     Sidebar,
     SidebarContent,
@@ -15,7 +15,7 @@ import {
 import type { NavItem } from '@/types';
 import AppLogo from './app-logo';
 import { dashboard } from '@/routes';
-import AppLogoIcon from '@/components/user/app-logo-icon';
+import AppLogoIcon from '@/components/student/app-logo-icon';
 
 const mainNavItems: NavItem[] = [
     {
@@ -46,8 +46,8 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href={dashboard()} prefetch>
-                                <AppLogoIcon className="h-10 w-10 " />
-                                <h2 className='font-semibold'>Absensi</h2>
+                                <AppLogoIcon className="h-10 w-10" />
+                                <h2 className="font-semibold">Absensi</h2>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

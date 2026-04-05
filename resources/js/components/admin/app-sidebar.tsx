@@ -21,7 +21,7 @@ import {
     SidebarRail,
 } from '@/components/ui/sidebar';
 import { usePage } from '@inertiajs/react';
-import AppLogoIcon from '@/components/user/app-logo-icon';
+import AppLogoIcon from '@/components/student/app-logo-icon';
 import { Nav } from './nav';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

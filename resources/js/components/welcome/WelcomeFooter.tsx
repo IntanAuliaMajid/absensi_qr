@@ -1,4 +1,4 @@
-import AppLogoIcon from '@/components/user/app-logo-icon';
+import AppLogoIcon from '@/components/student/app-logo-icon';
 
 export default function WelcomeFooter() {
     return (

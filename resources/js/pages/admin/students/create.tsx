@@ -1,4 +1,4 @@
-import AdminLayout from '@/layouts/AdminLayout';
+import AdminLayout from '@/layouts/admin-layout';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -12,14 +12,26 @@ import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
+import type { StudyProgram } from '@/types';
 
 export default function Page() {
+    const { studyPrograms } = usePage<{ studyPrograms: StudyProgram[] }>()
+        .props;
+
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
         nim: '',
+        study_program_id: '',
         gender: '',
         date_of_birth: '',
         address: '',
@@ -141,6 +153,45 @@ export default function Page() {
                             {errors.nim && (
                                 <p className="text-sm font-medium text-red-500">
                                     {errors.nim}
+                                </p>
+                            )}
+                        </Field>
+
+                        <Field className="grid gap-2">
+                            <FieldLabel htmlFor="study_program_id">
+                                Study Program
+                            </FieldLabel>
+                            <Select
+                                value={data.study_program_id}
+                                onValueChange={(value) =>
+                                    setData('study_program_id', value)
+                                }
+                            >
+                                <SelectTrigger
+                                    id="study_program_id"
+                                    className={
+                                        errors.study_program_id
+                                            ? 'border-red-500 focus-visible:ring-red-500'
+                                            : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select study program" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {studyPrograms.map((program) => (
+                                        <SelectItem
+                                            key={program.id}
+                                            value={String(program.id)}
+                                        >
+                                            {program.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+
+                            {errors.study_program_id && (
+                                <p className="text-sm font-medium text-red-500">
+                                    {errors.study_program_id}
                                 </p>
                             )}
                         </Field>

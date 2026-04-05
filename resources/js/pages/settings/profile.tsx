@@ -1,12 +1,12 @@
 import { Transition } from '@headlessui/react';
 import { Form, Head, Link, usePage } from '@inertiajs/react';
-import DeleteUser from '@/components/user/delete-user';
-import Heading from '@/components/user/heading';
-import InputError from '@/components/user/input-error';
+import DeleteUser from '@/components/student/delete-user';
+import Heading from '@/components/student/heading';
+import InputError from '@/components/student/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AppLayout from '@/layouts/app-layout';
+import AppLayout from '@/layouts/student-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import type { BreadcrumbItem } from '@/types';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';

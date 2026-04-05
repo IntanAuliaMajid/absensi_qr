@@ -89,8 +89,10 @@ export type StudentPayload = {
     id: number;
     user_id: number;
     nim: string;
+    study_program_id?: number | null;
     gender?: string | null;
     date_of_birth?: string | null;
+    study_program?: StudyProgram;
     user: {
         id: number;
         name: string;
@@ -104,8 +106,10 @@ export type StudentItem = {
     id: number;
     user_id: number;
     nim: string;
+    study_program_id?: number | null;
     gender?: string | null;
     date_of_birth?: string | null;
+    study_program?: StudyProgram;
     user: {
         id: number;
         name: string;

@@ -11,8 +11,8 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar';
-import { UserInfo } from '@/components/user/user-info';
-import { UserMenuContent } from '@/components/user/user-menu-content';
+import { UserInfo } from '@/components/student/user-info';
+import { UserMenuContent } from '@/components/student/user-menu-content';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export function NavUser() {

@@ -1,4 +1,4 @@
-import { Breadcrumbs } from '@/components/user/breadcrumbs';
+import { Breadcrumbs } from '@/components/student/breadcrumbs';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 

@@ -1,4 +1,4 @@
-import AdminLayout from '@/layouts/AdminLayout';
+import AdminLayout from '@/layouts/admin-layout';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -92,7 +92,9 @@ export default function Page() {
                             {studyPrograms.map((studyProgram, index) => (
                                 <TableRow key={studyProgram.id}>
                                     <TableCell>{studyProgram.name}</TableCell>
-                                    <TableCell>{studyProgram.faculty?.name}</TableCell>
+                                    <TableCell>
+                                        {studyProgram.faculty?.name}
+                                    </TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">
                                             <Button

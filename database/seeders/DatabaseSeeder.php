@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             RoleHasPermission::class,
             FacultySeeder::class,
             StudyProgramSeeder::class,
+            LecturerSeeder::class,
+            StudentSeeder::class,
         ]);
     }
 }
