@@ -6,9 +6,7 @@ import { initializeTheme } from './hooks/use-appearance';
 import { Toaster } from 'sonner';
 import { configureEcho } from '@laravel/echo-react';
 
-const reverbScheme =
-    import.meta.env.VITE_REVERB_SCHEME ??
-    window.location.protocol.replace(':', '');
+const reverbScheme = import.meta.env.VITE_REVERB_SCHEME ?? window.location.protocol.replace(':', '');
 
 configureEcho({
     broadcaster: 'reverb',
