@@ -13,19 +13,27 @@ class EmailChanged implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public int $userId;
+    public ?int $actorUserId;
     public string $newEmail;
 
-    public function __construct(int $userId, string $newEmail, ?string $role = null)
+    public function __construct(int $userId, string $newEmail, ?int $actorUserId = null)
     {
         $this->userId = $userId;
+        $this->actorUserId = $actorUserId;
         $this->newEmail = $newEmail;
     }
 
     public function broadcastOn(): array
     {
-        return [
+        $channels = [
             new PrivateChannel("user.{$this->userId}"),
         ];
+
+        if ($this->actorUserId !== null && $this->actorUserId !== $this->userId) {
+            $channels[] = new PrivateChannel("user.{$this->actorUserId}");
+        }
+
+        return $channels;
     }
 
     public function broadcastAs(): string

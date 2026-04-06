@@ -19,6 +19,6 @@ class StudentMiddleware
         if (Auth::check() && Auth::user()->type === 'student') {
             return $next($request);
         }
-        abort(403, 'Unauthorized Access');
+        abort(403, 'Unauthorized');
     }
 }

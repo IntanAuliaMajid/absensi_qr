@@ -69,6 +69,7 @@ class LecturerController extends Controller
     public function update(Request $request, Lecturer $lecturer)
     {
         $lecturer->load('user');
+        $actorUserId = $request->user()?->id;
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -78,7 +79,7 @@ class LecturerController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        DB::transaction(function () use ($validated, $lecturer) {
+        DB::transaction(function () use ($validated, $lecturer, $actorUserId) {
             $user = $lecturer->user;
 
             $newEmail = $validated['email'];
@@ -104,7 +105,7 @@ class LecturerController extends Controller
                 Notification::route('mail', $newEmail)
                     ->notify(new PendingEmailChangeVerificationNotification($user));
 
-                event(new EmailChanged($user->id, $newEmail, $user->type));
+                event(new EmailChanged($user->id, $newEmail, $actorUserId));
             }
 
             $lecturer->update([

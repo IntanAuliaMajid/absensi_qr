@@ -1,12 +1,25 @@
 import RealtimeEmailChangedListener from '@/components/ui/realtime-email-changed-listener';
 import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
 import type { AppLayoutProps } from '@/types';
+import { usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 
-export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => (
-    <>
-        <RealtimeEmailChangedListener />
-        <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
-            {children}
-        </AppLayoutTemplate>
-    </>
-);
+export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => {
+    const { flash } = usePage<{ flash?: { success?: string } }>().props;
+
+    useEffect(() => {
+        if (flash?.success) {
+            toast.success(flash.success);
+        }
+    }, [flash]);
+
+    return (
+        <>
+            <RealtimeEmailChangedListener />
+            <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
+                {children}
+            </AppLayoutTemplate>
+        </>
+    );
+};

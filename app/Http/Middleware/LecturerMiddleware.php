@@ -19,6 +19,6 @@ class LecturerMiddleware
         if (Auth::check() && Auth::user()->type === 'lecturer') {
             return $next($request);
         }
-        abort(403, 'Unauthorized Access');
+        abort(403, 'Unauthorized');
     }
 }

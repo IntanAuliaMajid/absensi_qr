@@ -90,10 +90,6 @@ export default function Page() {
                                     {errors.name}
                                 </p>
                             )}
-
-                            <FieldDescription>
-                                Choose a unique name.
-                            </FieldDescription>
                         </Field>
 
                         <Field className="grid gap-2">
@@ -147,18 +143,18 @@ export default function Page() {
 
                         <Field className="grid gap-2">
                             <FieldLabel htmlFor="address">Address</FieldLabel>
-                            <Input
+                            <textarea
                                 id="address"
                                 value={data.address}
                                 onChange={(e) =>
                                     setData('address', e.target.value)
                                 }
                                 placeholder="Enter Address"
-                                className={
+                                className={`rounded-lg border p-2 placeholder:text-sm ${
                                     errors.address
                                         ? 'border-red-500 focus-visible:ring-red-500'
-                                        : ''
-                                }
+                                        : 'border-gray-300'
+                                }`}
                             />
 
                             {errors.address && (

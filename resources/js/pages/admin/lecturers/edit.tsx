@@ -141,18 +141,18 @@ export default function EditUserPage() {
 
                         <Field className="grid gap-2">
                             <FieldLabel htmlFor="address">Address</FieldLabel>
-                            <Input
+                            <textarea
                                 id="address"
                                 value={data.address}
                                 onChange={(e) =>
                                     setData('address', e.target.value)
                                 }
                                 placeholder="Enter Address"
-                                className={
+                                className={`rounded-lg border p-2 ${
                                     errors.address
                                         ? 'border-red-500 focus-visible:ring-red-500'
-                                        : ''
-                                }
+                                        : 'border-gray-300'
+                                }`}
                             />
 
                             {errors.address && (

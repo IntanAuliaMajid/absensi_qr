@@ -172,14 +172,10 @@
         <section class="card">
             <span class="code">403</span>
             <h1>Akses ditolak</h1>
-            <p>{{ $exception->getMessage() ?: 'Kamu tidak memiliki akses ke halaman ini. Gunakan tombol di bawah untuk kembali ke dashboard sesuai role kamu.' }}</p>
+            <p>{{ $exception->getMessage() }}</p>
 
             <div class="actions">
                 <a href="{{ $dashboardRoute }}" class="button button-primary">{{ $dashboardLabel }}</a>
-
-                @guest
-                <a href="{{ route('login') }}" class="button button-secondary">Login</a>
-                @endguest
             </div>
 
             @auth
