@@ -76,6 +76,7 @@ export default function Page() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
+                                <TableHead>Faculty</TableHead>
                                 <TableHead>Action</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -83,6 +84,9 @@ export default function Page() {
                             {lecturers.map((lecturer) => (
                                 <TableRow key={lecturer.id}>
                                     <TableCell>{lecturer.user.name}</TableCell>
+                                    <TableCell>
+                                        {lecturer.faculty?.name ?? '-'}
+                                    </TableCell>
                                     <TableCell>
                                         <div className="flex gap-2">
                                             <Button

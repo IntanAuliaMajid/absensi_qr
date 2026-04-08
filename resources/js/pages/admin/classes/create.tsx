@@ -1,0 +1,311 @@
+import AdminLayout from '@/layouts/admin-layout';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useForm, usePage } from '@inertiajs/react';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { LecturerItem, Semester, StudyProgram } from '@/types';
+
+export default function Page() {
+    const { studyPrograms, semesters, lecturers } = usePage<{
+        studyPrograms: StudyProgram[];
+        semesters: Semester[];
+        lecturers: LecturerItem[];
+    }>().props;
+
+    const { data, setData, post, processing, errors } = useForm({
+        name: '',
+        study_program_id: null as number | null,
+        semester_id: null as number | null,
+        lecturer_id: null as number | null,
+        room: '',
+        start_time: '',
+        end_time: '',
+    });
+
+    const submit = (e: React.FormEvent) => {
+        e.preventDefault();
+        post('/admin/classes');
+    };
+
+    return (
+        <AdminLayout>
+            <SidebarInset>
+                <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+                    <div className="flex items-center gap-2">
+                        <SidebarTrigger className="-ml-1" />
+                        <Separator
+                            orientation="vertical"
+                            className="mr-2 h-4"
+                        />
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem className="hidden md:block">
+                                    <BreadcrumbLink href="/admin/classes">
+                                        Class
+                                    </BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator className="hidden md:block" />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>Add Class</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                    </div>
+                </header>
+
+                <div className="flex flex-1 items-center justify-center p-4">
+                    <form
+                        onSubmit={submit}
+                        className="w-full max-w-md space-y-6"
+                    >
+                        <h1 className="text-center text-2xl font-semibold">
+                            Add Class
+                        </h1>
+
+                        <Field className="grid gap-2">
+                            <FieldLabel htmlFor="name">Name</FieldLabel>
+                            <Input
+                                id="name"
+                                value={data.name}
+                                onChange={(e) =>
+                                    setData('name', e.target.value)
+                                }
+                                placeholder="Enter class name"
+                                className={
+                                    errors.name
+                                        ? 'border-red-500 focus-visible:ring-red-500'
+                                        : ''
+                                }
+                            />
+
+                            {errors.name && (
+                                <p className="text-sm font-medium text-red-500">
+                                    {errors.name}
+                                </p>
+                            )}
+
+                            <FieldDescription>
+                                Choose a unique class name.
+                            </FieldDescription>
+                        </Field>
+
+                        <Field className="grid gap-2">
+                            <FieldLabel htmlFor="study_program_id">
+                                Study Program
+                            </FieldLabel>
+                            <Select
+                                value={data.study_program_id?.toString()}
+                                onValueChange={(value) =>
+                                    setData('study_program_id', parseInt(value))
+                                }
+                            >
+                                <SelectTrigger
+                                    className={
+                                        errors.study_program_id
+                                            ? 'border-red-500'
+                                            : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select a study program" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {studyPrograms.map((studyProgram) => (
+                                        <SelectItem
+                                            key={studyProgram.id}
+                                            value={studyProgram.id.toString()}
+                                        >
+                                            {studyProgram.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+
+                            {errors.study_program_id && (
+                                <p className="text-sm font-medium text-red-500">
+                                    {errors.study_program_id}
+                                </p>
+                            )}
+                        </Field>
+
+                        <Field className="grid gap-2">
+                            <FieldLabel htmlFor="semester_id">
+                                Semester
+                            </FieldLabel>
+                            <Select
+                                value={data.semester_id?.toString()}
+                                onValueChange={(value) =>
+                                    setData('semester_id', parseInt(value))
+                                }
+                            >
+                                <SelectTrigger
+                                    className={
+                                        errors.semester_id
+                                            ? 'border-red-500'
+                                            : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select a semester" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {semesters.map((semester) => (
+                                        <SelectItem
+                                            key={semester.id}
+                                            value={semester.id.toString()}
+                                        >
+                                            {semester.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+
+                            {errors.semester_id && (
+                                <p className="text-sm font-medium text-red-500">
+                                    {errors.semester_id}
+                                </p>
+                            )}
+                        </Field>
+
+                        <Field className="grid gap-2">
+                            <FieldLabel htmlFor="lecturer_id">
+                                Lecturer
+                            </FieldLabel>
+                            <Select
+                                value={data.lecturer_id?.toString()}
+                                onValueChange={(value) =>
+                                    setData('lecturer_id', parseInt(value))
+                                }
+                            >
+                                <SelectTrigger
+                                    className={
+                                        errors.lecturer_id
+                                            ? 'border-red-500'
+                                            : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select a lecturer" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {lecturers.map((lecturer) => (
+                                        <SelectItem
+                                            key={lecturer.id}
+                                            value={lecturer.id.toString()}
+                                        >
+                                            {lecturer.user.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+
+                            {errors.lecturer_id && (
+                                <p className="text-sm font-medium text-red-500">
+                                    {errors.lecturer_id}
+                                </p>
+                            )}
+                        </Field>
+
+                        <Field className="grid gap-2">
+                            <FieldLabel htmlFor="room">Room</FieldLabel>
+                            <Input
+                                id="room"
+                                value={data.room}
+                                onChange={(e) =>
+                                    setData('room', e.target.value)
+                                }
+                                placeholder="Enter room"
+                                className={
+                                    errors.room
+                                        ? 'border-red-500 focus-visible:ring-red-500'
+                                        : ''
+                                }
+                            />
+
+                            {errors.room && (
+                                <p className="text-sm font-medium text-red-500">
+                                    {errors.room}
+                                </p>
+                            )}
+                        </Field>
+
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <Field className="grid gap-2">
+                                <FieldLabel htmlFor="start_time">
+                                    Start Time
+                                </FieldLabel>
+                                <Input
+                                    id="start_time"
+                                    type="time"
+                                    value={data.start_time}
+                                    onChange={(e) =>
+                                        setData('start_time', e.target.value)
+                                    }
+                                    className={
+                                        errors.start_time
+                                            ? 'border-red-500 focus-visible:ring-red-500'
+                                            : ''
+                                    }
+                                />
+
+                                {errors.start_time && (
+                                    <p className="text-sm font-medium text-red-500">
+                                        {errors.start_time}
+                                    </p>
+                                )}
+                            </Field>
+
+                            <Field className="grid gap-2">
+                                <FieldLabel htmlFor="end_time">
+                                    End Time
+                                </FieldLabel>
+                                <Input
+                                    id="end_time"
+                                    type="time"
+                                    value={data.end_time}
+                                    onChange={(e) =>
+                                        setData('end_time', e.target.value)
+                                    }
+                                    className={
+                                        errors.end_time
+                                            ? 'border-red-500 focus-visible:ring-red-500'
+                                            : ''
+                                    }
+                                />
+
+                                {errors.end_time && (
+                                    <p className="text-sm font-medium text-red-500">
+                                        {errors.end_time}
+                                    </p>
+                                )}
+                            </Field>
+                        </div>
+
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={processing}
+                        >
+                            {processing ? 'Saving...' : 'Save Class'}
+                        </Button>
+                    </form>
+                </div>
+            </SidebarInset>
+        </AdminLayout>
+    );
+}

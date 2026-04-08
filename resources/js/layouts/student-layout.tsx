@@ -1,4 +1,3 @@
-import RealtimeEmailChangedListener from '@/components/ui/realtime-email-changed-listener';
 import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
 import type { AppLayoutProps } from '@/types';
 import { usePage } from '@inertiajs/react';
@@ -16,7 +15,6 @@ export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => {
 
     return (
         <>
-            <RealtimeEmailChangedListener />
             <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
                 {children}
             </AppLayoutTemplate>

@@ -15,11 +15,12 @@ use Illuminate\Support\Carbon;
 use App\Notifications\ApiVerifyEmailNotification;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasRoles, HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasApiTokens, HasRoles, HasFactory, Notifiable, TwoFactorAuthenticatable, Searchable;
     /**
      * The attributes that are mass assignable.
      *
@@ -97,5 +98,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function student(): HasOne
     {
         return $this->hasOne(Student::class);
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'type' => $this->type,
+        ];
     }
 }

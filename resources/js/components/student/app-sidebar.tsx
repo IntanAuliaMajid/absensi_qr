@@ -1,5 +1,5 @@
-import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { BookOpen, Folder, LayoutGrid, Search } from 'lucide-react';
 import { NavFooter } from '@/components/student/nav-footer';
 import { NavMain } from '@/components/student/nav-main';
 import { NavUser } from '@/components/student/nav-user';
@@ -7,13 +7,15 @@ import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
+    SidebarGroup,
+    SidebarGroupLabel,
     SidebarHeader,
+    SidebarInput,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import type { NavItem } from '@/types';
-import AppLogo from './app-logo';
 import { dashboard } from '@/routes/student';
 import AppLogoIcon from '@/components/student/app-logo-icon';
 
@@ -22,6 +24,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Kelas',
+        href: '/student/classes',
+        icon: BookOpen,
     },
 ];
 
@@ -39,6 +46,11 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { url } = usePage();
+    const currentQuery = new URLSearchParams(url.split('?')[1] ?? '').get(
+        'class_q',
+    );
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -55,6 +67,16 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
+                <SidebarGroup className="px-2">
+                    <SidebarGroupLabel>Cari Kelas</SidebarGroupLabel>
+                    <form method="get" action="/student/search">
+                        <SidebarInput
+                            name="class_q"
+                            defaultValue={currentQuery ?? ''}
+                            placeholder="Nama kelas / dosen"
+                        />
+                    </form>
+                </SidebarGroup>
                 <NavMain items={mainNavItems} />
             </SidebarContent>
 
