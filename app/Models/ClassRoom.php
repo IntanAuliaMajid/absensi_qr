@@ -30,6 +30,9 @@ class ClassRoom extends Model
             'id' => $this->id,
             'name' => $this->name,
             'room' => $this->room,
+            'lecturer_name' => $this->lecturer?->user?->name,
+            'semester' => $this->semester?->name,
+            'study_program' => $this->studyProgram?->name,
         ];
     }
 
