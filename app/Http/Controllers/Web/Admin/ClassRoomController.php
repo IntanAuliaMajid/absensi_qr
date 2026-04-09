@@ -42,6 +42,7 @@ class ClassRoomController extends Controller
             'semester_id' => 'required|exists:semesters,id',
             'lecturer_id' => 'required|exists:lecturers,id',
             'room' => 'required|string|max:100',
+            'day' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
         ]);
@@ -71,6 +72,7 @@ class ClassRoomController extends Controller
             'semester_id' => 'required|exists:semesters,id',
             'lecturer_id' => 'required|exists:lecturers,id',
             'room' => 'required|string|max:100',
+            'day' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
         ]);

@@ -20,6 +20,7 @@ export default function DetailAbsensi() {
     // Data Dummy
     const courseInfo = {
         subject: 'Pemrograman Web',
+        sks: 3,
         lecturer: 'Dr. Aris Sudarsono, M.T.',
         nip: '19850312 201012 1 001',
         class: 'TI-4A',
@@ -70,7 +71,7 @@ export default function DetailAbsensi() {
                                 {courseInfo.subject}
                             </h1>
                             <p className="font-bold text-sky-500">
-                                {courseInfo.semester}
+                                {courseInfo.semester} • {courseInfo.sks} SKS
                             </p>
                         </div>
                     </div>

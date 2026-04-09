@@ -77,6 +77,7 @@ export default function Page() {
                                 <TableHead>Semester</TableHead>
                                 <TableHead>Lecturer</TableHead>
                                 <TableHead>Room</TableHead>
+                                <TableHead>Day</TableHead>
                                 <TableHead>Time</TableHead>
                                 <TableHead>Actions</TableHead>
                             </TableRow>
@@ -103,6 +104,9 @@ export default function Page() {
                                         </TableCell>
                                         <TableCell>
                                             {classRoom.room ?? '-'}
+                                        </TableCell>
+                                        <TableCell>
+                                            {classRoom.day ?? '-'}
                                         </TableCell>
                                         <TableCell>
                                             {startTime && endTime

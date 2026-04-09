@@ -31,6 +31,7 @@ export type ClassRoom = {
     semester_id?: number | null;
     lecturer_id?: number | null;
     room?: string | null;
+    day?: string | null;
     start_time?: string | null;
     end_time?: string | null;
     study_program?: StudyProgram;

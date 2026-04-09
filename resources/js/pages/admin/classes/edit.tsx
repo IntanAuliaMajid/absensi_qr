@@ -42,6 +42,7 @@ export default function EditClassPage() {
         semester_id: classRoom.semester_id ?? null,
         lecturer_id: classRoom.lecturer_id ?? null,
         room: classRoom.room ?? '',
+        day: classRoom.day ?? '',
         start_time: classRoom.start_time?.slice(0, 5) ?? '',
         end_time: classRoom.end_time?.slice(0, 5) ?? '',
     });
@@ -248,6 +249,41 @@ export default function EditClassPage() {
                             {errors.room && (
                                 <p className="text-sm font-medium text-red-500">
                                     {errors.room}
+                                </p>
+                            )}
+                        </Field>
+
+                        <Field className="grid gap-2">
+                            <FieldLabel htmlFor="day">Day</FieldLabel>
+                            <Select
+                                value={data.day}
+                                onValueChange={(value) => setData('day', value)}
+                            >
+                                <SelectTrigger
+                                    className={
+                                        errors.day ? 'border-red-500' : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select day" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Senin">Senin</SelectItem>
+                                    <SelectItem value="Selasa">
+                                        Selasa
+                                    </SelectItem>
+                                    <SelectItem value="Rabu">Rabu</SelectItem>
+                                    <SelectItem value="Kamis">Kamis</SelectItem>
+                                    <SelectItem value="Jumat">Jumat</SelectItem>
+                                    <SelectItem value="Sabtu">Sabtu</SelectItem>
+                                    <SelectItem value="Minggu">
+                                        Minggu
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                            {errors.day && (
+                                <p className="text-sm font-medium text-red-500">
+                                    {errors.day}
                                 </p>
                             )}
                         </Field>

@@ -37,12 +37,6 @@ export default function StudentClassIndex() {
                     </p>
                 </div>
 
-                <div className="flex justify-end">
-                    <Button asChild className="md:w-auto">
-                        <Link href="/student/search">Cari Kelas</Link>
-                    </Button>
-                </div>
-
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     {classes.map((classRoom) => {
                         return (
@@ -61,7 +55,6 @@ export default function StudentClassIndex() {
                                                 '-'}
                                         </p>
                                     </div>
-                                    <Badge variant="secondary">Kelas</Badge>
                                 </div>
 
                                 <div className="space-y-2 text-sm text-slate-600">
@@ -77,7 +70,7 @@ export default function StudentClassIndex() {
                                         <Clock3 className="size-4 text-sky-600" />
                                         {classRoom.start_time &&
                                         classRoom.end_time
-                                            ? `${classRoom.start_time.slice(0, 5)} - ${classRoom.end_time.slice(0, 5)}`
+                                            ? `${classRoom.day ? `${classRoom.day}, ` : ''}${classRoom.start_time.slice(0, 5)} - ${classRoom.end_time.slice(0, 5)}`
                                             : '-'}
                                     </p>
                                     <p className="flex items-center gap-2">

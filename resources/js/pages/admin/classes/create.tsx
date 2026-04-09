@@ -36,6 +36,7 @@ export default function Page() {
         semester_id: null as number | null,
         lecturer_id: null as number | null,
         room: '',
+        day: '',
         start_time: '',
         end_time: '',
     });
@@ -240,6 +241,41 @@ export default function Page() {
                             {errors.room && (
                                 <p className="text-sm font-medium text-red-500">
                                     {errors.room}
+                                </p>
+                            )}
+                        </Field>
+
+                        <Field className="grid gap-2">
+                            <FieldLabel htmlFor="day">Day</FieldLabel>
+                            <Select
+                                value={data.day}
+                                onValueChange={(value) => setData('day', value)}
+                            >
+                                <SelectTrigger
+                                    className={
+                                        errors.day ? 'border-red-500' : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select day" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Senin">Senin</SelectItem>
+                                    <SelectItem value="Selasa">
+                                        Selasa
+                                    </SelectItem>
+                                    <SelectItem value="Rabu">Rabu</SelectItem>
+                                    <SelectItem value="Kamis">Kamis</SelectItem>
+                                    <SelectItem value="Jumat">Jumat</SelectItem>
+                                    <SelectItem value="Sabtu">Sabtu</SelectItem>
+                                    <SelectItem value="Minggu">
+                                        Minggu
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                            {errors.day && (
+                                <p className="text-sm font-medium text-red-500">
+                                    {errors.day}
                                 </p>
                             )}
                         </Field>

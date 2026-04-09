@@ -1,7 +1,8 @@
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/student-layout';
 import type { BreadcrumbItem, ClassRoom } from '@/types';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { UserRound, MapPin, Clock3, GraduationCap } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -16,7 +17,16 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 type SearchPageProps = {
-    classes: ClassRoom[];
+    classes: {
+        data: ClassRoom[];
+        current_page: number;
+        last_page: number;
+        prev_page_url: string | null;
+        next_page_url: string | null;
+        from: number | null;
+        to: number | null;
+        total: number;
+    };
     filters?: {
         class_q?: string;
     };
@@ -35,9 +45,6 @@ export default function StudentSearchIndex() {
                     <h1 className="text-2xl font-bold tracking-tight text-slate-900">
                         Pencarian Kelas
                     </h1>
-                    <p className="text-sm text-slate-500">
-                        Hasil pencarian kelas dari input di sidebar.
-                    </p>
                 </div>
 
                 <div className="rounded-2xl border border-sky-100 bg-white px-4 py-3 text-sm text-slate-600 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
@@ -47,7 +54,7 @@ export default function StudentSearchIndex() {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {classes.map((classRoom) => (
+                    {classes.data.map((classRoom) => (
                         <div
                             key={classRoom.id}
                             className="rounded-2xl border border-sky-100 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
@@ -78,7 +85,7 @@ export default function StudentSearchIndex() {
                                 <p className="flex items-center gap-2">
                                     <Clock3 className="size-4 text-sky-600" />
                                     {classRoom.start_time && classRoom.end_time
-                                        ? `${classRoom.start_time.slice(0, 5)} - ${classRoom.end_time.slice(0, 5)}`
+                                        ? `${classRoom.day ? `${classRoom.day}, ` : ''}${classRoom.start_time.slice(0, 5)} - ${classRoom.end_time.slice(0, 5)}`
                                         : '-'}
                                 </p>
                                 <p className="flex items-center gap-2">
@@ -90,9 +97,65 @@ export default function StudentSearchIndex() {
                     ))}
                 </div>
 
-                {classes.length === 0 && (
+                {classes.data.length === 0 && (
                     <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
                         Tidak ada kelas yang cocok dengan pencarian Anda.
+                    </div>
+                )}
+
+                {classes.total > 0 && (
+                    <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-sky-100 bg-white px-4 py-3 text-sm text-slate-600 shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:flex-row">
+                        <p>
+                            Menampilkan {classes.from ?? 0}-{classes.to ?? 0}{' '}
+                            dari {classes.total} kelas
+                        </p>
+
+                        <div className="flex items-center gap-2">
+                            <Button
+                                asChild
+                                variant="outline"
+                                size="sm"
+                                disabled={!classes.prev_page_url}
+                            >
+                                <Link
+                                    href={classes.prev_page_url ?? '#'}
+                                    preserveScroll
+                                    aria-disabled={!classes.prev_page_url}
+                                    className={
+                                        !classes.prev_page_url
+                                            ? 'pointer-events-none opacity-50'
+                                            : ''
+                                    }
+                                >
+                                    Sebelumnya
+                                </Link>
+                            </Button>
+
+                            <span className="px-2 text-xs text-slate-500">
+                                Halaman {classes.current_page} /{' '}
+                                {classes.last_page}
+                            </span>
+
+                            <Button
+                                asChild
+                                variant="outline"
+                                size="sm"
+                                disabled={!classes.next_page_url}
+                            >
+                                <Link
+                                    href={classes.next_page_url ?? '#'}
+                                    preserveScroll
+                                    aria-disabled={!classes.next_page_url}
+                                    className={
+                                        !classes.next_page_url
+                                            ? 'pointer-events-none opacity-50'
+                                            : ''
+                                    }
+                                >
+                                    Berikutnya
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                 )}
             </div>

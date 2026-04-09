@@ -11,42 +11,38 @@ class SearchController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        // Validasi input pencarian
         $request->validate([
             'q' => 'nullable|string|max:100',
         ]);
 
         $query = trim((string) $request->input('q', ''));
-        $studentStudyProgramId = $request->user()?->student?->study_program_id;
 
         if ($query === '') {
-            // Jika query kosong, langsung kembalikan response kosong
             return response()->json([
                 'message' => 'Silakan masukkan kata kunci.',
                 'data' => [
                     'query' => $query,
                     'sections' => [
-                        'classes' => [],
+                        'classes' => ClassRoom::with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name'])
+                            ->orderBy('name')->get(),
                     ],
                 ],
                 'meta' => [
-                    'classes_total' => 0,
+                    'classes_total' => ClassRoom::with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name'])
+                        ->orderBy('name')->get()->count(),
                 ],
             ]);
         }
 
-        // Scout search untuk nama kelas + nama dosen
         $classes = ClassRoom::search($query)
             ->query(
                 fn($builder) => $builder
                     ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name'])
-                    ->when($studentStudyProgramId, fn($q) => $q->where('study_program_id', $studentStudyProgramId))
                     ->orderBy('name')
             )
             ->take(24)
             ->get();
 
-        // Mapping hasil ke array siap JSON
         $classData = $classes->map(fn(ClassRoom $classRoom) => [
             'id' => $classRoom->id,
             'name' => $classRoom->name,
