@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\ClassRoom;
+use App\Models\Faculty;
 use App\Models\Lecturer;
 use App\Models\Semester;
 use App\Models\StudyProgram;
@@ -16,104 +17,233 @@ class ClassRoomSeeder extends Seeder
      */
     public function run(): void
     {
-        $classes = [
-            [
-                'name' => 'RPL A',
-                'study_program' => 'Informatics Engineering',
-                'semester' => 'Gasal 2023/2024',
-                'lecturer' => 'Budi Santoso',
-                'room' => 'Ruang A101',
-                'day' => 'Senin',
-                'start_time' => '08:00',
-                'end_time' => '09:40',
+        $catalog = [
+            'Fakultas Teknik (FT)' => [
+                'Teknik Informatika' => [
+                    'Algoritma & Struktur Data',
+                    'Basis Data',
+                    'Jaringan Komputer',
+                    'Rekayasa Perangkat Lunak',
+                    'Kecerdasan Buatan',
+                ],
+                'Teknik Industri' => [
+                    'Pengantar Teknik Industri',
+                    'Ekonomi Teknik',
+                    'Perencanaan & Pengendalian Produksi',
+                    'Ergonomi',
+                ],
+                'Teknik Elektro' => [
+                    'Rangkaian Listrik',
+                    'Sistem Digital',
+                    'Elektronika',
+                    'Sistem Kontrol',
+                    'Medan Elektromagnetik',
+                ],
+                'Teknik Mekatronika' => [
+                    'Kinematika & Dinamika',
+                    'Robotika',
+                    'Sensor & Aktuator',
+                    'Mikroprosesor',
+                ],
+                'Sistem Informasi' => [
+                    'Analisis Proses Bisnis',
+                    'Manajemen Proyek TI',
+                    'E-Business',
+                    'Tata Kelola IT',
+                ],
             ],
-            [
-                'name' => 'RPL B',
-                'study_program' => 'Computer Science',
-                'semester' => 'Gasal 2023/2024',
-                'lecturer' => 'Siti Rahmawati',
-                'room' => 'Ruang A102',
-                'day' => 'Selasa',
-                'start_time' => '10:00',
-                'end_time' => '11:40',
+            'Fakultas Ekonomi dan Bisnis (FEB)' => [
+                'Manajemen' => [
+                    'Pengantar Manajemen',
+                    'Perilaku Organisasi',
+                    'Manajemen Pemasaran',
+                    'Manajemen Keuangan',
+                    'Kewirausahaan',
+                ],
+                'Akuntansi' => [
+                    'Akuntansi Keuangan',
+                    'Akuntansi Biaya',
+                    'Auditing',
+                    'Perpajakan',
+                    'Sistem Informasi Akuntansi',
+                ],
+                'Ekonomi Pembangunan' => [
+                    'Ekonomi Mikro & Makro',
+                    'Ekonomi Internasional',
+                    'Sejarah Pemikiran Ekonomi',
+                    'Ekonometrika',
+                ],
             ],
-            [
-                'name' => 'RPL C',
-                'study_program' => 'Informatics Engineering',
-                'semester' => 'Genap 2023/2024',
-                'lecturer' => 'Ahmad Fauzan',
-                'room' => 'Ruang B201',
-                'day' => 'Rabu',
-                'start_time' => '08:00',
-                'end_time' => '09:40',
+            'Fakultas Hukum (FH)' => [
+                'Ilmu Hukum' => [
+                    'Hukum Pidana',
+                    'Hukum Perdata',
+                    'Hukum Tata Negara',
+                    'Hukum Administrasi Negara',
+                    'Hukum Internasional',
+                ],
             ],
-            [
-                'name' => 'RPL D',
-                'study_program' => 'Computer Science',
-                'semester' => 'Genap 2023/2024',
-                'lecturer' => 'Budi Santoso',
-                'room' => 'Ruang B202',
-                'day' => 'Kamis',
-                'start_time' => '10:00',
-                'end_time' => '11:40',
+            'Fakultas Pertanian (FP)' => [
+                'Agroteknologi' => [
+                    'Dasar Agronomi',
+                    'Ilmu Tanah',
+                    'Perlindungan Tanaman',
+                    'Pemuliaan Tanaman',
+                ],
+                'Agribisnis' => [
+                    'Ekonomi Pertanian',
+                    'Manajemen Agribisnis',
+                    'Tata Niaga Pertanian',
+                    'Sosiologi Pertanian',
+                ],
+                'Teknologi Industri Pertanian' => [
+                    'Mikrobiologi Industri',
+                    'Satuan Operasi',
+                    'Pengendalian Mutu',
+                    'Manajemen Limbah',
+                ],
+                'Ilmu Kelautan' => [
+                    'Biologi Laut',
+                    'Oseanografi',
+                    'Selam Ilmiah',
+                    'Ekologi Pesisir',
+                ],
+                'Manajemen Sumberdaya Perairan' => [
+                    'Ikhtiologi',
+                    'Limnologi',
+                    'Konservasi Perairan',
+                    'Budidaya Perairan',
+                ],
             ],
-            [
-                'name' => 'RPL E',
-                'study_program' => 'Business Administration',
-                'semester' => 'Gasal 2024/2025',
-                'lecturer' => 'Siti Rahmawati',
-                'room' => 'Ruang C301',
-                'day' => 'Jumat',
-                'start_time' => '13:00',
-                'end_time' => '14:40',
+            'Fakultas Ilmu Sosial dan Ilmu Budaya (FISIB)' => [
+                'Ilmu Komunikasi' => [
+                    'Pengantar Ilmu Komunikasi',
+                    'Teori Komunikasi',
+                    'Jurnalistik',
+                    'Public Relations',
+                    'Komunikasi Massa',
+                ],
+                'Sosiologi' => [
+                    'Pengantar Sosiologi',
+                    'Teori Sosiologi Klasik & Modern',
+                    'Sosiologi Pedesaan',
+                    'Masalah Sosial',
+                ],
+                'Psikologi' => [
+                    'Psikologi Umum',
+                    'Psikologi Perkembangan',
+                    'Psikologi Sosial',
+                    'Biopsikologi',
+                    'Psikometri',
+                ],
+                'Sastra Inggris' => [
+                    'Listening & Speaking',
+                    'Reading & Writing',
+                    'Introduction to Literature',
+                    'Linguistics',
+                    'Translation',
+                ],
             ],
-            [
-                'name' => 'RPL F',
-                'study_program' => 'Visual Communication Design',
-                'semester' => 'Gasal 2024/2025',
-                'lecturer' => 'Ahmad Fauzan',
-                'room' => 'Ruang C302',
-                'day' => 'Sabtu',
-                'start_time' => '15:00',
-                'end_time' => '16:40',
+            'Fakultas Ilmu Pendidikan (FIP)' => [
+                'PGSD' => [
+                    'Strategi Pembelajaran SD',
+                    'Pendidikan Matematika/IPA/IPS SD',
+                    'Psikologi Pendidikan',
+                ],
+                'PGPAUD' => [
+                    'Bermain dan Permainan',
+                    'Perkembangan Anak Usia Dini',
+                    'Manajemen PAUD',
+                ],
+                'Pendidikan Informatika' => [
+                    'Media Pembelajaran',
+                    'Pemrograman Dasar',
+                    'Desain Grafis',
+                    'Sistem Operasi',
+                ],
+                'Pendidikan IPA' => [
+                    'Biologi Umum',
+                    'Kimia Dasar',
+                    'Fisika Dasar',
+                    'Strategi Pembelajaran IPA',
+                ],
+                'Pendidikan Bahasa Indonesia' => [
+                    'Linguistik Umum',
+                    'Menyimak',
+                    'Berbicara',
+                    'Membaca',
+                    'Menulis',
+                ],
+            ],
+            'Fakultas Keislaman (FKis)' => [
+                'Hukum Bisnis Syariah' => [
+                    'Fiqh Muamalah',
+                    'Hukum Perbankan Syariah',
+                    'Hukum Arbitrase Islam',
+                    'Fatwa Ekonomi Syariah',
+                ],
+                'Ekonomi Syariah' => [
+                    'Sejarah Pemikiran Ekonomi Islam',
+                    'Lembaga Keuangan Syariah',
+                    'Zakat & Wakaf',
+                    'Mikro/Makro Ekonomi Islam',
+                ],
             ],
         ];
 
-        foreach ($classes as $classData) {
-            $studyProgram = StudyProgram::query()->where('name', $classData['study_program'])->first();
+        $semester = Semester::query()->where('name', 'Gasal 2024/2025')->first();
 
-            if (! $studyProgram) {
-                throw new RuntimeException("Study program '{$classData['study_program']}' not found. Run StudyProgramSeeder first.");
+        if (! $semester) {
+            throw new RuntimeException("Semester 'Gasal 2024/2025' not found. Run SemesterSeeder first.");
+        }
+
+        $lecturers = Lecturer::query()->orderBy('id')->get();
+
+        if ($lecturers->isEmpty()) {
+            throw new RuntimeException('No lecturers found. Run LecturerSeeder first.');
+        }
+
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        $timeSlots = [
+            ['start' => '08:00', 'end' => '09:40'],
+            ['start' => '10:00', 'end' => '11:40'],
+            ['start' => '13:00', 'end' => '14:40'],
+            ['start' => '15:00', 'end' => '16:40'],
+        ];
+
+        $classIndex = 0;
+
+        foreach ($catalog as $facultyName => $studyPrograms) {
+            $faculty = Faculty::query()->firstOrCreate(['name' => $facultyName]);
+
+            foreach ($studyPrograms as $programName => $subjects) {
+                $studyProgram = StudyProgram::query()->updateOrCreate(
+                    ['name' => $programName],
+                    ['faculty_id' => $faculty->id]
+                );
+
+                foreach ($subjects as $subjectName) {
+                    $day = $days[$classIndex % count($days)];
+                    $slot = $timeSlots[$classIndex % count($timeSlots)];
+                    $lecturer = $lecturers[$classIndex % $lecturers->count()];
+                    $room = sprintf('Ruang %s%02d', chr(65 + ($classIndex % 6)), ($classIndex % 20) + 1);
+
+                    ClassRoom::query()->updateOrCreate(
+                        ['name' => $subjectName],
+                        [
+                            'study_program_id' => $studyProgram->id,
+                            'semester_id' => $semester->id,
+                            'lecturer_id' => $lecturer->id,
+                            'room' => $room,
+                            'day' => $day,
+                            'start_time' => $slot['start'],
+                            'end_time' => $slot['end'],
+                        ]
+                    );
+
+                    $classIndex++;
+                }
             }
-
-            $semester = Semester::query()->where('name', $classData['semester'])->first();
-
-            if (! $semester) {
-                throw new RuntimeException("Semester '{$classData['semester']}' not found. Run SemesterSeeder first.");
-            }
-
-            $lecturer = Lecturer::query()
-                ->whereHas('user', function ($query) use ($classData) {
-                    $query->where('name', $classData['lecturer']);
-                })
-                ->first();
-
-            if (! $lecturer) {
-                throw new RuntimeException("Lecturer '{$classData['lecturer']}' not found. Run LecturerSeeder first.");
-            }
-
-            ClassRoom::query()->updateOrCreate(
-                ['name' => $classData['name']],
-                [
-                    'study_program_id' => $studyProgram->id,
-                    'semester_id' => $semester->id,
-                    'lecturer_id' => $lecturer->id,
-                    'room' => $classData['room'],
-                    'day' => $classData['day'],
-                    'start_time' => $classData['start_time'],
-                    'end_time' => $classData['end_time'],
-                ]
-            );
         }
     }
 }

@@ -68,12 +68,11 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <SidebarGroup className="px-2">
-                    <SidebarGroupLabel>Cari Kelas</SidebarGroupLabel>
                     <form method="get" action="/student/search">
                         <SidebarInput
                             name="class_q"
                             defaultValue={currentQuery ?? ''}
-                            placeholder="Nama kelas / dosen"
+                            placeholder="Cari Sesuatu..."
                         />
                     </form>
                 </SidebarGroup>
