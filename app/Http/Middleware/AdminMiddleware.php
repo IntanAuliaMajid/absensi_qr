@@ -19,6 +19,6 @@ class AdminMiddleware
         if (Auth::check() && Auth::user()->type === 'admin') {
             return $next($request);
         }
-        abort(403, 'Unauthorized Access');
+        abort(404, 'Not Found');
     }
 }

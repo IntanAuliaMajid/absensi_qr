@@ -13,15 +13,26 @@ import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useForm, usePage } from '@inertiajs/react';
-import { LecturerPayload } from '@/types';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Faculty, LecturerPayload } from '@/types';
 
 export default function EditUserPage() {
-    const { lecturer } = usePage<{ lecturer: LecturerPayload }>().props;
+    const { lecturer, faculties } = usePage<{
+        lecturer: LecturerPayload;
+        faculties: Faculty[];
+    }>().props;
 
     const { data, setData, put, processing, errors } = useForm({
         name: lecturer.user.name,
         email: lecturer.user.email,
         nip: lecturer.nip ?? '',
+        faculty_id: lecturer.faculty_id ?? null,
         address: lecturer.user.address ?? '',
         password: '',
         password_confirmation: '',
@@ -135,6 +146,44 @@ export default function EditUserPage() {
                             {errors.nip && (
                                 <p className="text-sm font-medium text-red-500">
                                     {errors.nip}
+                                </p>
+                            )}
+                        </Field>
+
+                        <Field className="grid gap-2">
+                            <FieldLabel htmlFor="faculty_id">
+                                Faculty
+                            </FieldLabel>
+                            <Select
+                                value={data.faculty_id?.toString()}
+                                onValueChange={(value) =>
+                                    setData('faculty_id', parseInt(value))
+                                }
+                            >
+                                <SelectTrigger
+                                    className={
+                                        errors.faculty_id
+                                            ? 'border-red-500'
+                                            : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select a faculty" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {faculties.map((faculty) => (
+                                        <SelectItem
+                                            key={faculty.id}
+                                            value={faculty.id.toString()}
+                                        >
+                                            {faculty.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+
+                            {errors.faculty_id && (
+                                <p className="text-sm font-medium text-red-500">
+                                    {errors.faculty_id}
                                 </p>
                             )}
                         </Field>

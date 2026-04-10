@@ -2,23 +2,20 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
-use App\Events\EmailChanged;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Models\StudyProgram;
 use App\Models\User;
-use App\Notifications\PendingEmailChangeVerificationNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 
 class StudentController extends Controller
 {
     public function index()
     {
-        $students = Student::with('user')->get();
+        $students = Student::with(['user', 'studyProgram'])->get();
 
         return Inertia::render('admin/students/index', [
             'students' => $students,
@@ -83,11 +80,10 @@ class StudentController extends Controller
     public function update(Request $request, Student $student)
     {
         $student->load('user');
-        $actorUserId = $request->user()?->id;
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $student->user->id . '|unique:users,pending_email,' . $student->user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $student->user->id,
             'nim' => 'required|string|max:30|unique:students,nim,' . $student->id,
             'study_program_id' => 'required|integer|exists:study_programs,id',
             'gender' => 'nullable|string|max:50',
@@ -96,13 +92,12 @@ class StudentController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        DB::transaction(function () use ($validated, $student, $actorUserId) {
+        DB::transaction(function () use ($validated, $student) {
             $user = $student->user;
-            $newEmail = $validated['email'];
-            $emailChanged = $newEmail !== $user->email;
 
             $user->fill([
                 'name' => $validated['name'],
+                'email' => $validated['email'],
                 'address' => $validated['address'] ?? null,
             ]);
 
@@ -110,19 +105,7 @@ class StudentController extends Controller
                 $user['password'] = $validated['password'];
             }
 
-            if ($emailChanged) {
-                $user->pending_email = $newEmail;
-            }
-
             $user->save();
-
-            if ($emailChanged) {
-                Notification::route('mail', $newEmail)
-                    ->notify(new PendingEmailChangeVerificationNotification($user));
-
-                event(new EmailChanged($user->id, $newEmail, $actorUserId));
-            }
-
             $student->update([
                 'study_program_id' => $validated['study_program_id'],
                 'gender' => $validated['gender'],

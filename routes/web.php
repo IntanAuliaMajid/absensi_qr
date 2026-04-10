@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\Web\Admin\AdminController;
+use App\Http\Controllers\Web\Admin\ClassRoomController;
 use App\Http\Controllers\Web\Admin\FacultyController;
 use App\Http\Controllers\Web\Admin\LecturerController;
 use App\Http\Controllers\Web\Admin\RoleController;
 use App\Http\Controllers\Web\Admin\StudentController;
 use App\Http\Controllers\Web\Admin\StudyProgramController;
-use App\Http\Controllers\Web\EmailChangeVerificationController;
+use App\Http\Controllers\Web\Student\ClassEnrollmentController;
+use App\Http\Controllers\Web\Student\SearchController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\LecturerMiddleware;
 use App\Http\Middleware\StudentMiddleware;
@@ -20,10 +22,6 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/email/change/verify/{user}/{hash}', EmailChangeVerificationController::class)
-    ->middleware('signed')
-    ->name('email.change.verify');
-
 Route::middleware(['auth', StudentMiddleware::class])->prefix('student')->name('student.')->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('student/dashboard');
@@ -32,6 +30,9 @@ Route::middleware(['auth', StudentMiddleware::class])->prefix('student')->name('
     Route::get('matakuliah', function () {
         return Inertia::render('student/matakuliah');
     })->name('matakuliah');
+
+    Route::get('classes', [ClassEnrollmentController::class, 'index'])->name('classes.index');
+    Route::get('search', [SearchController::class, 'index'])->name('search.index');
 });
 
 Route::middleware(['auth', LecturerMiddleware::class])->prefix('lecturer')->name('lecturer.')->group(function () {
@@ -46,6 +47,7 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admi
     })->name('dashboard');
 
     Route::resource('/roles', RoleController::class)->middleware('can:manage_roles')->except(['show']);
+    Route::resource('/classes', ClassRoomController::class)->middleware('can:manage_classes')->except(['show']);
     Route::resource('/students', StudentController::class)->middleware('can:manage_students')->except(['show']);
     Route::resource('/lecturers', LecturerController::class)->middleware('can:manage_lecturers')->except(['show']);
     Route::resource('/admins', AdminController::class)->middleware('can:manage_admins')->except(['show']);
@@ -53,4 +55,4 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admi
     Route::resource('/study-programs', StudyProgramController::class)->middleware('can:manage_study_programs')->except(['show']);
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

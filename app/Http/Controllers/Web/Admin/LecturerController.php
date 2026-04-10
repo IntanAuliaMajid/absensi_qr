@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
-use App\Events\EmailChanged;
 use App\Http\Controllers\Controller;
+use App\Models\Faculty;
 use App\Models\Lecturer;
 use App\Models\User;
-use App\Notifications\PendingEmailChangeVerificationNotification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 
 class LecturerController extends Controller
 {
     public function index()
     {
-        $lecturers = Lecturer::with('user')->get();
+        $lecturers = Lecturer::with(['user', 'faculty'])->get();
 
         return Inertia::render('admin/lecturers/index', [
             'lecturers' => $lecturers,
@@ -26,7 +24,9 @@ class LecturerController extends Controller
 
     public function create()
     {
-        return Inertia::render('admin/lecturers/create');
+        return Inertia::render('admin/lecturers/create', [
+            'faculties' => Faculty::all(),
+        ]);
     }
 
     public function store(Request $request)
@@ -35,6 +35,7 @@ class LecturerController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'nip' => 'required|string|max:30|unique:lecturers,nip',
+            'faculty_id' => 'required|exists:faculties,id',
             'address' => 'nullable|string|max:1000',
             'password' => 'required|string|min:8|confirmed',
         ]);
@@ -51,6 +52,7 @@ class LecturerController extends Controller
             Lecturer::create([
                 'user_id' => $user->id,
                 'nip' => $validated['nip'],
+                'faculty_id' => $validated['faculty_id'],
             ]);
         });
 
@@ -59,34 +61,33 @@ class LecturerController extends Controller
 
     public function edit(Lecturer $lecturer)
     {
-        $lecturer->load('user');
+        $lecturer->load(['user', 'faculty']);
 
         return Inertia::render('admin/lecturers/edit', [
             'lecturer' => $lecturer,
+            'faculties' => Faculty::all(),
         ]);
     }
 
     public function update(Request $request, Lecturer $lecturer)
     {
-        $lecturer->load('user');
-        $actorUserId = $request->user()?->id;
+        $lecturer->load(['user', 'faculty']);
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $lecturer->user->id . '|unique:users,pending_email,' . $lecturer->user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $lecturer->user->id,
             'nip' => 'required|string|max:30|unique:lecturers,nip,' . $lecturer->id,
+            'faculty_id' => 'required|exists:faculties,id',
             'address' => 'nullable|string|max:1000',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        DB::transaction(function () use ($validated, $lecturer, $actorUserId) {
+        DB::transaction(function () use ($validated, $lecturer) {
             $user = $lecturer->user;
-
-            $newEmail = $validated['email'];
-            $emailChanged = $newEmail !== $user->email;
 
             $user->fill([
                 'name' => $validated['name'],
+                'email' => $validated['email'],
                 'address' => $validated['address'] ?? null,
             ]);
 
@@ -94,22 +95,11 @@ class LecturerController extends Controller
                 $user['password'] = $validated['password'];
             }
 
-            if ($emailChanged) {
-                $user->pending_email = $newEmail;
-            }
-
             $user->save();
-            $user->save();
-
-            if ($emailChanged) {
-                Notification::route('mail', $newEmail)
-                    ->notify(new PendingEmailChangeVerificationNotification($user));
-
-                event(new EmailChanged($user->id, $newEmail, $actorUserId));
-            }
 
             $lecturer->update([
                 'nip' => $validated['nip'],
+                'faculty_id' => $validated['faculty_id'],
             ]);
         });
 

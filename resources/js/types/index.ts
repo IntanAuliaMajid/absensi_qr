@@ -10,14 +10,42 @@ export type Role = {
 export type Faculty = {
     id: number;
     name: string;
-}
+};
 
 export type StudyProgram = {
     id: number;
     name: string;
     faculty_id: number;
     faculty?: Faculty;
-}
+};
+
+export type Semester = {
+    id: number;
+    name: string;
+};
+
+export type ClassRoom = {
+    id: number;
+    name: string;
+    study_program_id?: number | null;
+    semester_id?: number | null;
+    lecturer_id?: number | null;
+    room?: string | null;
+    day?: string | null;
+    start_time?: string | null;
+    end_time?: string | null;
+    study_program?: StudyProgram;
+    studyProgram?: StudyProgram;
+    semester?: Semester;
+    lecturer?: {
+        id: number;
+        user_id?: number;
+        user?: {
+            id?: number;
+            name?: string;
+        };
+    };
+};
 
 export type User = {
     id: number;
@@ -63,6 +91,8 @@ export type LecturerPayload = {
     id: number;
     user_id: number;
     nip: string;
+    faculty_id: number;
+    faculty?: Faculty;
     user: {
         id: number;
         name: string;
@@ -76,6 +106,8 @@ export type LecturerItem = {
     id: number;
     user_id: number;
     nip: string;
+    faculty_id: number;
+    faculty?: Faculty;
     user: {
         id: number;
         name: string;
@@ -92,6 +124,7 @@ export type StudentPayload = {
     study_program_id?: number | null;
     gender?: string | null;
     date_of_birth?: string | null;
+    studyProgram?: StudyProgram;
     study_program?: StudyProgram;
     user: {
         id: number;
@@ -109,6 +142,7 @@ export type StudentItem = {
     study_program_id?: number | null;
     gender?: string | null;
     date_of_birth?: string | null;
+    studyProgram?: StudyProgram;
     study_program?: StudyProgram;
     user: {
         id: number;

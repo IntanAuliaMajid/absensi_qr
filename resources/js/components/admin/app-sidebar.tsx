@@ -135,6 +135,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 ],
             },
             {
+                title: 'Class',
+                url: '/admin/classes',
+                icon: Book,
+                isActive: url.startsWith('/admin/classes'),
+                items: [
+                    {
+                        title: 'All Classes',
+                        url: '/admin/classes',
+                        isActive: url === '/admin/classes',
+                    },
+                    {
+                        title: 'Add Class',
+                        url: '/admin/classes/create',
+                        isActive: url === '/admin/classes/create',
+                    },
+                ],
+            },
+            {
                 title: 'Study Program',
                 url: '/admin/study-programs',
                 icon: BookOpen,
