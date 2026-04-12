@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Laravel\Scout\Searchable;
 
 class ClassRoom extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory;
 
     protected $table = 'classes';
 
@@ -24,19 +23,6 @@ class ClassRoom extends Model
         'start_time',
         'end_time',
     ];
-
-    public function toSearchableArray(): array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'room' => $this->room,
-            'day' => $this->day,
-            'lecturer_name' => $this->lecturer?->user?->name,
-            'semester' => $this->semester?->name,
-            'study_program' => $this->studyProgram?->name,
-        ];
-    }
 
     public function studyProgram(): BelongsTo
     {

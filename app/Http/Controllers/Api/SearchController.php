@@ -17,31 +17,20 @@ class SearchController extends Controller
 
         $query = trim((string) $request->input('q', ''));
 
-        if ($query === '') {
-            return response()->json([
-                'message' => 'Silakan masukkan kata kunci.',
-                'data' => [
-                    'query' => $query,
-                    'sections' => [
-                        'classes' => ClassRoom::with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name'])
-                            ->orderBy('name')->get(),
-                    ],
-                ],
-                'meta' => [
-                    'classes_total' => ClassRoom::with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name'])
-                        ->orderBy('name')->get()->count(),
-                ],
-            ]);
+        $builder = ClassRoom::with([
+            'lecturer.user:id,name',
+            'semester:id,name',
+            'studyProgram:id,name'
+        ])->orderBy('id');
+
+        if ($query !== '') {
+            $builder->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('room', 'like', "%{$query}%");
+            });
         }
 
-        $classes = ClassRoom::search($query)
-            ->query(
-                fn($builder) => $builder
-                    ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name'])
-                    ->orderBy('name')
-            )
-            ->take(24)
-            ->get();
+        $classes = $builder->cursorPaginate(10);
 
         $classData = $classes->map(fn(ClassRoom $classRoom) => [
             'id' => $classRoom->id,
@@ -55,15 +44,14 @@ class SearchController extends Controller
         ])->values();
 
         return response()->json([
-            'message' => 'Hasil pencarian berhasil diambil.',
+            'message' => 'Data berhasil diambil.',
             'data' => [
-                'query' => $query,
-                'sections' => [
-                    'classes' => $classData,
-                ],
+                'classes' => $classData,
             ],
             'meta' => [
-                'classes_total' => $classData->count(),
+                'next_cursor' => $classes->nextCursor()?->encode(),
+                'prev_cursor' => $classes->previousCursor()?->encode(),
+                'has_more' => $classes->hasMorePages(),
             ],
         ]);
     }
