@@ -17,8 +17,9 @@ class ClassRoomController extends Controller
     {
         $classes = ClassRoom::query()
             ->with(['studyProgram', 'semester', 'lecturer.user'])
-            ->orderBy('name')
-            ->get();
+            ->orderBy('id')
+            ->cursorPaginate(10)
+            ->withQueryString();
 
         return Inertia::render('admin/classes/index', [
             'classes' => $classes,

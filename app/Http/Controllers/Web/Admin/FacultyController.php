@@ -15,7 +15,10 @@ class FacultyController extends Controller
      */
     public function index()
     {
-        $faculties = Faculty::all();
+        $faculties = Faculty::query()
+            ->orderBy('id')
+            ->cursorPaginate(10)
+            ->withQueryString();
 
         return Inertia::render('admin/faculties/index', [
             'faculties' => $faculties,

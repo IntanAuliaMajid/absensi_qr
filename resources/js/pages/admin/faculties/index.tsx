@@ -27,10 +27,12 @@ import {
     edit,
     destroy as destroyRoute,
 } from '@/routes/admin/faculties';
-import { Faculty } from '@/types';
+import { Faculty, CursorPagination } from '@/types';
+import { PaginationComponent } from '@/components/admin/pagination-component';
 
 export default function Page() {
-    const { faculties } = usePage<{ faculties: Faculty[] }>().props;
+    const { faculties } = usePage<{ faculties: CursorPagination<Faculty> }>()
+        .props;
 
     const { delete: destroy, processing } = useForm();
 
@@ -85,7 +87,7 @@ export default function Page() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {faculties.map((faculty, index) => (
+                            {faculties.data.map((faculty) => (
                                 <TableRow key={faculty.id}>
                                     <TableCell>{faculty.name}</TableCell>
                                     <TableCell>
@@ -120,6 +122,7 @@ export default function Page() {
                             ))}
                         </TableBody>
                     </Table>
+                    <PaginationComponent pagination={faculties} />
                     <div className="min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min" />
                 </div>
             </SidebarInset>

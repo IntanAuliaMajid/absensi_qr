@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
+    { title: 'Beranda', href: '/dashboard' },
     { title: 'Presensi Mata Kuliah', href: '#' },
 ];
 

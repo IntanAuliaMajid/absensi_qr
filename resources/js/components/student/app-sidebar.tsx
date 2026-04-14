@@ -27,7 +27,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Kelas',
-        href: '/student/classes',
+        href: '/student/all-classes',
         icon: BookOpen,
     },
 ];
@@ -47,9 +47,7 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     const { url } = usePage();
-    const currentQuery = new URLSearchParams(url.split('?')[1] ?? '').get(
-        'class_q',
-    );
+    const currentQuery = new URLSearchParams(url.split('?')[1] ?? '').get('q');
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -68,9 +66,9 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <SidebarGroup className="px-2">
-                    <form method="get" action="/student/search">
+                    <form method="get" action="/student/all-classes">
                         <SidebarInput
-                            name="class_q"
+                            name="q"
                             defaultValue={currentQuery ?? ''}
                             placeholder="Cari Sesuatu..."
                         />

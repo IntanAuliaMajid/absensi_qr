@@ -15,7 +15,11 @@ class LecturerController extends Controller
 {
     public function index()
     {
-        $lecturers = Lecturer::with(['user', 'faculty'])->get();
+        $lecturers = Lecturer::query()
+            ->with(['user', 'faculty'])
+            ->orderBy('id')
+            ->cursorPaginate(10)
+            ->withQueryString();
 
         return Inertia::render('admin/lecturers/index', [
             'lecturers' => $lecturers,

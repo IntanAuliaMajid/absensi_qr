@@ -25,7 +25,7 @@ import {
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Beranda',
         href: '/student/dashboard',
     },
 ];
