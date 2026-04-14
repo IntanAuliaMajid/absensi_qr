@@ -13,11 +13,11 @@ class ClassEnrollmentController extends Controller
     public function allClasses(Request $request): Response
     {
         $request->validate([
-            'class_q' => 'nullable|string|max:100',
+            'q' => 'nullable|string|max:100',
         ]);
 
         $student = $request->user()?->student;
-        $query = trim((string) $request->input('class_q', ''));
+        $query = trim((string) $request->input('q', ''));
 
         if (! $student) {
             abort(403);
@@ -47,7 +47,7 @@ class ClassEnrollmentController extends Controller
         return Inertia::render('student/all-classes/index', [
             'classes' => $classes,
             'filters' => [
-                'class_q' => $query,
+                'q' => $query,
             ],
         ]);
     }

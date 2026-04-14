@@ -18,13 +18,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 type ClassPageProps = {
     classes: CursorPagination<ClassRoom>;
     filters?: {
-        class_q?: string;
+        q?: string;
     };
 };
 
 export default function StudentAllClassesIndex() {
     const { classes, filters } = usePage<ClassPageProps>().props;
-    const keyword = filters?.class_q?.trim() ?? '';
+    const keyword = filters?.q?.trim() ?? '';
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

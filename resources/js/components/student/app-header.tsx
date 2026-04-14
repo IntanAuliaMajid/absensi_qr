@@ -158,7 +158,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                             >
                                 <Search className="pointer-events-none absolute left-3 size-4 text-muted-foreground" />
                                 <Input
-                                    name="class_q"
+                                    name="q"
                                     placeholder="Cari kelas..."
                                     className="h-9 pl-9"
                                 />
