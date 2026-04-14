@@ -58,9 +58,7 @@ class SearchController extends Controller
             'message' => 'Hasil pencarian berhasil diambil.',
             'data' => [
                 'query' => $query,
-                'sections' => [
-                    'classes' => $classData,
-                ],
+                'classes' => $classData,
             ],
             'meta' => [
                 'classes_total' => $classData->count(),
