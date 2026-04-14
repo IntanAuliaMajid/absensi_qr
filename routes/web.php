@@ -8,7 +8,6 @@ use App\Http\Controllers\Web\Admin\RoleController;
 use App\Http\Controllers\Web\Admin\StudentController;
 use App\Http\Controllers\Web\Admin\StudyProgramController;
 use App\Http\Controllers\Web\Student\ClassEnrollmentController;
-use App\Http\Controllers\Web\Student\SearchController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\LecturerMiddleware;
 use App\Http\Middleware\StudentMiddleware;
@@ -32,7 +31,7 @@ Route::middleware(['auth', StudentMiddleware::class])->prefix('student')->name('
     })->name('matakuliah');
 
     Route::get('classes', [ClassEnrollmentController::class, 'index'])->name('classes.index');
-    Route::get('search', [SearchController::class, 'index'])->name('search.index');
+    Route::get('all-classes', [ClassEnrollmentController::class, 'allClasses'])->name('all-classes.index');
 });
 
 Route::middleware(['auth', LecturerMiddleware::class])->prefix('lecturer')->name('lecturer.')->group(function () {

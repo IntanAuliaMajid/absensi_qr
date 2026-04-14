@@ -21,10 +21,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { useForm, usePage, Link } from '@inertiajs/react';
 import { Trash2, Pencil } from 'lucide-react';
-import { ClassRoom } from '@/types';
+import { ClassRoom, CursorPagination } from '@/types';
+import { PaginationComponent } from '@/components/admin/pagination-component';
 
 export default function Page() {
-    const { classes } = usePage<{ classes: ClassRoom[] }>().props;
+    const { classes } = usePage<{ classes: CursorPagination<ClassRoom> }>()
+        .props;
 
     const { delete: destroy, processing } = useForm();
 
@@ -83,7 +85,7 @@ export default function Page() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {classes.map((classRoom) => {
+                            {classes.data.map((classRoom) => {
                                 const startTime = classRoom.start_time;
                                 const endTime = classRoom.end_time;
 
@@ -148,6 +150,7 @@ export default function Page() {
                             })}
                         </TableBody>
                     </Table>
+                    <PaginationComponent pagination={classes} />
                     <div className="min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min" />
                 </div>
             </SidebarInset>

@@ -83,7 +83,7 @@ export default function Page() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {roles.map((role, index) => (
+                            {roles.map((role) => (
                                 <TableRow key={role.id}>
                                     <TableCell>{role.name}</TableCell>
                                     <TableCell>

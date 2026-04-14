@@ -16,7 +16,11 @@ class StudyProgramController extends Controller
      */
     public function index()
     {
-        $studyPrograms = StudyProgram::with('faculty')->get();
+        $studyPrograms = StudyProgram::query()
+            ->with('faculty')
+            ->orderBy('id')
+            ->cursorPaginate(10)
+            ->withQueryString();
 
         return Inertia::render('admin/study-programs/index', [
             'studyPrograms' => $studyPrograms
@@ -57,7 +61,7 @@ class StudyProgramController extends Controller
             'studyProgram' => $studyProgram,
             'faculties' => Faculty::all(),
         ]);
-}
+    }
 
     /**
      * Update the specified resource in storage.

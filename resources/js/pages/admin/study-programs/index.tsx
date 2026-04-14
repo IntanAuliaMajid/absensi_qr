@@ -27,11 +27,13 @@ import {
     edit,
     destroy as destroyRoute,
 } from '@/routes/admin/study-programs';
-import { StudyProgram } from '@/types';
+import { StudyProgram, CursorPagination } from '@/types';
+import { PaginationComponent } from '@/components/admin/pagination-component';
 
 export default function Page() {
-    const { studyPrograms } = usePage<{ studyPrograms: StudyProgram[] }>()
-        .props;
+    const { studyPrograms } = usePage<{
+        studyPrograms: CursorPagination<StudyProgram>;
+    }>().props;
 
     const { delete: destroy, processing } = useForm();
 
@@ -89,7 +91,7 @@ export default function Page() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {studyPrograms.map((studyProgram, index) => (
+                            {studyPrograms.data.map((studyProgram) => (
                                 <TableRow key={studyProgram.id}>
                                     <TableCell>{studyProgram.name}</TableCell>
                                     <TableCell>
@@ -131,6 +133,7 @@ export default function Page() {
                             ))}
                         </TableBody>
                     </Table>
+                    <PaginationComponent pagination={studyPrograms} />
                     <div className="min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min" />
                 </div>
             </SidebarInset>

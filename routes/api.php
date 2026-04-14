@@ -26,3 +26,5 @@ Route::post('/otp-check', [PasswordResetController::class, 'checkOtp'])->middlew
 Route::post('/new-password', [PasswordResetController::class, 'resetPassword']);
 
 Route::get('/search', [SearchController::class, 'index']);
+
+

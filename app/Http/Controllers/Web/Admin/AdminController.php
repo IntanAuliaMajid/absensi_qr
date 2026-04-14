@@ -14,7 +14,11 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $admins = Admin::with('user')->get();
+        $admins = Admin::query()
+            ->with('user')
+            ->orderBy('id')
+            ->cursorPaginate(10)
+            ->withQueryString();
 
         return Inertia::render('admin/admins/index', [
             'admins' => $admins,

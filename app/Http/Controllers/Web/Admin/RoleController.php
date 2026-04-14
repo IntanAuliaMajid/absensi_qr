@@ -12,7 +12,11 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::select('id', 'name')->where('name', '!=', 'admin')->get();
+        $roles = Role::query()
+            ->select('id', 'name')
+            ->where('name', '!=', 'admin')
+            ->orderBy('name')
+            ->get();
 
         return Inertia::render('admin/roles/index', [
             'roles' => $roles

@@ -1,23 +1,22 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/student-layout';
-import type { BreadcrumbItem, ClassRoom } from '@/types';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import type { BreadcrumbItem, ClassRoom, CursorPagination } from '@/types';
 import { UserRound, MapPin, Clock3, GraduationCap } from 'lucide-react';
+import { PaginationComponent } from '@/components/student/pagination-component';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Beranda',
         href: '/student/dashboard',
     },
     {
-        title: 'Kelas',
+        title: 'Kelas Saya',
         href: '/student/classes',
     },
 ];
 
 type ClassPageProps = {
-    classes: ClassRoom[];
+    classes: CursorPagination<ClassRoom>;
 };
 
 export default function StudentClassIndex() {
@@ -25,20 +24,20 @@ export default function StudentClassIndex() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Kelas" />
+            <Head title="Kelas Saya" />
 
             <div className="flex h-full flex-1 flex-col gap-6 bg-[#F8FAFC] p-6">
                 <div className="flex flex-col gap-1">
                     <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-                        Daftar Kelas
+                        Kelas Saya
                     </h1>
                     <p className="text-sm text-slate-500">
-                        Daftar kelas aktif untuk program studi Anda.
+                        Daftar kelas yang Anda ambil semester ini.
                     </p>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {classes.map((classRoom) => {
+                    {classes.data.map((classRoom) => {
                         return (
                             <div
                                 key={classRoom.id}
@@ -83,11 +82,13 @@ export default function StudentClassIndex() {
                     })}
                 </div>
 
-                {classes.length === 0 && (
+                {classes.data.length === 0 && (
                     <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
-                        Tidak ada kelas yang cocok dengan pencarian Anda.
+                        Anda belum terdaftar pada kelas mana pun.
                     </div>
                 )}
+
+                <PaginationComponent pagination={classes} />
             </div>
         </AppLayout>
     );

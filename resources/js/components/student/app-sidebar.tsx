@@ -27,7 +27,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Kelas',
-        href: '/student/classes',
+        href: '/student/all-classes',
         icon: BookOpen,
     },
 ];
@@ -68,7 +68,7 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <SidebarGroup className="px-2">
-                    <form method="get" action="/student/search">
+                    <form method="get" action="/student/all-classes">
                         <SidebarInput
                             name="class_q"
                             defaultValue={currentQuery ?? ''}

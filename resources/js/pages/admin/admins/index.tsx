@@ -21,10 +21,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { usePage, useForm, Link } from '@inertiajs/react';
 import { Trash2, Pencil } from 'lucide-react';
-import { AdminItem } from '@/types';
+import { AdminItem, CursorPagination } from '@/types';
+import { PaginationComponent } from '@/components/admin/pagination-component';
 
 export default function Page() {
-    const { admins } = usePage<{ admins: AdminItem[] }>().props;
+    const { admins } = usePage<{ admins: CursorPagination<AdminItem> }>().props;
 
     const { delete: destroy, processing } = useForm();
     const handleDelete = (id: number) => {
@@ -76,7 +77,7 @@ export default function Page() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {admins.map((admin) => (
+                            {admins.data.map((admin) => (
                                 <TableRow key={admin.id}>
                                     <TableCell>{admin.user.name}</TableCell>
                                     <TableCell>
@@ -111,6 +112,7 @@ export default function Page() {
                             ))}
                         </TableBody>
                     </Table>
+                    <PaginationComponent pagination={admins} />
                     <div className="min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min" />
                 </div>
             </SidebarInset>
