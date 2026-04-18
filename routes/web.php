@@ -21,7 +21,7 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::middleware(['auth', StudentMiddleware::class])->prefix('student')->name('student.')->group(function () {
+Route::middleware(['auth', 'verified',StudentMiddleware::class])->prefix('student')->name('student.')->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('student/dashboard');
     })->name('dashboard');
