@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Web\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\ClassRoom;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,14 +14,14 @@ class ClassEnrollmentController extends Controller
     {
         $student = $request->user()?->student;
 
-        $classes = $student->classes()
+        $courses = $student->courses()
             ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name'])
-            ->orderBy('classes.id')
+            ->orderBy('courses.id')
             ->cursorPaginate(9)
             ->withQueryString();
 
-        return Inertia::render('student/classes/index', [
-            'classes' => $classes,
+        return Inertia::render('student/courses/index', [
+            'courses' => $courses,
         ]);
     }
 
@@ -34,28 +34,27 @@ class ClassEnrollmentController extends Controller
         $student = $request->user()?->student;
         $query = trim((string) $request->input('q', ''));
 
-        $classesQuery = ClassRoom::query()
+        $coursesQuery = Course::query()
             ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name'])
             ->orderBy('id')->where('study_program_id', $student->study_program_id);
 
         if ($query !== '') {
-            $classesQuery->where(function ($q) use ($query) {
+            $coursesQuery->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
-                ->orWhere('room', 'like', "%{$query}%")
-                ->orWhereHas('lecturer.user', function ($q2) use ($query) {
-                    $q2->where('name', 'like', "%{$query}%");
-                });
+                    ->orWhere('room', 'like', "%{$query}%")
+                    ->orWhereHas('lecturer.user', function ($q2) use ($query) {
+                        $q2->where('name', 'like', "%{$query}%");
+                    });
             });
         }
 
-        $classes = $classesQuery
+        $courses = $coursesQuery
             ->cursorPaginate(9)
             ->withQueryString();
 
-        return Inertia::render('student/all-classes/index', [
-            'classes' => $classes,    
+        return Inertia::render('student/all-courses/index', [
+            'courses' => $courses,
             'q' => $query,
         ]);
     }
-
 }

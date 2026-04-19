@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             FacultySeeder::class,
             SemesterSeeder::class,
             LecturerSeeder::class,
-            ClassRoomSeeder::class,
+            CourseSeeder::class,
             StudentSeeder::class,
             ClassStudentSeeder::class,
         ]);

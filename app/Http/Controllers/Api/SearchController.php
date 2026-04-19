@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\ClassRoom;
+use App\Models\Course;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class SearchController extends Controller
 
         $query = trim((string) $request->input('q', ''));
 
-        $builder = ClassRoom::with([
+        $builder = Course::with([
             'lecturer.user:id,name',
             'semester:id,name',
             'studyProgram:id,name'
@@ -39,17 +39,17 @@ class SearchController extends Controller
             });
         }
 
-        $classes = $builder->cursorPaginate(9);
+        $courses = $builder->cursorPaginate(9);
 
-        $classData = $classes->map(fn(ClassRoom $classRoom) => [
-            'id' => $classRoom->id,
-            'name' => $classRoom->name,
-            'room' => $classRoom->room,
-            'start_time' => $classRoom->start_time,
-            'end_time' => $classRoom->end_time,
-            'study_program' => $classRoom->studyProgram?->name,
-            'semester' => $classRoom->semester?->name,
-            'lecturer_name' => $classRoom->lecturer?->user?->name,
+        $classData = $courses->map(fn(Course $course) => [
+            'id' => $course->id,
+            'name' => $course->name,
+            'room' => $course->room,
+            'start_time' => $course->start_time,
+            'end_time' => $course->end_time,
+            'study_program' => $course->studyProgram?->name,
+            'semester' => $course->semester?->name,
+            'lecturer_name' => $course->lecturer?->user?->name,
         ])->values();
 
         return response()->json([
@@ -57,9 +57,9 @@ class SearchController extends Controller
             'classes' => $classData,
 
             'meta' => [
-                'next_cursor' => $classes->nextCursor()?->encode(),
-                'prev_cursor' => $classes->previousCursor()?->encode(),
-                'has_more' => $classes->hasMorePages(),
+                'next_cursor' => $courses->nextCursor()?->encode(),
+                'prev_cursor' => $courses->previousCursor()?->encode(),
+                'has_more' => $courses->hasMorePages(),
             ],
         ]);
     }

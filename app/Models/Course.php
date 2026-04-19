@@ -7,12 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class ClassRoom extends Model
+class Course extends Model
 {
-    use HasFactory;
-
-    protected $table = 'classes';
-
     protected $fillable = [
         'name',
         'study_program_id',

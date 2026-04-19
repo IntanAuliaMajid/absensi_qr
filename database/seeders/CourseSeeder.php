@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\ClassRoom;
+use App\Models\Course;
 use App\Models\Faculty;
 use App\Models\Lecturer;
 use App\Models\Semester;
@@ -10,7 +10,7 @@ use App\Models\StudyProgram;
 use Illuminate\Database\Seeder;
 use RuntimeException;
 
-class ClassRoomSeeder extends Seeder
+class CourseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -222,13 +222,18 @@ class ClassRoomSeeder extends Seeder
                     ['faculty_id' => $faculty->id]
                 );
 
+                $slotIndex = 0;
+
                 foreach ($subjects as $subjectName) {
-                    $day = $days[$classIndex % count($days)];
-                    $slot = $timeSlots[$classIndex % count($timeSlots)];
+
+                    $dayIndex = intdiv($slotIndex, 2) % count($days);
+                    $day = $days[$dayIndex];
+                    $slot = $timeSlots[$slotIndex % count($timeSlots)];
+
                     $lecturer = $lecturers[$classIndex % $lecturers->count()];
                     $room = sprintf('Ruang %s%02d', chr(65 + ($classIndex % 6)), ($classIndex % 20) + 1);
 
-                    ClassRoom::query()->updateOrCreate(
+                    Course::query()->updateOrCreate(
                         ['name' => $subjectName],
                         [
                             'study_program_id' => $studyProgram->id,
@@ -241,6 +246,7 @@ class ClassRoomSeeder extends Seeder
                         ]
                     );
 
+                    $slotIndex++;
                     $classIndex++;
                 }
             }

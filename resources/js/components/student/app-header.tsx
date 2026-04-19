@@ -42,7 +42,7 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
     },
     {
-        title: 'Kelas',
+        title: 'Daftar Kelas',
         href: '/student/all-classes',
     },
     {
@@ -154,7 +154,11 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                             <form
                                 method="get"
                                 action="/student/all-classes"
-                                className="relative hidden w-52 items-center md:flex lg:w-64"
+                                className={cn(
+                                    'relative hidden w-52 items-center lg:w-64',
+                                    !isCurrentUrl('/student/all-classes') &&
+                                        'md:flex',
+                                )}
                             >
                                 <Search className="pointer-events-none absolute left-3 size-4 text-muted-foreground" />
                                 <Input

@@ -8,8 +8,17 @@ import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
+import { usePage } from '@inertiajs/react';
+
+type StudyProgram = {
+    id: number;
+    name: string;
+};
 
 export default function Register() {
+    const { studyPrograms } = usePage<{ studyPrograms: StudyProgram[] }>()
+        .props;
+
     return (
         <AuthLayout
             title="Create an account"
@@ -58,12 +67,39 @@ export default function Register() {
                             </div>
 
                             <div className="grid gap-2">
+                                <Label htmlFor="study_program_id">
+                                    Program Studi
+                                </Label>
+                                <select
+                                    id="study_program_id"
+                                    name="study_program_id"
+                                    required
+                                    tabIndex={3}
+                                    defaultValue=""
+                                    className="h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+                                >
+                                    <option value="" disabled>
+                                        Pilih program studi
+                                    </option>
+                                    {studyPrograms.map((studyProgram) => (
+                                        <option
+                                            key={studyProgram.id}
+                                            value={studyProgram.id}
+                                        >
+                                            {studyProgram.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <InputError message={errors.study_program_id} />
+                            </div>
+
+                            <div className="grid gap-2">
                                 <Label htmlFor="nim">NIM</Label>
                                 <Input
                                     id="nim"
                                     type="text"
                                     required
-                                    tabIndex={3}
+                                    tabIndex={4}
                                     autoComplete="nim"
                                     name="nim"
                                     placeholder="23xxxxxx"
@@ -77,7 +113,7 @@ export default function Register() {
                                     id="password"
                                     type="password"
                                     required
-                                    tabIndex={4}
+                                    tabIndex={5}
                                     autoComplete="new-password"
                                     name="password"
                                     placeholder="Password"
@@ -93,7 +129,7 @@ export default function Register() {
                                     id="password_confirmation"
                                     type="password"
                                     required
-                                    tabIndex={5}
+                                    tabIndex={6}
                                     autoComplete="new-password"
                                     name="password_confirmation"
                                     placeholder="Confirm password"
@@ -106,7 +142,7 @@ export default function Register() {
                             <Button
                                 type="submit"
                                 className="mt-2 w-full"
-                                tabIndex={5}
+                                tabIndex={7}
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}
@@ -116,7 +152,7 @@ export default function Register() {
 
                         <div className="text-center text-sm text-muted-foreground">
                             Already have an account?{' '}
-                            <TextLink href={login()} tabIndex={6}>
+                            <TextLink href={login()} tabIndex={8}>
                                 Log in
                             </TextLink>
                         </div>

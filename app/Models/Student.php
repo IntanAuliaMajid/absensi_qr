@@ -29,9 +29,9 @@ class Student extends Model
         return $this->belongsTo(StudyProgram::class);
     }
 
-    public function classes(): BelongsToMany
+    public function courses(): BelongsToMany
     {
-        return $this->belongsToMany(ClassRoom::class, 'class_student', 'student_id', 'class_id')
+        return $this->belongsToMany(Course::class, 'class_student', 'student_id', 'class_id')
             ->withTimestamps();
     }
 }

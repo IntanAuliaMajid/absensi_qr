@@ -1,8 +1,9 @@
 import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/student-layout';
-import type { BreadcrumbItem, ClassRoom, CursorPagination } from '@/types';
-import { UserRound, MapPin, Clock3, GraduationCap } from 'lucide-react';
+import type { BreadcrumbItem, Course, CursorPagination } from '@/types';
+import { UserRound, MapPin, Clock3, GraduationCap, Search } from 'lucide-react';
 import { PaginationComponent } from '@/components/student/pagination-component';
+import { Input } from '@/components/ui/input';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -11,17 +12,17 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Kelas',
-        href: '/student/all-classes',
+        href: '/student/all-courses',
     },
 ];
 
 type ClassPageProps = {
-    classes: CursorPagination<ClassRoom>;
+    courses: CursorPagination<Course>;
     q?: string;
 };
 
-export default function StudentAllClassesIndex() {
-    const { classes, q } = usePage<ClassPageProps>().props;
+export default function StudentAllcoursesIndex() {
+    const { courses, q } = usePage<ClassPageProps>().props;
     const keyword = q?.trim() ?? '';
 
     return (
@@ -38,22 +39,36 @@ export default function StudentAllClassesIndex() {
                             ? 'Daftar seluruh kelas pada program studi Anda.'
                             : `Hasil pencarian: "${keyword}"`}
                     </p>
+
+                    <form
+                        method="get"
+                        action="/student/all-classes"
+                        className="relative w-52 shrink-0 lg:w-64 mt-2"
+                    >
+                        <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            name="q"
+                            defaultValue={keyword}
+                            placeholder="Cari kelas..."
+                            className="h-9 pl-9"
+                        />
+                    </form>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {classes.data.map((classRoom) => (
+                    {courses.data.map((courses) => (
                         <div
-                            key={classRoom.id}
+                            key={courses.id}
                             className="rounded-2xl border border-sky-100 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                         >
                             <div className="mb-4 flex items-start justify-between gap-2">
                                 <div>
                                     <h2 className="line-clamp-2 text-base font-bold text-slate-900">
-                                        {classRoom.name}
+                                        {courses.name}
                                     </h2>
                                     <p className="mt-1 text-xs text-slate-500">
-                                        {classRoom.study_program?.name ??
-                                            classRoom.studyProgram?.name ??
+                                        {courses.study_program?.name ??
+                                            courses.studyProgram?.name ??
                                             '-'}
                                     </p>
                                 </div>
@@ -62,34 +77,34 @@ export default function StudentAllClassesIndex() {
                             <div className="space-y-2 text-sm text-slate-600">
                                 <p className="flex items-center gap-2">
                                     <UserRound className="size-4 text-sky-600" />
-                                    {classRoom.lecturer?.user?.name ?? '-'}
+                                    {courses.lecturer?.user?.name ?? '-'}
                                 </p>
                                 <p className="flex items-center gap-2">
                                     <MapPin className="size-4 text-sky-600" />
-                                    {classRoom.room ?? '-'}
+                                    {courses.room ?? '-'}
                                 </p>
                                 <p className="flex items-center gap-2">
                                     <Clock3 className="size-4 text-sky-600" />
-                                    {classRoom.start_time && classRoom.end_time
-                                        ? `${classRoom.day ? `${classRoom.day}, ` : ''}${classRoom.start_time.slice(0, 5)} - ${classRoom.end_time.slice(0, 5)}`
+                                    {courses.start_time && courses.end_time
+                                        ? `${courses.day ? `${courses.day}, ` : ''}${courses.start_time.slice(0, 5)} - ${courses.end_time.slice(0, 5)}`
                                         : '-'}
                                 </p>
                                 <p className="flex items-center gap-2">
                                     <GraduationCap className="size-4 text-sky-600" />
-                                    {classRoom.semester?.name ?? '-'}
+                                    {courses.semester?.name ?? '-'}
                                 </p>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                {classes.data.length === 0 && (
+                {courses.data.length === 0 && (
                     <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
                         Belum ada data kelas.
                     </div>
                 )}
 
-                <PaginationComponent pagination={classes} />
+                <PaginationComponent pagination={courses} />
             </div>
         </AppLayout>
     );

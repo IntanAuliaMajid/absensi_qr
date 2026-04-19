@@ -24,10 +24,11 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'nim' => $this->nimRules(),
+            'study_program_id' => ['required', 'integer', 'exists:study_programs,id'],
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return DB::transaction(function () use ($input){
+        return DB::transaction(function () use ($input) {
             $user = User::create([
                 'name' => $input['name'],
                 'email' => $input['email'],
@@ -38,6 +39,7 @@ class CreateNewUser implements CreatesNewUsers
             Student::create([
                 'user_id' => $user->id,
                 'nim' => $input['nim'],
+                'study_program_id' => $input['study_program_id'],
             ]);
 
             return $user;

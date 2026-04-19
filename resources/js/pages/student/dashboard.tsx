@@ -1,6 +1,6 @@
 import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/student-layout';
-import type { BreadcrumbItem } from '@/types';
+import type { BreadcrumbItem, Course } from '@/types';
 import student from '@/routes/student';
 
 import {
@@ -30,8 +30,23 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+type DashboardProps = {
+    todayCourses: Course[];
+    tomorrowCourses: Course[];
+    today: string;
+    tomorrow: string;
+};
+
 export default function Dashboard() {
-    const { auth } = usePage().props as any;
+    const pageProps = usePage<Partial<DashboardProps> & { auth?: any }>().props;
+    const {
+        auth,
+        todayCourses = [],
+        tomorrowCourses = [],
+        today = '',
+        tomorrow = '',
+    } = pageProps;
+
     const userName = auth?.user?.name
         ? auth.user.name.split(' ')[0]
         : 'Mahasiswa';
@@ -66,22 +81,11 @@ export default function Dashboard() {
         },
     ];
 
-    const todayClasses = [
-        {
-            id: 1,
-            subject: 'Pemrograman Web',
-            time: '08:00 - 10:30',
-            room: 'Lab Terpadu 1',
-            status: 'Active',
-        },
-        {
-            id: 2,
-            subject: 'Basis Data Terdistribusi',
-            time: '13:00 - 15:30',
-            room: 'Ruang Kuliah 3.2',
-            status: 'Upcoming',
-        },
-    ];
+    const hasTodayCourses = todayCourses.length > 0;
+    const scheduleTitle = hasTodayCourses ? 'Jadwal Hari Ini' : 'Jadwal Besok';
+    const scheduleDate = hasTodayCourses ? today : tomorrow;
+    const scheduleCourses = hasTodayCourses ? todayCourses : tomorrowCourses;
+    const scheduleBadge = hasTodayCourses ? 'Hari Ini' : 'Besok';
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -198,58 +202,99 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    {/* Jadwal Absensi Section (1/3 Kolom) */}
-                    <div className="rounded-[2rem] border border-sky-100 bg-white p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                        <h2 className="mb-6 flex items-center gap-2 text-lg font-bold text-slate-800">
-                            <Clock className="size-5 text-sky-600" />
-                            Jadwal Hari Ini
-                        </h2>
-
-                        <div className="flex flex-col gap-4">
-                            {todayClasses.map((item) => (
-                                <div
-                                    key={item.id}
-                                    className="group rounded-2xl border border-slate-50 bg-slate-50/50 p-4 transition-all hover:border-sky-200 hover:bg-sky-50/50"
-                                >
-                                    <div className="mb-2 flex items-start justify-between">
-                                        <span
-                                            className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                                                item.status === 'Active'
-                                                    ? 'bg-green-100 text-green-600'
-                                                    : 'bg-slate-200 text-slate-500'
-                                            }`}
+                    {/* Jadwal Hari Ini & Besok */}
+                    <div className="flex flex-col gap-6 rounded-[2rem] border border-sky-100 bg-white p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                        {/* Jadwal Hari Ini */}
+                        <div>
+                            <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-slate-800">
+                                <Clock className="size-5 text-sky-600" />
+                                Jadwal Hari Ini
+                                <span className="text-sm font-normal text-slate-400">
+                                    ({today})
+                                </span>
+                            </h2>
+                            <div className="flex flex-col gap-3">
+                                {todayCourses.length > 0 ? (
+                                    todayCourses.map((item) => (
+                                        <div
+                                            key={item.id}
+                                            className="rounded-2xl border border-slate-50 bg-slate-50/50 p-4"
                                         >
-                                            {item.status === 'Active'
-                                                ? 'Mulai'
-                                                : 'Akan Datang'}
-                                        </span>
-                                        <span className="text-xs font-semibold text-slate-400">
-                                            {item.time}
-                                        </span>
-                                    </div>
-                                    <h3 className="mb-2 leading-tight font-bold text-slate-800">
-                                        {item.subject}
-                                    </h3>
-                                    <div className="mt-4 flex items-center justify-between">
-                                        <div className="flex items-center gap-1 text-xs text-slate-500">
-                                            <MapPin className="size-3" />
-                                            {item.room}
+                                            <div className="mb-2 flex items-start justify-between">
+                                                <span className="rounded-full bg-sky-100 px-2 py-0.5 text-[10px] font-bold text-sky-600 uppercase">
+                                                    Hari Ini
+                                                </span>
+                                                <span className="text-xs font-semibold text-slate-400">
+                                                    {item.start_time?.slice(
+                                                        0,
+                                                        5,
+                                                    )}{' '}
+                                                    -{' '}
+                                                    {item.end_time?.slice(0, 5)}
+                                                </span>
+                                            </div>
+                                            <h3 className="mb-2 leading-tight font-bold text-slate-800">
+                                                {item.name}
+                                            </h3>
+                                            <div className="flex items-center gap-1 text-xs text-slate-500">
+                                                <MapPin className="size-3" />
+                                                {item.room ?? '-'}
+                                            </div>
                                         </div>
-                                        {item.status === 'Active' && (
-                                            <button className="flex items-center gap-1 text-xs font-bold text-sky-600 transition-all group-hover:gap-2">
-                                                Absen{' '}
-                                                <ArrowRight className="size-3" />
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
+                                    ))
+                                ) : (
+                                    <p className="py-4 text-center text-sm text-slate-400">
+                                        Tidak ada jadwal hari ini.
+                                    </p>
+                                )}
+                            </div>
+                        </div>
 
-                            {todayClasses.length === 0 && (
-                                <p className="py-10 text-center text-sm text-slate-400">
-                                    Tidak ada jadwal kuliah hari ini.
-                                </p>
-                            )}
+                        <div className="border-t border-slate-100" />
+
+                        <div>
+                            <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-slate-800">
+                                <Clock className="size-5 text-slate-400" />
+                                Jadwal Besok
+                                <span className="text-sm font-normal text-slate-400">
+                                    ({tomorrow})
+                                </span>
+                            </h2>
+                            <div className="flex flex-col gap-3">
+                                {tomorrowCourses.length > 0 ? (
+                                    tomorrowCourses.map((item) => (
+                                        <div
+                                            key={item.id}
+                                            className="rounded-2xl border border-slate-50 bg-slate-50/50 p-4"
+                                        >
+                                            <div className="mb-2 flex items-start justify-between">
+                                                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500 uppercase">
+                                                    Besok
+                                                </span>
+                                                <span className="text-xs font-semibold text-slate-400">
+                                                    {item.start_time?.slice(
+                                                        0,
+                                                        5,
+                                                    )}{' '}
+                                                    -{' '}
+                                                    {item.end_time?.slice(0, 5)}
+                                                </span>
+                                            </div>
+                                            <h3 className="mb-2 leading-tight font-bold text-slate-800">
+                                                {item.name}
+                                            </h3>
+                                            <div className="flex items-center gap-1 text-xs text-slate-500">
+                                                <MapPin className="size-3" />
+                                                {item.room ?? '-'}
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="py-4 text-center text-sm text-slate-400">
+                                        Tidak ada jadwal besok.
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

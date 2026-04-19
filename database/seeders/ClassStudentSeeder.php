@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\ClassRoom;
+use App\Models\Course;
 use App\Models\Student;
 use Illuminate\Database\Seeder;
 
@@ -19,7 +19,7 @@ class ClassStudentSeeder extends Seeder
             ->get();
 
         foreach ($students as $student) {
-            $classIds = ClassRoom::query()
+            $classIds = Course::query()
                 ->where('study_program_id', $student->study_program_id)
                 ->orderBy('id')
                 ->limit(4)
@@ -30,7 +30,7 @@ class ClassStudentSeeder extends Seeder
                 continue;
             }
 
-            $student->classes()->syncWithoutDetaching($classIds);
+            $student->courses()->syncWithoutDetaching($classIds);
         }
     }
 }

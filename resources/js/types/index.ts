@@ -34,7 +34,7 @@ export type CursorPagination<T> = {
     prev_page_url: string | null;
 };
 
-export type ClassRoom = {
+export type Course = {
     id: number;
     name: string;
     study_program_id?: number | null;

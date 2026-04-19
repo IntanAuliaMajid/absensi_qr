@@ -7,11 +7,18 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\PasswordResetController;
 use App\Http\Controllers\Api\Auth\EmailVerificationController;
+use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\StudyProgramController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::get('/schedule', [ScheduleController::class, 'index'])->middleware('auth:sanctum');
+
+Route::get('/study-program', [StudyProgramController::class, 'index']);
 
 
 Route::post('/register', RegisterController::class);
@@ -25,6 +32,5 @@ Route::post('/reset-password', [PasswordResetController::class, 'sendOtp']);
 Route::post('/otp-check', [PasswordResetController::class, 'checkOtp'])->middleware('throttle:6,1');
 Route::post('/new-password', [PasswordResetController::class, 'resetPassword']);
 
+
 Route::get('/search', [SearchController::class, 'index']);
-
-

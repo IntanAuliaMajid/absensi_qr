@@ -1,6 +1,6 @@
 import { Head, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/student-layout';
-import type { BreadcrumbItem, ClassRoom, CursorPagination } from '@/types';
+import type { BreadcrumbItem, Course, CursorPagination } from '@/types';
 import { UserRound, MapPin, Clock3, GraduationCap } from 'lucide-react';
 import { PaginationComponent } from '@/components/student/pagination-component';
 
@@ -16,11 +16,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 type ClassPageProps = {
-    classes: CursorPagination<ClassRoom>;
+    courses: CursorPagination<Course>;
 };
 
 export default function StudentClassIndex() {
-    const { classes } = usePage<ClassPageProps>().props;
+    const { courses } = usePage<ClassPageProps>().props;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -37,20 +37,20 @@ export default function StudentClassIndex() {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {classes.data.map((classRoom) => {
+                    {courses.data.map((course) => {
                         return (
                             <div
-                                key={classRoom.id}
+                                key={course.id}
                                 className="rounded-2xl border border-sky-100 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                             >
                                 <div className="mb-4 flex items-start justify-between gap-2">
                                     <div>
                                         <h2 className="line-clamp-2 text-base font-bold text-slate-900">
-                                            {classRoom.name}
+                                            {course.name}
                                         </h2>
                                         <p className="mt-1 text-xs text-slate-500">
-                                            {classRoom.study_program?.name ??
-                                                classRoom.studyProgram?.name ??
+                                            {course.study_program?.name ??
+                                                course.studyProgram?.name ??
                                                 '-'}
                                         </p>
                                     </div>
@@ -59,22 +59,22 @@ export default function StudentClassIndex() {
                                 <div className="space-y-2 text-sm text-slate-600">
                                     <p className="flex items-center gap-2">
                                         <UserRound className="size-4 text-sky-600" />
-                                        {classRoom.lecturer?.user?.name ?? '-'}
+                                        {course.lecturer?.user?.name ?? '-'}
                                     </p>
                                     <p className="flex items-center gap-2">
                                         <MapPin className="size-4 text-sky-600" />
-                                        {classRoom.room ?? '-'}
+                                        {course.room ?? '-'}
                                     </p>
                                     <p className="flex items-center gap-2">
                                         <Clock3 className="size-4 text-sky-600" />
-                                        {classRoom.start_time &&
-                                        classRoom.end_time
-                                            ? `${classRoom.day ? `${classRoom.day}, ` : ''}${classRoom.start_time.slice(0, 5)} - ${classRoom.end_time.slice(0, 5)}`
+                                        {course.start_time &&
+                                        course.end_time
+                                            ? `${course.day ? `${course.day}, ` : ''}${course.start_time.slice(0, 5)} - ${course.end_time.slice(0, 5)}`
                                             : '-'}
                                     </p>
                                     <p className="flex items-center gap-2">
                                         <GraduationCap className="size-4 text-sky-600" />
-                                        {classRoom.semester?.name ?? '-'}
+                                        {course.semester?.name ?? '-'}
                                     </p>
                                 </div>
                             </div>
@@ -82,13 +82,13 @@ export default function StudentClassIndex() {
                     })}
                 </div>
 
-                {classes.data.length === 0 && (
+                {courses.data.length === 0 && (
                     <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
                         Anda belum terdaftar pada kelas mana pun.
                     </div>
                 )}
 
-                <PaginationComponent pagination={classes} />
+                <PaginationComponent pagination={courses} />
             </div>
         </AppLayout>
     );

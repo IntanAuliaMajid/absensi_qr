@@ -1,13 +1,14 @@
 <?php
 
 use App\Http\Controllers\Web\Admin\AdminController;
-use App\Http\Controllers\Web\Admin\ClassRoomController;
+use App\Http\Controllers\Web\Admin\CourseController;
 use App\Http\Controllers\Web\Admin\FacultyController;
 use App\Http\Controllers\Web\Admin\LecturerController;
 use App\Http\Controllers\Web\Admin\RoleController;
 use App\Http\Controllers\Web\Admin\StudentController;
 use App\Http\Controllers\Web\Admin\StudyProgramController;
 use App\Http\Controllers\Web\Student\ClassEnrollmentController;
+use App\Http\Controllers\Web\Student\DashboardController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\LecturerMiddleware;
 use App\Http\Middleware\StudentMiddleware;
@@ -21,10 +22,8 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::middleware(['auth', 'verified',StudentMiddleware::class])->prefix('student')->name('student.')->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('student/dashboard');
-    })->name('dashboard');
+Route::middleware(['auth', 'verified', StudentMiddleware::class])->prefix('student')->name('student.')->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('matakuliah', function () {
         return Inertia::render('student/matakuliah');
@@ -46,7 +45,7 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admi
     })->name('dashboard');
 
     Route::resource('/roles', RoleController::class)->middleware('can:manage_roles')->except(['show']);
-    Route::resource('/classes', ClassRoomController::class)->middleware('can:manage_classes')->except(['show']);
+    Route::resource('/courses', CourseController::class)->middleware('can:manage_classes')->except(['show']);
     Route::resource('/students', StudentController::class)->middleware('can:manage_students')->except(['show']);
     Route::resource('/lecturers', LecturerController::class)->middleware('can:manage_lecturers')->except(['show']);
     Route::resource('/admins', AdminController::class)->middleware('can:manage_admins')->except(['show']);

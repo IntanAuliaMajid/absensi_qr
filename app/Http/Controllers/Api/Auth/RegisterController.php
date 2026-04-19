@@ -10,12 +10,14 @@ use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
 {
-    public function __invoke(Request $request){
+    public function __invoke(Request $request)
+    {
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email',
-                'password' => 'required|string|min:8|confirmed'
+                'password' => 'required|string|min:8|confirmed',
+                'study_program_id' => 'required|exists:study_programs,id',
             ]);
         } catch (ValidationException $e) {
             Log::warning('Registration validation failed', [
@@ -30,10 +32,11 @@ class RegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'study_program_id' => $request->study_program_id,
         ]);
 
         $user->sendEmailVerificationNotification();
-        
+
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
