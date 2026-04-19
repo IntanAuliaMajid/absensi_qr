@@ -20,22 +20,29 @@ class SearchController extends Controller
         $builder = Course::with([
             'lecturer.user:id,name',
             'semester:id,name',
-            'studyProgram:id,name'
+            'studyProgram:id,name',
+            'classroom.building:id,name',
         ])->orderBy('id');
 
         $student = $request->user()?->student;
 
         if ($student && $student->study_program_id) {
             $builder->where('study_program_id', $student->study_program_id);
-        } 
+        }
 
         if ($query !== '') {
             $builder->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
-                ->orWhere('room', 'like', "%{$query}%")
-                ->orWhereHas('lecturer.user', function ($q2) use ($query) {
-                    $q2->where('name', 'like', "%{$query}%");
-                });
+                    ->orWhere('room', 'like', "%{$query}%")
+                    ->orWhereHas('classroom', function ($q2) use ($query) {
+                        $q2->where('name', 'like', "%{$query}%")
+                            ->orWhereHas('building', function ($q3) use ($query) {
+                                $q3->where('name', 'like', "%{$query}%");
+                            });
+                    })
+                    ->orWhereHas('lecturer.user', function ($q2) use ($query) {
+                        $q2->where('name', 'like', "%{$query}%");
+                    });
             });
         }
 
@@ -44,7 +51,7 @@ class SearchController extends Controller
         $classData = $courses->map(fn(Course $course) => [
             'id' => $course->id,
             'name' => $course->name,
-            'room' => $course->room,
+            'room' => trim((($course->classroom?->building?->name) ? $course->classroom->building->name . ' - ' : '') . ($course->classroom?->name ?? '')) ?: $course->room,
             'start_time' => $course->start_time,
             'end_time' => $course->end_time,
             'study_program' => $course->studyProgram?->name,

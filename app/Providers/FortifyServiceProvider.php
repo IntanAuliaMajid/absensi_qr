@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\LoginResponse;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Models\Faculty;
 use App\Models\StudyProgram;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -74,9 +75,12 @@ class FortifyServiceProvider extends ServiceProvider
         ]));
 
         Fortify::registerView(fn() => Inertia::render('auth/register', [
-            'studyPrograms' => StudyProgram::query()
+            'faculties' => Faculty::query()
                 ->orderBy('name')
                 ->get(['id', 'name']),
+            'studyPrograms' => StudyProgram::query()
+                ->orderBy('name')
+                ->get(['id', 'name', 'faculty_id']),
         ]));
 
         Fortify::twoFactorChallengeView(fn() => Inertia::render('auth/two-factor-challenge'));

@@ -21,18 +21,17 @@ import {
 import { Button } from '@/components/ui/button';
 import { useForm, usePage, Link } from '@inertiajs/react';
 import { Trash2, Pencil } from 'lucide-react';
-import { ClassRoom, CursorPagination } from '@/types';
+import { Course, CursorPagination } from '@/types';
 import { PaginationComponent } from '@/components/admin/pagination-component';
 
 export default function Page() {
-    const { classes } = usePage<{ classes: CursorPagination<ClassRoom> }>()
-        .props;
+    const { courses } = usePage<{ courses: CursorPagination<Course> }>().props;
 
     const { delete: destroy, processing } = useForm();
 
     const handleDelete = (id: number) => {
         if (confirm('Are you sure you want to delete this class?')) {
-            destroy(`/admin/classes/${id}`, {
+            destroy(`/admin/courses/${id}`, {
                 preserveScroll: true,
             });
         }
@@ -51,7 +50,7 @@ export default function Page() {
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="/admin/classes">
+                                    <BreadcrumbLink href="/admin/courses">
                                         Class
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
@@ -66,7 +65,7 @@ export default function Page() {
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                     <div className="flex justify-between">
                         <h1 className="text-xl font-semibold">Manage Class</h1>
-                        <Link href="/admin/classes/create">
+                        <Link href="/admin/courses/create">
                             <Button className="w-auto">Add</Button>
                         </Link>
                     </div>
@@ -85,30 +84,34 @@ export default function Page() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {classes.data.map((classRoom) => {
-                                const startTime = classRoom.start_time;
-                                const endTime = classRoom.end_time;
+                            {courses.data.map((course) => {
+                                const startTime = course.start_time;
+                                const endTime = course.end_time;
 
                                 return (
-                                    <TableRow key={classRoom.id}>
-                                        <TableCell>{classRoom.name}</TableCell>
+                                    <TableRow key={course.id}>
+                                        <TableCell>{course.name}</TableCell>
                                         <TableCell>
-                                            {classRoom.study_program?.name ??
-                                                classRoom.studyProgram?.name ??
+                                            {course.study_program?.name ??
+                                                course.studyProgram?.name ??
                                                 '-'}
                                         </TableCell>
                                         <TableCell>
-                                            {classRoom.semester?.name ?? '-'}
+                                            {course.semester?.name ?? '-'}
                                         </TableCell>
                                         <TableCell>
-                                            {classRoom.lecturer?.user?.name ??
-                                                '-'}
+                                            {course.lecturer?.user?.name ?? '-'}
                                         </TableCell>
                                         <TableCell>
-                                            {classRoom.room ?? '-'}
+                                            {course.classroom?.building?.name &&
+                                            course.classroom?.name
+                                                ? `${course.classroom.building.name} - ${course.classroom.name}`
+                                                : (course.classroom?.name ??
+                                                  course.room ??
+                                                  '-')}
                                         </TableCell>
                                         <TableCell>
-                                            {classRoom.day ?? '-'}
+                                            {course.day ?? '-'}
                                         </TableCell>
                                         <TableCell>
                                             {startTime && endTime
@@ -124,7 +127,7 @@ export default function Page() {
                                                     disabled={processing}
                                                 >
                                                     <Link
-                                                        href={`/admin/classes/${classRoom.id}/edit`}
+                                                        href={`/admin/courses/${course.id}/edit`}
                                                     >
                                                         <Pencil className="mr-2 h-4 w-4" />
                                                         Edit
@@ -135,9 +138,7 @@ export default function Page() {
                                                     size="sm"
                                                     disabled={processing}
                                                     onClick={() =>
-                                                        handleDelete(
-                                                            classRoom.id,
-                                                        )
+                                                        handleDelete(course.id)
                                                     }
                                                 >
                                                     <Trash2 className="mr-2 h-4 w-4" />
@@ -150,7 +151,7 @@ export default function Page() {
                             })}
                         </TableBody>
                     </Table>
-                    <PaginationComponent pagination={classes} />
+                    <PaginationComponent pagination={courses} />
                     <div className="min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min" />
                 </div>
             </SidebarInset>

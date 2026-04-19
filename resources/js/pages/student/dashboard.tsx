@@ -238,7 +238,13 @@ export default function Dashboard() {
                                             </h3>
                                             <div className="flex items-center gap-1 text-xs text-slate-500">
                                                 <MapPin className="size-3" />
-                                                {item.room ?? '-'}
+                                                {item.classroom?.building
+                                                    ?.name &&
+                                                item.classroom?.name
+                                                    ? `${item.classroom.building.name} - ${item.classroom.name}`
+                                                    : (item.classroom?.name ??
+                                                      item.room ??
+                                                      '-')}
                                             </div>
                                         </div>
                                     ))
@@ -285,7 +291,13 @@ export default function Dashboard() {
                                             </h3>
                                             <div className="flex items-center gap-1 text-xs text-slate-500">
                                                 <MapPin className="size-3" />
-                                                {item.room ?? '-'}
+                                                {item.classroom?.building
+                                                    ?.name &&
+                                                item.classroom?.name
+                                                    ? `${item.classroom.building.name} - ${item.classroom.name}`
+                                                    : (item.classroom?.name ??
+                                                      item.room ??
+                                                      '-')}
                                             </div>
                                         </div>
                                     ))

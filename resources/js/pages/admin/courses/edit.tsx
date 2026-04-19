@@ -22,34 +22,47 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import {
-    ClassRoom as ClassRoomType,
+    Course as CourseType,
     LecturerItem,
+    Room,
     Semester,
     StudyProgram,
 } from '@/types';
 
 export default function EditClassPage() {
-    const { classRoom, studyPrograms, semesters, lecturers } = usePage<{
-        classRoom: ClassRoomType;
-        studyPrograms: StudyProgram[];
-        semesters: Semester[];
-        lecturers: LecturerItem[];
+    const {
+        course,
+        studyPrograms = [],
+        semesters = [],
+        lecturers = [],
+        rooms = [],
+    } = usePage<{
+        course?: CourseType;
+        studyPrograms?: StudyProgram[];
+        semesters?: Semester[];
+        lecturers?: LecturerItem[];
+        rooms?: Room[];
     }>().props;
 
     const { data, setData, put, processing, errors } = useForm({
-        name: classRoom.name,
-        study_program_id: classRoom.study_program_id ?? null,
-        semester_id: classRoom.semester_id ?? null,
-        lecturer_id: classRoom.lecturer_id ?? null,
-        room: classRoom.room ?? '',
-        day: classRoom.day ?? '',
-        start_time: classRoom.start_time?.slice(0, 5) ?? '',
-        end_time: classRoom.end_time?.slice(0, 5) ?? '',
+        name: course?.name ?? '',
+        study_program_id: course?.study_program_id ?? null,
+        semester_id: course?.semester_id ?? null,
+        lecturer_id: course?.lecturer_id ?? null,
+        room_id: course?.room_id ?? course?.classroom?.id ?? null,
+        day: course?.day ?? '',
+        start_time: course?.start_time?.slice(0, 5) ?? '',
+        end_time: course?.end_time?.slice(0, 5) ?? '',
     });
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/admin/classes/${classRoom.id}`, {
+
+        if (!course?.id) {
+            return;
+        }
+
+        put(`/admin/courses/${course.id}`, {
             preserveScroll: true,
         });
     };
@@ -67,7 +80,7 @@ export default function EditClassPage() {
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="/admin/classes">
+                                    <BreadcrumbLink href="/admin/courses">
                                         Class
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
@@ -231,24 +244,37 @@ export default function EditClassPage() {
                         </Field>
 
                         <Field className="grid gap-2">
-                            <FieldLabel htmlFor="room">Room</FieldLabel>
-                            <Input
-                                id="room"
-                                value={data.room}
-                                onChange={(e) =>
-                                    setData('room', e.target.value)
+                            <FieldLabel htmlFor="room_id">Room</FieldLabel>
+                            <Select
+                                value={data.room_id?.toString()}
+                                onValueChange={(value) =>
+                                    setData('room_id', parseInt(value))
                                 }
-                                placeholder="Enter room"
-                                className={
-                                    errors.room
-                                        ? 'border-red-500 focus-visible:ring-red-500'
-                                        : ''
-                                }
-                            />
+                            >
+                                <SelectTrigger
+                                    className={
+                                        errors.room_id ? 'border-red-500' : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select a room" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {rooms.map((room) => (
+                                        <SelectItem
+                                            key={room.id}
+                                            value={room.id.toString()}
+                                        >
+                                            {room.building?.name
+                                                ? `${room.building.name} - ${room.name}`
+                                                : room.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
 
-                            {errors.room && (
+                            {errors.room_id && (
                                 <p className="text-sm font-medium text-red-500">
-                                    {errors.room}
+                                    {errors.room_id}
                                 </p>
                             )}
                         </Field>

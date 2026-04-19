@@ -21,13 +21,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { LecturerItem, Semester, StudyProgram } from '@/types';
+import { LecturerItem, Room, Semester, StudyProgram } from '@/types';
 
 export default function Page() {
-    const { studyPrograms, semesters, lecturers } = usePage<{
+    const { studyPrograms, semesters, lecturers, rooms } = usePage<{
         studyPrograms: StudyProgram[];
         semesters: Semester[];
         lecturers: LecturerItem[];
+        rooms: Room[];
     }>().props;
 
     const { data, setData, post, processing, errors } = useForm({
@@ -35,7 +36,7 @@ export default function Page() {
         study_program_id: null as number | null,
         semester_id: null as number | null,
         lecturer_id: null as number | null,
-        room: '',
+        room_id: null as number | null,
         day: '',
         start_time: '',
         end_time: '',
@@ -43,7 +44,7 @@ export default function Page() {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/admin/classes');
+        post('/admin/courses');
     };
 
     return (
@@ -59,7 +60,7 @@ export default function Page() {
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="/admin/classes">
+                                    <BreadcrumbLink href="/admin/courses">
                                         Class
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
@@ -223,24 +224,37 @@ export default function Page() {
                         </Field>
 
                         <Field className="grid gap-2">
-                            <FieldLabel htmlFor="room">Room</FieldLabel>
-                            <Input
-                                id="room"
-                                value={data.room}
-                                onChange={(e) =>
-                                    setData('room', e.target.value)
+                            <FieldLabel htmlFor="room_id">Room</FieldLabel>
+                            <Select
+                                value={data.room_id?.toString()}
+                                onValueChange={(value) =>
+                                    setData('room_id', parseInt(value))
                                 }
-                                placeholder="Enter room"
-                                className={
-                                    errors.room
-                                        ? 'border-red-500 focus-visible:ring-red-500'
-                                        : ''
-                                }
-                            />
+                            >
+                                <SelectTrigger
+                                    className={
+                                        errors.room_id ? 'border-red-500' : ''
+                                    }
+                                >
+                                    <SelectValue placeholder="Select a room" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {rooms.map((room) => (
+                                        <SelectItem
+                                            key={room.id}
+                                            value={room.id.toString()}
+                                        >
+                                            {room.building?.name
+                                                ? `${room.building.name} - ${room.name}`
+                                                : room.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
 
-                            {errors.room && (
+                            {errors.room_id && (
                                 <p className="text-sm font-medium text-red-500">
-                                    {errors.room}
+                                    {errors.room_id}
                                 </p>
                             )}
                         </Field>

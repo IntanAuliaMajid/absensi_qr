@@ -63,12 +63,16 @@ export default function StudentClassIndex() {
                                     </p>
                                     <p className="flex items-center gap-2">
                                         <MapPin className="size-4 text-sky-600" />
-                                        {course.room ?? '-'}
+                                        {course.classroom?.building?.name &&
+                                        course.classroom?.name
+                                            ? `${course.classroom.building.name} - ${course.classroom.name}`
+                                            : (course.classroom?.name ??
+                                              course.room ??
+                                              '-')}
                                     </p>
                                     <p className="flex items-center gap-2">
                                         <Clock3 className="size-4 text-sky-600" />
-                                        {course.start_time &&
-                                        course.end_time
+                                        {course.start_time && course.end_time
                                             ? `${course.day ? `${course.day}, ` : ''}${course.start_time.slice(0, 5)} - ${course.end_time.slice(0, 5)}`
                                             : '-'}
                                     </p>

@@ -24,6 +24,18 @@ export type Semester = {
     name: string;
 };
 
+export type Building = {
+    id: number;
+    name: string;
+};
+
+export type Room = {
+    id: number;
+    name: string;
+    building_id: number;
+    building?: Building;
+};
+
 export type CursorPagination<T> = {
     data: T[];
     path: string;
@@ -40,10 +52,12 @@ export type Course = {
     study_program_id?: number | null;
     semester_id?: number | null;
     lecturer_id?: number | null;
+    room_id?: number | null;
     room?: string | null;
     day?: string | null;
     start_time?: string | null;
     end_time?: string | null;
+    classroom?: Room | null;
     study_program?: StudyProgram;
     studyProgram?: StudyProgram;
     semester?: Semester;

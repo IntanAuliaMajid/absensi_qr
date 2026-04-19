@@ -4,7 +4,7 @@ export default function AppLogo() {
     return (
         <>
             <AppLogoIcon className="h-10 w-10" />
-            <h2 className="font-semibold">Absensi</h2>
+            <h2 className="font-semibold">IGS Presensi</h2>
         </>
     );
 }

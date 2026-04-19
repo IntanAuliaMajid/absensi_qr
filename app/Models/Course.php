@@ -14,6 +14,7 @@ class Course extends Model
         'study_program_id',
         'semester_id',
         'lecturer_id',
+        'room_id',
         'room',
         'day',
         'start_time',
@@ -33,6 +34,11 @@ class Course extends Model
     public function lecturer(): BelongsTo
     {
         return $this->belongsTo(Lecturer::class);
+    }
+
+    public function classroom(): BelongsTo
+    {
+        return $this->belongsTo(Room::class);
     }
 
     public function students(): BelongsToMany

@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { useMemo, useState } from 'react';
 import InputError from '@/components/student/input-error';
 import TextLink from '@/components/student/text-link';
 import { Button } from '@/components/ui/button';
@@ -9,22 +10,52 @@ import AuthLayout from '@/layouts/auth-layout';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
 import { usePage } from '@inertiajs/react';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
 type StudyProgram = {
+    id: number;
+    name: string;
+    faculty_id: number;
+};
+
+type Faculty = {
     id: number;
     name: string;
 };
 
 export default function Register() {
-    const { studyPrograms } = usePage<{ studyPrograms: StudyProgram[] }>()
-        .props;
+    const { faculties, studyPrograms } = usePage<{
+        faculties: Faculty[];
+        studyPrograms: StudyProgram[];
+    }>().props;
+
+    const [selectedFacultyId, setSelectedFacultyId] = useState<string>('');
+    const [selectedStudyProgramId, setSelectedStudyProgramId] =
+        useState<string>('');
+
+    const filteredStudyPrograms = useMemo(() => {
+        if (!selectedFacultyId) {
+            return [];
+        }
+
+        return studyPrograms.filter(
+            (studyProgram) =>
+                String(studyProgram.faculty_id) === selectedFacultyId,
+        );
+    }, [selectedFacultyId, studyPrograms]);
 
     return (
         <AuthLayout
-            title="Create an account"
-            description="Enter your details below to create your account"
+            title="Buat akun baru"
+            description="Masukkan data diri kamu untuk membuat akun"
         >
-            <Head title="Register" />
+            <Head title="Daftar" />
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
@@ -35,7 +66,7 @@ export default function Register() {
                     <>
                         <div className="grid gap-6">
                             <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name">Nama Lengkap</Label>
                                 <Input
                                     id="name"
                                     type="text"
@@ -44,7 +75,7 @@ export default function Register() {
                                     tabIndex={1}
                                     autoComplete="name"
                                     name="name"
-                                    placeholder="Full name"
+                                    placeholder="Nama lengkap"
                                 />
                                 <InputError
                                     message={errors.name}
@@ -53,7 +84,7 @@ export default function Register() {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                                <Label htmlFor="email">Alamat Email</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -67,29 +98,65 @@ export default function Register() {
                             </div>
 
                             <div className="grid gap-2">
+                                <Label htmlFor="faculty_id">Fakultas</Label>
+                                <Select
+                                    value={selectedFacultyId}
+                                    onValueChange={(value) => {
+                                        setSelectedFacultyId(value);
+                                        setSelectedStudyProgramId('');
+                                    }}
+                                >
+                                    <SelectTrigger id="faculty_id" tabIndex={3}>
+                                        <SelectValue placeholder="Pilih fakultas" />
+                                    </SelectTrigger>
+                                    <SelectContent className="max-h-60 overflow-y-auto">
+                                        {faculties.map((faculty) => (
+                                            <SelectItem
+                                                key={faculty.id}
+                                                value={String(faculty.id)}
+                                            >
+                                                {faculty.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div className="grid gap-2">
                                 <Label htmlFor="study_program_id">
                                     Program Studi
                                 </Label>
-                                <select
-                                    id="study_program_id"
+                                <input
+                                    type="hidden"
                                     name="study_program_id"
-                                    required
-                                    tabIndex={3}
-                                    defaultValue=""
-                                    className="h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+                                    value={selectedStudyProgramId}
+                                />
+                                <Select
+                                    value={selectedStudyProgramId}
+                                    onValueChange={setSelectedStudyProgramId}
                                 >
-                                    <option value="" disabled>
-                                        Pilih program studi
-                                    </option>
-                                    {studyPrograms.map((studyProgram) => (
-                                        <option
-                                            key={studyProgram.id}
-                                            value={studyProgram.id}
-                                        >
-                                            {studyProgram.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <SelectTrigger
+                                        id="study_program_id"
+                                        tabIndex={4}
+                                        disabled={!selectedFacultyId}
+                                    >
+                                        <SelectValue placeholder="Pilih program studi" />
+                                    </SelectTrigger>
+                                    <SelectContent className="max-h-60 overflow-y-auto">
+                                        {filteredStudyPrograms.map(
+                                            (studyProgram) => (
+                                                <SelectItem
+                                                    key={studyProgram.id}
+                                                    value={String(
+                                                        studyProgram.id,
+                                                    )}
+                                                >
+                                                    {studyProgram.name}
+                                                </SelectItem>
+                                            ),
+                                        )}
+                                    </SelectContent>
+                                </Select>
                                 <InputError message={errors.study_program_id} />
                             </div>
 
@@ -99,7 +166,7 @@ export default function Register() {
                                     id="nim"
                                     type="text"
                                     required
-                                    tabIndex={4}
+                                    tabIndex={5}
                                     autoComplete="nim"
                                     name="nim"
                                     placeholder="23xxxxxx"
@@ -113,7 +180,7 @@ export default function Register() {
                                     id="password"
                                     type="password"
                                     required
-                                    tabIndex={5}
+                                    tabIndex={6}
                                     autoComplete="new-password"
                                     name="password"
                                     placeholder="Password"
@@ -123,16 +190,16 @@ export default function Register() {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="password_confirmation">
-                                    Confirm password
+                                    Konfirmasi Password
                                 </Label>
                                 <Input
                                     id="password_confirmation"
                                     type="password"
                                     required
-                                    tabIndex={6}
+                                    tabIndex={7}
                                     autoComplete="new-password"
                                     name="password_confirmation"
-                                    placeholder="Confirm password"
+                                    placeholder="Konfirmasi password"
                                 />
                                 <InputError
                                     message={errors.password_confirmation}
@@ -142,18 +209,18 @@ export default function Register() {
                             <Button
                                 type="submit"
                                 className="mt-2 w-full"
-                                tabIndex={7}
+                                tabIndex={8}
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}
-                                Create account
+                                Buat Akun
                             </Button>
                         </div>
 
                         <div className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <TextLink href={login()} tabIndex={8}>
-                                Log in
+                            Sudah punya akun?{' '}
+                            <TextLink href={login()} tabIndex={9}>
+                                Masuk
                             </TextLink>
                         </div>
                     </>

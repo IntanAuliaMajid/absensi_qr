@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Auth\EmailVerificationController;
 use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\StudyProgramController;
+use App\Http\Controllers\Api\FacultyController;
 
 
 Route::get('/user', function (Request $request) {
@@ -19,6 +20,7 @@ Route::get('/user', function (Request $request) {
 Route::get('/schedule', [ScheduleController::class, 'index'])->middleware('auth:sanctum');
 
 Route::get('/study-program', [StudyProgramController::class, 'index']);
+Route::get('/faculties', [FacultyController::class, 'index']);
 
 
 Route::post('/register', RegisterController::class);
