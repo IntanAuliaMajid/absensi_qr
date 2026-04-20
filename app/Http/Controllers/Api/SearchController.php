@@ -12,26 +12,18 @@ class SearchController extends Controller
     public function index(Request $request): JsonResponse
     {
         $request->validate([
-            'q' => 'nullable|string|max:50',
+            'q' => 'nullable|string|max:100',
         ]);
 
+        $student = $request->user()?->student;
         $query = trim((string) $request->input('q', ''));
 
-        $builder = Course::with([
-            'lecturer.user:id,name',
-            'semester:id,name',
-            'studyProgram:id,name',
-            'classroom.building:id,name',
-        ])->orderBy('id');
-
-        $student = $request->user()?->student;
-
-        if ($student && $student->study_program_id) {
-            $builder->where('study_program_id', $student->study_program_id);
-        }
+        $coursesQuery = Course::query()
+            ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name', 'classroom.building:id,name'])
+            ->orderBy('id')->where('study_program_id', $student->study_program_id);
 
         if ($query !== '') {
-            $builder->where(function ($q) use ($query) {
+            $coursesQuery->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
                     ->orWhere('room', 'like', "%{$query}%")
                     ->orWhereHas('classroom', function ($q2) use ($query) {
@@ -46,7 +38,9 @@ class SearchController extends Controller
             });
         }
 
-        $courses = $builder->cursorPaginate(9);
+        $courses = $coursesQuery
+            ->cursorPaginate(9)
+            ->withQueryString();
 
         $courseData = $courses->map(fn(Course $course) => [
             'id' => $course->id,
