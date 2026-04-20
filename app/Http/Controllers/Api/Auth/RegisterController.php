@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
@@ -16,8 +17,22 @@ class RegisterController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email',
+                'nim' => [
+                    'required',
+                    'string',
+                    'max:20',
+                    'regex:/^[A-Za-z0-9\-]+$/',
+                    'unique:students,nim',
+                ],
                 'password' => 'required|string|min:8|confirmed',
-                'study_program_id' => 'required|exists:study_programs,id',
+                'faculty_id' => 'required|integer|exists:faculties,id',
+                'study_program_id' => [
+                    'required',
+                    'integer',
+                    Rule::exists('study_programs', 'id')->where(function ($query) use ($request) {
+                        $query->where('faculty_id', $request->input('faculty_id'));
+                    }),
+                ],
             ]);
         } catch (ValidationException $e) {
             Log::warning('Registration validation failed', [

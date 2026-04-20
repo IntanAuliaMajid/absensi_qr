@@ -91,7 +91,7 @@ trait ProfileValidationRules
         return [
             'required',
             'string',
-            'max:30',
+            'max:20',
             'regex:/^[A-Za-z0-9\-]+$/',
             $studentId === null
                 ? Rule::unique('students', 'nim')
