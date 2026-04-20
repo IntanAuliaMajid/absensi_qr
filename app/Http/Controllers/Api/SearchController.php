@@ -61,7 +61,7 @@ class SearchController extends Controller
 
         return response()->json([
             'message' => 'Data berhasil diambil.',
-            'course' => $courseData,
+            'courses' => $courseData,
 
             'meta' => [
                 'next_cursor' => $courses->nextCursor()?->encode(),
