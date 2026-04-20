@@ -64,25 +64,21 @@ export default function Register() {
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Nama Lengkap</Label>
-                                <Input
-                                    id="name"
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="name"
-                                    name="name"
-                                    placeholder="Nama lengkap"
-                                />
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
-                            </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="nim">NIM</Label>
+                            <Input
+                                id="nim"
+                                type="text"
+                                required
+                                tabIndex={5}
+                                autoComplete="nim"
+                                name="nim"
+                                placeholder="23xxxxxx"
+                            />
+                            <InputError message={errors.nim} />
+                        </div>
 
+                        <div className="grid gap-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Alamat Email</Label>
                                 <Input
@@ -158,20 +154,6 @@ export default function Register() {
                                     </SelectContent>
                                 </Select>
                                 <InputError message={errors.study_program_id} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="nim">NIM</Label>
-                                <Input
-                                    id="nim"
-                                    type="text"
-                                    required
-                                    tabIndex={5}
-                                    autoComplete="nim"
-                                    name="nim"
-                                    placeholder="23xxxxxx"
-                                />
-                                <InputError message={errors.nim} />
                             </div>
 
                             <div className="grid gap-2">
