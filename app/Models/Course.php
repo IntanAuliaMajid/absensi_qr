@@ -38,7 +38,7 @@ class Course extends Model
 
     public function classroom(): BelongsTo
     {
-        return $this->belongsTo(Room::class);
+        return $this->belongsTo(Room::class, 'room_id');
     }
 
     public function students(): BelongsToMany
