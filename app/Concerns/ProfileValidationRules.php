@@ -30,7 +30,7 @@ trait ProfileValidationRules
      */
     protected function nameRules(): array
     {
-        return ['required', 'string', 'max:255'];
+        return ['nullable', 'required', 'string', 'max:255'];
     }
 
     /**

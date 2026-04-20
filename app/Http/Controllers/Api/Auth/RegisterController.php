@@ -15,7 +15,6 @@ class RegisterController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email',
                 'nim' => [
                     'required',
@@ -44,7 +43,6 @@ class RegisterController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'study_program_id' => $request->study_program_id,
