@@ -48,7 +48,7 @@ class SearchController extends Controller
 
         $courses = $builder->cursorPaginate(9);
 
-        $classData = $courses->map(fn(Course $course) => [
+        $courseData = $courses->map(fn(Course $course) => [
             'id' => $course->id,
             'name' => $course->name,
             'room' => trim((($course->classroom?->building?->name) ? $course->classroom->building->name . ' - ' : '') . ($course->classroom?->name ?? '')) ?: $course->room,
@@ -61,7 +61,7 @@ class SearchController extends Controller
 
         return response()->json([
             'message' => 'Data berhasil diambil.',
-            'classes' => $classData,
+            'course' => $courseData,
 
             'meta' => [
                 'next_cursor' => $courses->nextCursor()?->encode(),
