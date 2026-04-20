@@ -61,26 +61,12 @@ export default function StudentAllcoursesIndex() {
                             key={courses.id}
                             className="rounded-2xl border border-sky-100 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                         >
-                            <div className="mb-4 flex items-start justify-between gap-2">
-                                <div>
-                                    <h2 className="line-clamp-2 text-base font-bold text-slate-900">
-                                        {courses.name}
-                                    </h2>
-                                    <p className="mt-1 text-xs text-slate-500">
-                                        {courses.study_program?.name ??
-                                            courses.studyProgram?.name ??
-                                            '-'}
-                                    </p>
-                                </div>
-                            </div>
+                            <div className="mb-4 flex items-start justify-between gap-3">
+                                <h6 className="line-clamp-2 flex-1 text-base font-bold text-slate-900">
+                                    {courses.name}
+                                </h6>
 
-                            <div className="space-y-2 text-sm text-slate-600">
-                                <p className="flex items-center gap-2">
-                                    <UserRound className="size-4 text-sky-600" />
-                                    {courses.lecturer?.user?.name ?? '-'}
-                                </p>
-                                <p className="flex items-center gap-2">
-                                    <MapPin className="size-4 text-sky-600" />
+                                <p className="shrink-0 rounded-full bg-blue-100 px-3 py-1.5 text-xs whitespace-nowrap">
                                     {courses.classroom?.building?.name &&
                                     courses.classroom?.name
                                         ? `${courses.classroom.building.name} - ${courses.classroom.name}`
@@ -88,16 +74,30 @@ export default function StudentAllcoursesIndex() {
                                           courses.room ??
                                           '-')}
                                 </p>
+                            </div>
+
+                            <div className="space-y-2 text-sm text-slate-600">
+                                <p className="flex items-center gap-2">
+                                    <UserRound className="size-4 text-sky-600" />
+                                    {courses.lecturer?.user?.name ?? '-'}
+                                </p>
+
                                 <p className="flex items-center gap-2">
                                     <Clock3 className="size-4 text-sky-600" />
                                     {courses.start_time && courses.end_time
                                         ? `${courses.day ? `${courses.day}, ` : ''}${courses.start_time.slice(0, 5)} - ${courses.end_time.slice(0, 5)}`
                                         : '-'}
                                 </p>
-                                <p className="flex items-center gap-2">
-                                    <GraduationCap className="size-4 text-sky-600" />
-                                    {courses.semester?.name ?? '-'}
-                                </p>
+                                <div className="flex gap-3">
+                                    <p className="flex w-36 items-center justify-center gap-2 rounded-full bg-green-100 p-1.5">
+                                        {courses.study_program?.name ??
+                                            courses.studyProgram?.name ??
+                                            '-'}
+                                    </p>
+                                    <p className="flex w-32 items-center justify-center gap-2 rounded-full bg-yellow-100 p-1.5">
+                                        {courses.semester?.name ?? '-'}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     ))}
