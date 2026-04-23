@@ -12,14 +12,18 @@ use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\Student\CourseEnrollmentController;
 use App\Http\Controllers\Api\StudyProgramController;
 use App\Http\Controllers\Api\FacultyController;
-
+use App\Http\Controllers\Api\Student\StudentCourseController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/schedule', [ScheduleController::class, 'index'])->middleware('auth:sanctum');
-Route::post('/student/all-classes/{course}/enroll', [CourseEnrollmentController::class, 'enroll'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->prefix('student')->group(function () {
+    Route::get('/classes', [StudentCourseController::class, 'index']);
+    Route::get('/classes/{course}', [StudentCourseController::class, 'show']);
+    Route::get('/schedule', [ScheduleController::class, 'index']);
+    Route::post('/all-classes/{course}/enroll', [CourseEnrollmentController::class, 'enroll']);
+});
 
 Route::get('/study-program', [StudyProgramController::class, 'index']);
 Route::get('/faculties', [FacultyController::class, 'index']);

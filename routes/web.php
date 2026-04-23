@@ -30,6 +30,7 @@ Route::middleware(['auth', 'verified', StudentMiddleware::class])->prefix('stude
     })->name('matakuliah');
 
     Route::get('classes', [ClassEnrollmentController::class, 'index'])->name('classes.index');
+    Route::get('classes/{course}', [ClassEnrollmentController::class, 'show'])->name('classes.show');
     Route::get('all-classes', [ClassEnrollmentController::class, 'allClasses'])->name('all-classes.index');
     Route::post('all-classes/{course}/enroll', [ClassEnrollmentController::class, 'enroll'])->name('all-classes.enroll');
 });

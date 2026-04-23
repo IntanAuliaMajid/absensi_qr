@@ -18,17 +18,14 @@ class EmailVerificationController extends Controller
             'otp' => 'required|string|size:6',
         ]);
 
-        // mengambil data user
         $user = $request->user();
 
-        // cek apakah user sudah di verifikasi
         if ($user->hasVerifiedEmail()) {
             return response()->json([
                 'message' => 'Email already verified'
             ], 400);
         }
 
-        // mengambil data otp user
         $otp = Otp::where('user_id', $user->id)
             ->where('otp', $request->otp)
             ->where('type', 'email_verification')

@@ -1,4 +1,4 @@
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/student-layout';
 import type { BreadcrumbItem, Course, CursorPagination } from '@/types';
 import { UserRound, MapPin, Clock3, GraduationCap } from 'lucide-react';
@@ -39,9 +39,10 @@ export default function StudentClassIndex() {
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     {courses.data.map((course) => {
                         return (
-                            <div
+                            <Link
                                 key={course.id}
-                                className="rounded-2xl border border-sky-100 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+                                href={`/student/classes/${course.id}`}
+                                className="block rounded-2xl border border-sky-100 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-[0_12px_32px_rgb(2,132,199,0.15)]"
                             >
                                 <div className="mb-4 flex items-start justify-between gap-2">
                                     <div>
@@ -81,7 +82,7 @@ export default function StudentClassIndex() {
                                         {course.semester?.name ?? '-'}
                                     </p>
                                 </div>
-                            </div>
+                            </Link>
                         );
                     })}
                 </div>
