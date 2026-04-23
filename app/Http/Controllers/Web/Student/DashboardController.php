@@ -21,7 +21,7 @@ class DashboardController extends Controller
                 $query->where('students.id', $studentId);
             })
             ->orderBy('start_time')
-            ->with(['lecturer.user', 'studyProgram', 'semester', 'classroom.building'])
+
             ->get();
 
         $tomorrowCourses = Course::where('day', $tomorrow)
@@ -29,7 +29,7 @@ class DashboardController extends Controller
                 $query->where('students.id', $studentId);
             })
             ->orderBy('start_time')
-            ->with(['lecturer.user', 'studyProgram', 'semester', 'classroom.building'])
+
             ->get();
 
         return Inertia::render('student/dashboard', [

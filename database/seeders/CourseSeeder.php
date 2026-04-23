@@ -55,6 +55,7 @@ class CourseSeeder extends Seeder
         ];
 
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
         $timeSlots = [
             ['start' => '08:00', 'end' => '09:40'],
             ['start' => '10:00', 'end' => '11:40'],
@@ -66,15 +67,19 @@ class CourseSeeder extends Seeder
 
         foreach ($studyPrograms as $studyProgram) {
             for ($i = 0; $i < 4; $i++) {
-                $subjectName = $subjectPool[($courseIndex + $i) % count($subjectPool)];
-                $courseName = sprintf('%s - %s %d', $studyProgram->name, $subjectName, $i + 1);
+                $subjectName = $subjectPool[$courseIndex % count($subjectPool)];
+
+                // Nama course unique secara global
+                $courseName = sprintf('%s %d', $subjectName, $courseIndex + 1);
 
                 $lecturer = $lecturers[$courseIndex % $lecturers->count()];
                 $room = $rooms[$courseIndex % $rooms->count()];
                 $slot = $timeSlots[$courseIndex % count($timeSlots)];
                 $day = $days[$courseIndex % count($days)];
 
-                $roomLabel = trim(($room->building?->name ? $room->building->name . ' - ' : '') . $room->name);
+                $roomLabel = trim(
+                    ($room->building?->name ? $room->building->name . ' - ' : '') . $room->name
+                );
 
                 Course::query()->updateOrCreate(
                     ['name' => $courseName],

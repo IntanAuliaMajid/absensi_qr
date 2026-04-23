@@ -21,7 +21,6 @@ class ScheduleController extends Controller
                 $query->where('students.id', $studentId);
             })
             ->orderBy('start_time')
-            ->with(['lecturer.user', 'studyProgram', 'semester'])
             ->get();
 
         $tomorrowCourses = Course::where('day', $tomorrow)
@@ -29,7 +28,6 @@ class ScheduleController extends Controller
                 $query->where('students.id', $studentId);
             })
             ->orderBy('start_time')
-            ->with(['lecturer.user', 'studyProgram', 'semester'])
             ->get();
 
         return response()->json([

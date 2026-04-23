@@ -16,9 +16,9 @@ class Room extends Model
         'building_id',
     ];
 
-    public function building(): BelongsTo
+    public function location(): BelongsTo
     {
-        return $this->belongsTo(Building::class);
+        return $this->belongsTo(Location::class);
     }
 
     public function courses(): HasMany

@@ -67,9 +67,9 @@ export default function StudentAllcoursesIndex() {
                                 </h6>
 
                                 <p className="shrink-0 rounded-full bg-blue-100 px-3 py-1.5 text-xs whitespace-nowrap">
-                                    {courses.classroom?.building?.name &&
+                                    {courses.classroom?.location?.name &&
                                     courses.classroom?.name
-                                        ? `${courses.classroom.building.name} - ${courses.classroom.name}`
+                                        ? `${courses.classroom.location.name} - ${courses.classroom.name}`
                                         : (courses.classroom?.name ??
                                           courses.room ??
                                           '-')}

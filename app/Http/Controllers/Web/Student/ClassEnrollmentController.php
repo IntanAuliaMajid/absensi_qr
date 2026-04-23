@@ -15,7 +15,7 @@ class ClassEnrollmentController extends Controller
         $student = $request->user()?->student;
 
         $courses = $student->courses()
-            ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name', 'classroom.building:id,name'])
+            ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name', 'classroom.location:id,name'])
             ->orderBy('courses.id')
             ->cursorPaginate(9)
             ->withQueryString();
@@ -35,7 +35,7 @@ class ClassEnrollmentController extends Controller
         $query = trim((string) $request->input('q', ''));
 
         $coursesQuery = Course::query()
-            ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name', 'classroom.building:id,name'])
+            ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name', 'classroom.location:id,name'])
             ->orderBy('id')->where('study_program_id', $student->study_program_id);
 
         if ($query !== '') {
@@ -44,7 +44,7 @@ class ClassEnrollmentController extends Controller
                     ->orWhere('room', 'like', "%{$query}%")
                     ->orWhereHas('classroom', function ($q2) use ($query) {
                         $q2->where('name', 'like', "%{$query}%")
-                            ->orWhereHas('building', function ($q3) use ($query) {
+                            ->orWhereHas('location', function ($q3) use ($query) {
                                 $q3->where('name', 'like', "%{$query}%");
                             });
                     })

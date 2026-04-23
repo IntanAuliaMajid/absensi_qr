@@ -32,8 +32,8 @@ export type Building = {
 export type Room = {
     id: number;
     name: string;
-    building_id: number;
-    building?: Building;
+    location_id: number;
+    location?: Location;
 };
 
 export type CursorPagination<T> = {
