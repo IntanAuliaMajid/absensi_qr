@@ -31,7 +31,7 @@ class Student extends Model
 
     public function courses(): BelongsToMany
     {
-        return $this->belongsToMany(Course::class, 'class_student', 'student_id', 'class_id')
+        return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id')
             ->withTimestamps();
     }
 }

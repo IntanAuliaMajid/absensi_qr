@@ -25,7 +25,7 @@ class CourseSeeder extends Seeder
 
         $studyPrograms = StudyProgram::query()->orderBy('id')->get();
         $lecturers = Lecturer::query()->orderBy('id')->get();
-        $rooms = Room::query()->with('building')->orderBy('id')->get();
+        $rooms = Room::query()->with('location')->orderBy('id')->get();
 
         if ($studyPrograms->isEmpty()) {
             throw new RuntimeException('No study programs found. Run StudyProgramSeeder first.');
@@ -78,7 +78,7 @@ class CourseSeeder extends Seeder
                 $day = $days[$courseIndex % count($days)];
 
                 $roomLabel = trim(
-                    ($room->building?->name ? $room->building->name . ' - ' : '') . $room->name
+                    ($room->location?->name ? $room->location->name . ' - ' : '') . $room->name
                 );
 
                 Course::query()->updateOrCreate(

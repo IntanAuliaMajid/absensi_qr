@@ -103,9 +103,9 @@ export default function Page() {
                                             {course.lecturer?.user?.name ?? '-'}
                                         </TableCell>
                                         <TableCell>
-                                            {course.classroom?.building?.name &&
+                                            {course.classroom?.location?.name &&
                                             course.classroom?.name
-                                                ? `${course.classroom.building.name} - ${course.classroom.name}`
+                                                ? `${course.classroom.location.name} - ${course.classroom.name}`
                                                 : (course.classroom?.name ??
                                                   course.room ??
                                                   '-')}

@@ -31,6 +31,7 @@ Route::middleware(['auth', 'verified', StudentMiddleware::class])->prefix('stude
 
     Route::get('classes', [ClassEnrollmentController::class, 'index'])->name('classes.index');
     Route::get('all-classes', [ClassEnrollmentController::class, 'allClasses'])->name('all-classes.index');
+    Route::post('all-classes/{course}/enroll', [ClassEnrollmentController::class, 'enroll'])->name('all-classes.enroll');
 });
 
 Route::middleware(['auth', LecturerMiddleware::class])->prefix('lecturer')->name('lecturer.')->group(function () {

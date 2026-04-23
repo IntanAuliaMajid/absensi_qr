@@ -1,9 +1,11 @@
-import { Head, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/student-layout';
 import type { BreadcrumbItem, Course, CursorPagination } from '@/types';
-import { UserRound, MapPin, Clock3, GraduationCap, Search } from 'lucide-react';
+import { Clock3, Search, UserRound } from 'lucide-react';
 import { PaginationComponent } from '@/components/student/pagination-component';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,11 +21,28 @@ const breadcrumbs: BreadcrumbItem[] = [
 type ClassPageProps = {
     courses: CursorPagination<Course>;
     q?: string;
+    enrolledCourseIds: number[];
 };
 
 export default function StudentAllcoursesIndex() {
-    const { courses, q } = usePage<ClassPageProps>().props;
+    const { courses, q, enrolledCourseIds } = usePage<ClassPageProps>().props;
     const keyword = q?.trim() ?? '';
+    const [enrollingCourseId, setEnrollingCourseId] = useState<number | null>(
+        null,
+    );
+
+    const handleEnroll = (courseId: number) => {
+        setEnrollingCourseId(courseId);
+
+        router.post(
+            `/student/all-classes/${courseId}/enroll`,
+            {},
+            {
+                preserveScroll: true,
+                onFinish: () => setEnrollingCourseId(null),
+            },
+        );
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -56,51 +75,66 @@ export default function StudentAllcoursesIndex() {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {courses.data.map((courses) => (
-                        <div
-                            key={courses.id}
-                            className="rounded-2xl border border-sky-100 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
-                        >
-                            <div className="mb-4 flex items-start justify-between gap-3">
-                                <h6 className="line-clamp-2 flex-1 text-base font-bold text-slate-900">
-                                    {courses.name}
-                                </h6>
+                    {courses.data.map((course) => {
+                        const isEnrolled = enrolledCourseIds.includes(
+                            course.id,
+                        );
+                        const isSubmitting = enrollingCourseId === course.id;
 
-                                <p className="shrink-0 rounded-full bg-blue-100 px-3 py-1.5 text-xs whitespace-nowrap">
-                                    {courses.classroom?.location?.name &&
-                                    courses.classroom?.name
-                                        ? `${courses.classroom.location.name} - ${courses.classroom.name}`
-                                        : (courses.classroom?.name ??
-                                          courses.room ??
-                                          '-')}
-                                </p>
-                            </div>
+                        return (
+                            <div
+                                key={course.id}
+                                className="rounded-2xl border border-sky-100 bg-white p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+                            >
+                                <div className="mb-4 flex items-start justify-between gap-3">
+                                    <h6 className="line-clamp-2 flex-1 text-base font-bold text-slate-900">
+                                        {course.name}
+                                    </h6>
 
-                            <div className="space-y-2 text-sm text-slate-600">
-                                <p className="flex items-center gap-2">
-                                    <UserRound className="size-4 text-sky-600" />
-                                    {courses.lecturer?.user?.name ?? '-'}
-                                </p>
-
-                                <p className="flex items-center gap-2">
-                                    <Clock3 className="size-4 text-sky-600" />
-                                    {courses.start_time && courses.end_time
-                                        ? `${courses.day ? `${courses.day}, ` : ''}${courses.start_time.slice(0, 5)} - ${courses.end_time.slice(0, 5)}`
-                                        : '-'}
-                                </p>
-                                <div className="flex gap-3">
-                                    <p className="flex w-36 items-center justify-center gap-2 rounded-full bg-green-100 p-1.5">
-                                        {courses.study_program?.name ??
-                                            courses.studyProgram?.name ??
-                                            '-'}
-                                    </p>
-                                    <p className="flex w-32 items-center justify-center gap-2 rounded-full bg-yellow-100 p-1.5">
-                                        {courses.semester?.name ?? '-'}
+                                    <p className="shrink-0 rounded-full bg-blue-100 px-3 py-1.5 text-xs whitespace-nowrap">
+                                        {course.classroom?.location?.name &&
+                                        course.classroom?.name
+                                            ? `${course.classroom.location.name} - ${course.classroom.name}`
+                                            : (course.classroom?.name ??
+                                              course.room ??
+                                              '-')}
                                     </p>
                                 </div>
+
+                                <div className="space-y-2 text-sm text-slate-600">
+                                    <p className="flex items-center gap-2">
+                                        <UserRound className="size-4 text-sky-600" />
+                                        {course.lecturer?.user?.name ?? '-'}
+                                    </p>
+
+                                    <p className="flex items-center gap-2">
+                                        <Clock3 className="size-4 text-sky-600" />
+                                        {course.start_time && course.end_time
+                                            ? `${course.day ? `${course.day}, ` : ''}${course.start_time.slice(0, 5)} - ${course.end_time.slice(0, 5)}`
+                                            : '-'}
+                                    </p>
+                                </div>
+
+                                <div className="mt-5 flex items-center justify-end">
+                                    <Button
+                                        type="button"
+                                        size="sm"
+                                        variant={
+                                            isEnrolled ? 'secondary' : 'default'
+                                        }
+                                        disabled={isEnrolled || isSubmitting}
+                                        onClick={() => handleEnroll(course.id)}
+                                    >
+                                        {isEnrolled
+                                            ? 'Terdaftar'
+                                            : isSubmitting
+                                              ? 'Mendaftarkan...'
+                                              : 'Daftar Kelas'}
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
                 {courses.data.length === 0 && (

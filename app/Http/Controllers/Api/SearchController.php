@@ -19,7 +19,7 @@ class SearchController extends Controller
         $query = trim((string) $request->input('q', ''));
 
         $coursesQuery = Course::query()
-            ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name', 'classroom.building:id,name'])
+            ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name', 'classroom.location:id,name'])
             ->orderBy('id')->where('study_program_id', $student->study_program_id);
 
         if ($query !== '') {
@@ -28,7 +28,7 @@ class SearchController extends Controller
                     ->orWhere('room', 'like', "%{$query}%")
                     ->orWhereHas('classroom', function ($q2) use ($query) {
                         $q2->where('name', 'like', "%{$query}%")
-                            ->orWhereHas('building', function ($q3) use ($query) {
+                            ->orWhereHas('location', function ($q3) use ($query) {
                                 $q3->where('name', 'like', "%{$query}%");
                             });
                     })
@@ -45,7 +45,7 @@ class SearchController extends Controller
         $courseData = $courses->map(fn(Course $course) => [
             'id' => $course->id,
             'name' => $course->name,
-            'room' => trim((($course->classroom?->building?->name) ? $course->classroom->building->name . ' - ' : '') . ($course->classroom?->name ?? '')) ?: $course->room,
+            'room' => trim((($course->classroom?->location?->name) ? $course->classroom->location->name . ' - ' : '') . ($course->classroom?->name ?? '')) ?: $course->room,
             'start_time' => $course->start_time,
             'end_time' => $course->end_time,
             'study_program' => $course->studyProgram?->name,

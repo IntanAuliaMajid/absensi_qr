@@ -20,16 +20,28 @@ class DashboardController extends Controller
             ->whereHas('students', function ($query) use ($studentId) {
                 $query->where('students.id', $studentId);
             })
+            ->with([
+                'lecturer.user:id,name',
+                'semester:id,name',
+                'studyProgram:id,name',
+                'classroom:id,name,building_id',
+                'classroom.location:id,name',
+            ])
             ->orderBy('start_time')
-
             ->get();
 
         $tomorrowCourses = Course::where('day', $tomorrow)
             ->whereHas('students', function ($query) use ($studentId) {
                 $query->where('students.id', $studentId);
             })
+            ->with([
+                'lecturer.user:id,name',
+                'semester:id,name',
+                'studyProgram:id,name',
+                'classroom:id,name,building_id',
+                'classroom.location:id,name',
+            ])
             ->orderBy('start_time')
-
             ->get();
 
         return Inertia::render('student/dashboard', [

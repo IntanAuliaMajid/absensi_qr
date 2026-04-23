@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Building;
+use App\Models\Location;
 use App\Models\Room;
 use Illuminate\Database\Seeder;
 
@@ -22,7 +22,7 @@ class RoomSeeder extends Seeder
         ];
 
         foreach ($roomsByBuilding as $buildingName => $rooms) {
-            $building = Building::query()->firstOrCreate([
+            $building = Location::query()->firstOrCreate([
                 'name' => $buildingName,
             ]);
 

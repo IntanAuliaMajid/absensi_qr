@@ -244,8 +244,8 @@ export default function Page() {
                                             key={room.id}
                                             value={room.id.toString()}
                                         >
-                                            {room.building?.name
-                                                ? `${room.building.name} - ${room.name}`
+                                            {room.location?.name
+                                                ? `${room.location.name} - ${room.name}`
                                                 : room.name}
                                         </SelectItem>
                                     ))}

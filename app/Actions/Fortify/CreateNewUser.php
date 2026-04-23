@@ -23,6 +23,7 @@ class CreateNewUser implements CreatesNewUsers
     {
         Validator::make($input, [
             ...$this->profileRules(),
+            'name' => $this->nameRules(),
             'nim' => $this->nimRules(),
             'study_program_id' => ['required', 'integer', 'exists:study_programs,id'],
             'password' => $this->passwordRules(),

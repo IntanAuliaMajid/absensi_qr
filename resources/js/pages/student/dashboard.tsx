@@ -202,9 +202,7 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    {/* Jadwal Hari Ini & Besok */}
                     <div className="flex flex-col gap-6 rounded-[2rem] border border-sky-100 bg-white p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                        {/* Jadwal Hari Ini */}
                         <div>
                             <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-slate-800">
                                 <Clock className="size-5 text-sky-600" />
@@ -238,10 +236,10 @@ export default function Dashboard() {
                                             </h3>
                                             <div className="flex items-center gap-1 text-xs text-slate-500">
                                                 <MapPin className="size-3" />
-                                                {item.classroom?.building
+                                                {item.classroom?.location
                                                     ?.name &&
                                                 item.classroom?.name
-                                                    ? `${item.classroom.building.name} - ${item.classroom.name}`
+                                                    ? `${item.classroom.location.name} - ${item.classroom.name}`
                                                     : (item.classroom?.name ??
                                                       item.room ??
                                                       '-')}
@@ -291,10 +289,10 @@ export default function Dashboard() {
                                             </h3>
                                             <div className="flex items-center gap-1 text-xs text-slate-500">
                                                 <MapPin className="size-3" />
-                                                {item.classroom?.building
+                                                {item.classroom?.location
                                                     ?.name &&
                                                 item.classroom?.name
-                                                    ? `${item.classroom.building.name} - ${item.classroom.name}`
+                                                    ? `${item.classroom.location.name} - ${item.classroom.name}`
                                                     : (item.classroom?.name ??
                                                       item.room ??
                                                       '-')}

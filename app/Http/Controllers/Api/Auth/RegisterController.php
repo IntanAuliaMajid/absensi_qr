@@ -15,6 +15,7 @@ class RegisterController extends Controller
     {
         try {
             $request->validate([
+                'name' => 'nullable|required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email',
                 'nim' => [
                     'required',

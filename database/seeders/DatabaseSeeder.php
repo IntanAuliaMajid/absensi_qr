@@ -18,11 +18,11 @@ class DatabaseSeeder extends Seeder
             StudyProgramSeeder::class,
             SemesterSeeder::class,
             LecturerSeeder::class,
-            BuildingSeeder::class,
+            LocationSeeder::class,
             RoomSeeder::class,
             CourseSeeder::class,
             StudentSeeder::class,
-            ClassStudentSeeder::class,
+            CourseStudentSeeder::class,
         ]);
     }
 }

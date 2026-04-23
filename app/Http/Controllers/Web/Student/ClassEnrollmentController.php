@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -13,6 +14,7 @@ class ClassEnrollmentController extends Controller
     public function index(Request $request): Response
     {
         $student = $request->user()?->student;
+        abort_unless($student, 403);
 
         $courses = $student->courses()
             ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name', 'classroom.location:id,name'])
@@ -32,10 +34,19 @@ class ClassEnrollmentController extends Controller
         ]);
 
         $student = $request->user()?->student;
+        abort_unless($student, 403);
         $query = trim((string) $request->input('q', ''));
 
+        $enrolledCourseIds = $student->courses()->pluck('courses.id')->all();
+
         $coursesQuery = Course::query()
-            ->with(['lecturer.user:id,name', 'semester:id,name', 'studyProgram:id,name', 'classroom.location:id,name'])
+            ->with([
+                'lecturer.user:id,name',
+                'semester:id,name',
+                'studyProgram:id,name',
+                'classroom:id,name,building_id',
+                'classroom.location:id,name',
+            ])
             ->orderBy('id')->where('study_program_id', $student->study_program_id);
 
         if ($query !== '') {
@@ -61,6 +72,40 @@ class ClassEnrollmentController extends Controller
         return Inertia::render('student/all-courses/index', [
             'courses' => $courses,
             'q' => $query,
+            'enrolledCourseIds' => $enrolledCourseIds,
         ]);
+    }
+
+    public function enroll(Request $request, Course $course): RedirectResponse
+    {
+        $student = $request->user()?->student;
+
+        if (! $student) {
+            return back()->with('error', 'Student tidak ditemukan.');
+        }
+
+        $alreadyEnrolled = $student->courses()
+            ->where('courses.id', $course->id)
+            ->exists();
+
+        if ($alreadyEnrolled) {
+            return back()->with('error', 'Kamu sudah terdaftar di kelas ini.');
+        }
+
+        $hasConflict = $student->courses()
+            ->where('day', $course->day)
+            ->where(function ($query) use ($course) {
+                $query->where('start_time', '<', $course->end_time)
+                    ->where('end_time', '>', $course->start_time);
+            })
+            ->exists();
+
+        if ($hasConflict) {
+            return back()->with('error', 'Jadwal kelas bentrok dengan kelas lain yang sudah didaftarkan.');
+        }
+
+        $student->courses()->syncWithoutDetaching([$course->id]);
+
+        return back()->with('success', 'Kelas berhasil didaftarkan.');
     }
 }

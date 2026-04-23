@@ -64,13 +64,28 @@ export default function Register() {
             >
                 {({ processing, errors }) => (
                     <>
+                    <div className="grid gap-2">
+    
+                            <Label htmlFor="nim">Nama</Label>
+                            <Input
+                                id="name"
+                                type="text"
+                                required
+                                tabIndex={1}
+                                autoComplete="name"
+                                name="name"
+                                placeholder="Masukan nama"
+                            />
+                            <InputError message={errors.nim} />
+                        </div>
                         <div className="grid gap-2">
+    
                             <Label htmlFor="nim">NIM</Label>
                             <Input
                                 id="nim"
                                 type="text"
                                 required
-                                tabIndex={5}
+                                tabIndex={2}
                                 autoComplete="nim"
                                 name="nim"
                                 placeholder="23xxxxxx"
@@ -85,7 +100,7 @@ export default function Register() {
                                     id="email"
                                     type="email"
                                     required
-                                    tabIndex={2}
+                                    tabIndex={3}
                                     autoComplete="email"
                                     name="email"
                                     placeholder="email@example.com"
@@ -96,13 +111,14 @@ export default function Register() {
                             <div className="grid gap-2">
                                 <Label htmlFor="faculty_id">Fakultas</Label>
                                 <Select
+                                    
                                     value={selectedFacultyId}
                                     onValueChange={(value) => {
                                         setSelectedFacultyId(value);
                                         setSelectedStudyProgramId('');
                                     }}
                                 >
-                                    <SelectTrigger id="faculty_id" tabIndex={3}>
+                                    <SelectTrigger id="faculty_id" tabIndex={4}>
                                         <SelectValue placeholder="Pilih fakultas" />
                                     </SelectTrigger>
                                     <SelectContent className="max-h-60 overflow-y-auto">
@@ -133,7 +149,7 @@ export default function Register() {
                                 >
                                     <SelectTrigger
                                         id="study_program_id"
-                                        tabIndex={4}
+                                        tabIndex={5}
                                         disabled={!selectedFacultyId}
                                     >
                                         <SelectValue placeholder="Pilih program studi" />

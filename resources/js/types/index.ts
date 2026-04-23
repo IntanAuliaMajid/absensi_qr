@@ -24,7 +24,7 @@ export type Semester = {
     name: string;
 };
 
-export type Building = {
+export type LocationType = {
     id: number;
     name: string;
 };
@@ -32,8 +32,9 @@ export type Building = {
 export type Room = {
     id: number;
     name: string;
-    location_id: number;
-    location?: Location;
+    building_id?: number;
+    location_id?: number;
+    location?: LocationType;
 };
 
 export type CursorPagination<T> = {

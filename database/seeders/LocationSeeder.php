@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Building;
+use App\Models\Location;
 use Illuminate\Database\Seeder;
 
-class BuildingSeeder extends Seeder
+class LocationSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -21,7 +21,7 @@ class BuildingSeeder extends Seeder
         ];
 
         foreach ($buildings as $buildingName) {
-            Building::query()->firstOrCreate([
+            Location::query()->firstOrCreate([
                 'name' => $buildingName,
             ]);
         }

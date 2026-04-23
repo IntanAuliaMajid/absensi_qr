@@ -63,9 +63,9 @@ export default function StudentClassIndex() {
                                     </p>
                                     <p className="flex items-center gap-2">
                                         <MapPin className="size-4 text-sky-600" />
-                                        {course.classroom?.building?.name &&
+                                        {course.classroom?.location?.name &&
                                         course.classroom?.name
-                                            ? `${course.classroom.building.name} - ${course.classroom.name}`
+                                            ? `${course.classroom.location.name} - ${course.classroom.name}`
                                             : (course.classroom?.name ??
                                               course.room ??
                                               '-')}

@@ -6,7 +6,7 @@ use App\Models\Course;
 use App\Models\Student;
 use Illuminate\Database\Seeder;
 
-class ClassStudentSeeder extends Seeder
+class CourseStudentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -22,7 +22,7 @@ class ClassStudentSeeder extends Seeder
             $classIds = Course::query()
                 ->where('study_program_id', $student->study_program_id)
                 ->orderBy('id')
-                ->limit(4)
+                ->limit(2)
                 ->pluck('id')
                 ->all();
 

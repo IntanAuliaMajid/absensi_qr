@@ -17,7 +17,7 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::query()
-            ->with(['studyProgram', 'semester', 'lecturer.user', 'classroom.building'])
+            ->with(['studyProgram', 'semester', 'lecturer.user', 'classroom.location'])
             ->orderBy('id')
             ->cursorPaginate(10)
             ->withQueryString();
@@ -33,7 +33,7 @@ class CourseController extends Controller
             'studyPrograms' => StudyProgram::query()->orderBy('name')->get(['id', 'name']),
             'semesters' => Semester::query()->orderBy('name')->get(['id', 'name']),
             'lecturers' => Lecturer::query()->with('user:id,name')->get(['id', 'user_id']),
-            'rooms' => Room::query()->with('building:id,name')->orderBy('name')->get(['id', 'name', 'building_id']),
+            'rooms' => Room::query()->with('location:id,name')->orderBy('name')->get(['id', 'name', 'building_id']),
         ]);
     }
 
@@ -50,8 +50,8 @@ class CourseController extends Controller
             'end_time' => 'required|date_format:H:i|after:start_time',
         ]);
 
-        $selectedRoom = Room::query()->with('building:id,name')->findOrFail($validated['room_id']);
-        $validated['room'] = trim(($selectedRoom->building?->name ? $selectedRoom->building->name . ' - ' : '') . $selectedRoom->name);
+        $selectedRoom = Room::query()->with('location:id,name')->findOrFail($validated['room_id']);
+        $validated['room'] = trim(($selectedRoom->location?->name ? $selectedRoom->location->name . ' - ' : '') . $selectedRoom->name);
 
         Course::create($validated);
 
@@ -60,14 +60,14 @@ class CourseController extends Controller
 
     public function edit(Course $course)
     {
-        $course->load(['studyProgram', 'semester', 'lecturer.user', 'classroom.building']);
+        $course->load(['studyProgram', 'semester', 'lecturer.user', 'classroom.location']);
 
         return Inertia::render('admin/courses/edit', [
             'course' => $course,
             'studyPrograms' => StudyProgram::query()->orderBy('name')->get(['id', 'name']),
             'semesters' => Semester::query()->orderBy('name')->get(['id', 'name']),
             'lecturers' => Lecturer::query()->with('user:id,name')->get(['id', 'user_id']),
-            'rooms' => Room::query()->with('building:id,name')->orderBy('name')->get(['id', 'name', 'building_id']),
+            'rooms' => Room::query()->with('location:id,name')->orderBy('name')->get(['id', 'name', 'building_id']),
         ]);
     }
 
@@ -84,8 +84,8 @@ class CourseController extends Controller
             'end_time' => 'required|date_format:H:i|after:start_time',
         ]);
 
-        $selectedRoom = Room::query()->with('building:id,name')->findOrFail($validated['room_id']);
-        $validated['room'] = trim(($selectedRoom->building?->name ? $selectedRoom->building->name . ' - ' : '') . $selectedRoom->name);
+        $selectedRoom = Room::query()->with('location:id,name')->findOrFail($validated['room_id']);
+        $validated['room'] = trim(($selectedRoom->location?->name ? $selectedRoom->location->name . ' - ' : '') . $selectedRoom->name);
 
         $course->update($validated);
 
