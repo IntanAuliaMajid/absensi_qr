@@ -12,7 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('study_programs', function (Blueprint $table) {
+           
+            $table->dropForeign(['faculty_id']);
+
+         
             $table->dropUnique(['faculty_id']);
+
+     
+            $table->foreign('faculty_id')
+                ->references('id')
+                ->on('faculties')
+                ->cascadeOnDelete();
         });
     }
 
