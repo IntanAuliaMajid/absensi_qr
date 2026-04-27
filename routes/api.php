@@ -32,8 +32,20 @@ Route::post('/register', RegisterController::class);
 Route::post('/login', LoginController::class);
 Route::post('/logout', LogoutController::class)->middleware('auth:sanctum');
 
-Route::post('/email/verify-otp', [EmailVerificationController::class, 'verifyEmail'])->name('api.verification.verify')->middleware('auth:sanctum');
-Route::post('/email/resend-otp', [EmailVerificationController::class, 'resendOtp'])->middleware('throttle:6,1', 'auth:sanctum')->name('api.verification.resend');
+Route::post('/email/verify-otp', [EmailVerificationController::class, 'verifyEmail'])
+    ->name('api.verification.verify')
+    ->middleware('auth:sanctum');
+
+Route::post('/email/resend-otp', [EmailVerificationController::class, 'resendOtp'])
+    ->middleware(['throttle:6,1', 'auth:sanctum'])
+    ->name('api.verification.resend');
+
+Route::post('/email/verify-pending-otp', [EmailVerificationController::class, 'verifyPendingEmail'])
+    ->middleware('auth:sanctum');
+
+Route::post('/email/resend-pending-otp', [EmailVerificationController::class, 'resendPendingEmailOtp'])
+    ->middleware(['throttle:6,1', 'auth:sanctum']);
+
 
 Route::post('/reset-password', [PasswordResetController::class, 'sendOtp']);
 Route::post('/otp-check', [PasswordResetController::class, 'checkOtp'])->middleware('throttle:6,1');

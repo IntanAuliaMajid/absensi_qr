@@ -74,27 +74,27 @@ class StudentCourseController extends Controller
 
         $meetings = collect();
 
-        if (Schema::hasTable('attendances')) {
-            $hasAttendanceLogs = Schema::hasTable('attendance_logs');
+        if (Schema::hasTable('course_sessions')) {
+            $hasAttendances = Schema::hasTable('attendances');
 
-            $query = DB::table('attendances as attendances')
-                ->where('attendances.course_id', $course->id)
-                ->orderBy('attendances.date');
+            $query = DB::table('course_sessions as sessions')
+                ->where('sessions.course_id', $course->id)
+                ->orderBy('sessions.date');
 
-            if ($hasAttendanceLogs) {
-                $query->leftJoin('attendance_logs as logs', function ($join) use ($student) {
-                    $join->on('logs.attendance_id', '=', 'attendances.id')
+            if ($hasAttendances) {
+                $query->leftJoin('attendances as logs', function ($join) use ($student) {
+                    $join->on('logs.course_session_id', '=', 'sessions.id')
                         ->where('logs.student_id', '=', $student->id);
                 });
             }
 
             $selects = [
-                'attendances.id',
-                'attendances.name',
-                'attendances.date',
+                'sessions.id',
+                'sessions.name',
+                'sessions.date',
             ];
 
-            if ($hasAttendanceLogs) {
+            if ($hasAttendances) {
                 $selects[] = 'logs.status as status';
                 $selects[] = 'logs.updated_at as logged_at';
             }
@@ -102,7 +102,7 @@ class StudentCourseController extends Controller
             $meetings = $query
                 ->select($selects)
                 ->get()
-                ->map(fn ($item) => [
+                ->map(fn($item) => [
                     'id' => $item->id,
                     'name' => $item->name,
                     'date' => $item->date,
