@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\Auth\EmailVerificationController;
 use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\Student\CourseEnrollmentController;
+use App\Http\Controllers\Api\Student\ProfileController; // ✅ TAMBAHAN
+use App\Http\Controllers\Api\Student\ScanController; // ✅ TAMBAHAN
 use App\Http\Controllers\Api\StudyProgramController;
 use App\Http\Controllers\Api\FacultyController;
 use App\Http\Controllers\Api\Student\StudentCourseController;
@@ -23,6 +25,13 @@ Route::middleware('auth:sanctum')->prefix('student')->group(function () {
     Route::get('/classes/{course}', [StudentCourseController::class, 'show']);
     Route::get('/schedule', [ScheduleController::class, 'index']);
     Route::post('/all-classes/{course}/enroll', [CourseEnrollmentController::class, 'enroll']);
+
+    // ✅ TAMBAHAN: Profile mahasiswa
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+
+    // ✅ TAMBAHAN: Scan QR absensi
+    Route::get('/scan/{token}', [ScanController::class, 'scan']);
 });
 
 Route::get('/study-program', [StudyProgramController::class, 'index']);
@@ -45,7 +54,6 @@ Route::post('/email/verify-pending-otp', [EmailVerificationController::class, 'v
 
 Route::post('/email/resend-pending-otp', [EmailVerificationController::class, 'resendPendingEmailOtp'])
     ->middleware(['throttle:6,1', 'auth:sanctum']);
-
 
 Route::post('/reset-password', [PasswordResetController::class, 'sendOtp']);
 Route::post('/otp-check', [PasswordResetController::class, 'checkOtp'])->middleware('throttle:6,1');

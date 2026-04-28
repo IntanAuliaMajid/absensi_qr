@@ -22,12 +22,14 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import QRCode from 'react-qr-code';
 
 type MeetingItem = {
     id: number;
     name: string;
     date: string;
     logged_at: string | null;
+    qr_token: string;
 };
 
 function formatDate(value: string): string {
@@ -42,7 +44,6 @@ function formatDate(value: string): string {
 }
 
 export default function LecturerClassDetail() {
-    // Ambil props dari usePage
     const props = usePage().props as Record<string, any>;
     const kelas = props.class;
     const meetings = props.meetings as MeetingItem[];
@@ -148,12 +149,11 @@ export default function LecturerClassDetail() {
                                                             </DialogTitle>
                                                         </DialogHeader>
                                                         <div className="flex flex-col items-center justify-center space-y-4 py-6">
-                                                            <div className="flex h-64 w-64 items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50">
-                                                                <span className="text-slate-400">
-                                                                    [QR CODE
-                                                                    BESAR
-                                                                    DISINI]
-                                                                </span>
+                                                            <div className="rounded-xl bg-white p-4">
+                                                                <QRCode
+                                                                    value={`${window.location.origin}/${meeting.qr_token}`}
+                                                                    size={220}
+                                                                />
                                                             </div>
 
                                                             <div className="text-center">
