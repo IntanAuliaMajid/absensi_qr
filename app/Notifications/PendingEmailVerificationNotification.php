@@ -30,13 +30,13 @@ class PendingEmailVerificationNotification extends Notification
             'user_id' => $this->user->id,
             'otp' => $otp,
             'type' => 'pending_email_verification',
-            'expires_at' => Carbon::now()->addMinutes(10),
+            'expires_at' => Carbon::now()->addMinutes(60),
         ]);
 
         return (new MailMessage)
             ->subject('Verifikasi Email Baru')
             ->line('Gunakan kode OTP berikut untuk memverifikasi email baru kamu:')
             ->line($otp)
-            ->line('Kode ini berlaku selama 10 menit.');
+            ->line('Kode ini berlaku selama 60 menit.');
     }
 }

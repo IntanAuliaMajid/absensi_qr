@@ -10,11 +10,13 @@ use App\Http\Controllers\Api\Auth\EmailVerificationController;
 use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\Student\CourseEnrollmentController;
-use App\Http\Controllers\Api\Student\ProfileController; // ✅ TAMBAHAN
-use App\Http\Controllers\Api\Student\ScanController; // ✅ TAMBAHAN
+use App\Http\Controllers\Api\Student\ProfileController;
+use App\Http\Controllers\Api\Student\ScanController;
 use App\Http\Controllers\Api\StudyProgramController;
 use App\Http\Controllers\Api\FacultyController;
 use App\Http\Controllers\Api\Student\StudentCourseController;
+use App\Http\Controllers\Api\Auth\PendingEmailVerificationController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -26,11 +28,9 @@ Route::middleware('auth:sanctum')->prefix('student')->group(function () {
     Route::get('/schedule', [ScheduleController::class, 'index']);
     Route::post('/all-classes/{course}/enroll', [CourseEnrollmentController::class, 'enroll']);
 
-    // ✅ TAMBAHAN: Profile mahasiswa
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
 
-    // ✅ TAMBAHAN: Scan QR absensi
     Route::get('/scan/{token}', [ScanController::class, 'scan']);
 });
 
@@ -49,11 +49,8 @@ Route::post('/email/resend-otp', [EmailVerificationController::class, 'resendOtp
     ->middleware(['throttle:6,1', 'auth:sanctum'])
     ->name('api.verification.resend');
 
-Route::post('/email/verify-pending-otp', [EmailVerificationController::class, 'verifyPendingEmail'])
+Route::post('/email/verify-pending-otp', [PendingEmailVerificationController::class, 'verify'])
     ->middleware('auth:sanctum');
-
-Route::post('/email/resend-pending-otp', [EmailVerificationController::class, 'resendPendingEmailOtp'])
-    ->middleware(['throttle:6,1', 'auth:sanctum']);
 
 Route::post('/reset-password', [PasswordResetController::class, 'sendOtp']);
 Route::post('/otp-check', [PasswordResetController::class, 'checkOtp'])->middleware('throttle:6,1');
