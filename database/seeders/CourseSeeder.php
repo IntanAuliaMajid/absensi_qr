@@ -23,7 +23,7 @@ class CourseSeeder extends Seeder
             throw new RuntimeException("Semester 'Gasal 2024/2025' not found. Run SemesterSeeder first.");
         }
 
-        // Only seed for Teknik Informatika study program
+
         $studyPrograms = StudyProgram::query()->where('name', 'Teknik Informatika')->orderBy('id')->get();
         $lecturers = Lecturer::query()->orderBy('id')->get();
         $rooms = Room::query()->with('location')->orderBy('id')->get();
@@ -64,8 +64,6 @@ class CourseSeeder extends Seeder
             ['start' => '15:00', 'end' => '16:40'],
         ];
 
-
-        // Loop seluruh subjectPool untuk Teknik Informatika
         if ($studyPrograms->isNotEmpty()) {
             $studyProgram = $studyPrograms->first();
             $lecturerCount = $lecturers->count();

@@ -30,6 +30,7 @@ type MeetingItem = {
     date: string;
     logged_at: string | null;
     qr_token: string;
+    qr_url: string | null;
 };
 
 function formatDate(value: string): string {
@@ -47,6 +48,8 @@ export default function LecturerClassDetail() {
     const props = usePage().props as Record<string, any>;
     const kelas = props.class;
     const meetings = props.meetings as MeetingItem[];
+
+    console.log(meetings);
 
     if (!kelas) {
         return (
@@ -150,10 +153,21 @@ export default function LecturerClassDetail() {
                                                         </DialogHeader>
                                                         <div className="flex flex-col items-center justify-center space-y-4 py-6">
                                                             <div className="rounded-xl bg-white p-4">
-                                                                <QRCode
-                                                                    value={`${window.location.origin}/${meeting.qr_token}`}
-                                                                    size={220}
-                                                                />
+                                                                {meeting.qr_url ? (
+                                                                    <QRCode
+                                                                        value={
+                                                                            meeting.qr_url
+                                                                        }
+                                                                        size={
+                                                                            220
+                                                                        }
+                                                                    />
+                                                                ) : (
+                                                                    <p className="text-sm text-red-500">
+                                                                        QR belum
+                                                                        tersedia
+                                                                    </p>
+                                                                )}
                                                             </div>
 
                                                             <div className="text-center">

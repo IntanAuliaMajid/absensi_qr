@@ -25,8 +25,8 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             CourseStudentSeeder::class,
 
+            CourseSessionSeeder::class,
             CourseSessionQrSeeder::class,
-            AttendanceSeeder::class,
         ]);
     }
 }
